@@ -1,0 +1,25 @@
+name: anti-drift
+
+# Guards against a fourth, unsynced mirror of the three canonical skill repos.
+# This plugin vendors SKILL.md byte-for-byte from Ansvar-Systems/*-skill (main).
+# Any drift between the vendored copy and the canonical repo is a red build.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  check-vendored-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Diff vendored SKILL.md files against the canonical repos
+        run: bash scripts/sync.sh --check

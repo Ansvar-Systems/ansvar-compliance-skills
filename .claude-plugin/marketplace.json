@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-marketplace.json",
+  "name": "ansvar-compliance-skills",
+  "owner": {
+    "name": "Ansvar Systems AB",
+    "email": "team@ansvar.eu"
+  },
+  "description": "Marketplace for the Ansvar Compliance Skills plugin — EU regulatory threat modeling, incident-reporting navigation, and CRA vulnerability obligations, grounded via the Ansvar Gateway MCP connector.",
+  "plugins": [
+    {
+      "name": "ansvar-compliance-skills",
+      "source": "./",
+      "description": "Three compliance skills for EU security work: STRIDE/LINDDUN regulatory threat modeling, incident-reporting navigation across NIS2/GDPR/DORA/CRA, and CRA vulnerability obligations — every regulatory statement cited from officially published text via the Ansvar Gateway MCP connector (free plan available, business sign-up).",
+      "homepage": "https://ansvar.eu/docs/agent-skills",
+      "license": "CC-BY-4.0"
+    }
+  ]
+}

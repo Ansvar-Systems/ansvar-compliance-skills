@@ -1,0 +1,38 @@
+Ansvar Compliance Skills plugin — third-party / upstream attribution
+=====================================================================
+
+This plugin bundles no original skill content. Every file under skills/ is
+a byte-identical vendored copy of SKILL.md from a canonical, independently
+published, independently licensed Ansvar Systems AB repository. The plugin
+adds only packaging: the plugin manifest, the MCP server declaration, and
+the anti-drift CI gate that keeps the copies honest.
+
+1. skills/regulatory-threat-model/SKILL.md
+   Canonical repo: https://github.com/Ansvar-Systems/regulatory-threat-model-skill
+   License:        Creative Commons Attribution 4.0 International (CC BY 4.0)
+   Copyright:      (c) 2026 Ansvar Systems AB
+
+2. skills/incident-reporting-navigator/SKILL.md
+   Canonical repo: https://github.com/Ansvar-Systems/incident-reporting-navigator-skill
+   License:        Creative Commons Attribution 4.0 International (CC BY 4.0)
+   Copyright:      (c) 2026 Ansvar Systems AB
+
+3. skills/cra-vulnerability-obligations/SKILL.md
+   Canonical repo: https://github.com/Ansvar-Systems/cra-vulnerability-obligations-skill
+   License:        Creative Commons Attribution 4.0 International (CC BY 4.0)
+   Copyright:      (c) 2026 Ansvar Systems AB
+
+Full CC BY 4.0 legal text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Attribution notice per the license: when you share or adapt this plugin (or
+any of the three skills individually), credit Ansvar Systems AB, link to the
+CC BY 4.0 license, and note any changes you made. This plugin makes no
+changes to the skill text — see .github/workflows/anti-drift.yml, which
+fails CI the moment a vendored copy diverges from its canonical repo.
+
+Each skill's SKILL.md carries its own note that this license covers the
+skill text only: regulatory and guidance content the skill fetches at
+runtime through the Ansvar Gateway MCP connector is served from its
+original official publisher under that publisher's own terms, cited per
+row (for example EUR-Lex content under Commission Decision 2011/833/EU;
+ENISA publications under CC BY 4.0).
