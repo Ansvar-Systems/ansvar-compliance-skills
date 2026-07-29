@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "ansvar-compliance-skills",
   "displayName": "Ansvar Compliance Skills",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Three compliance skills for EU security work: STRIDE/LINDDUN regulatory threat modeling, incident-reporting navigation across NIS2/GDPR/DORA/CRA, and CRA vulnerability obligations — every regulatory statement cited from officially published text via the Ansvar Gateway MCP connector (free plan available, business sign-up).",
   "author": {
     "name": "Ansvar Systems AB",
