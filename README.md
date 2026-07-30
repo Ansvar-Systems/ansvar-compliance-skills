@@ -1,8 +1,8 @@
 # Ansvar Compliance Skills
 
-A Claude Code plugin that bundles three published Ansvar Systems AB agent
+A Claude Code plugin that bundles four published Ansvar Systems AB agent
 skills for EU security and compliance work. The plugin adds no skill content
-of its own — it packages the three canonical skills, unmodified, so they can
+of its own — it packages the four canonical skills, unmodified, so they can
 be installed as a single unit from the Claude Code plugin marketplaces.
 
 | Skill | Invocation | What it does |
@@ -10,11 +10,19 @@ be installed as a single unit from the Claude Code plugin marketplaces.
 | `regulatory-threat-model` | `/ansvar-compliance-skills:regulatory-threat-model` | STRIDE and LINDDUN threat modeling, a dependency-exposure screen against live CVE / CISA-KEV / EPSS data, and a non-exhaustive screen of which EU security obligations (GDPR, NIS2, Cyber Resilience Act, AI Act) may apply. |
 | `incident-reporting-navigator` | `/ansvar-compliance-skills:incident-reporting-navigator` | Screens one incident across NIS2, GDPR, DORA, and the Cyber Resilience Act, resolves which notification duties fire for each entity role, and produces a deadline table with the receiving authority per regime and member state. |
 | `cra-vulnerability-obligations` | `/ansvar-compliance-skills:cra-vulnerability-obligations` | Maps a product with digital elements to Cyber Resilience Act scope, product classification, Annex I vulnerability-handling duties, and Article 14 reporting obligations. |
+| `iso-standards-expert` | `/ansvar-compliance-skills:iso-standards-expert` | Cited clause-level support on SS-EN ISO/IEC 27001:2023, 27002:2022, 27005:2024, 42001:2026 and SS-ISO/SAE 21434:2021 — licensed standard text served under Ansvar's SIS reproduction licence, quoted verbatim with attribution; only selected parts of a standard, never the complete standard. |
 
-Every regulatory statement each skill produces is cited from officially
-published text fetched live through the Ansvar Gateway MCP connector — none
-of the three skills answers from model memory, and each says so explicitly
+Every claim each skill produces is cited from officially published or
+licensed text fetched live through the Ansvar Gateway MCP connector — none
+of the four skills answers from model memory, and each says so explicitly
 in its own SKILL.md.
+
+Plan note: the first three skills have free lanes on a free gateway
+account, with paid features varying by skill and plan. The ISO skill's
+licensed clause lane needs the paid, per-standard [ISO Standards
+add-on](https://ansvar.eu/standards) (purchasable on any plan, including
+Free); without it that skill still runs in its labelled SCF
+cross-reference lane.
 
 ## Canonical sources
 
@@ -25,11 +33,12 @@ the source of truth; this plugin is a wrapper:
 - https://github.com/Ansvar-Systems/regulatory-threat-model-skill
 - https://github.com/Ansvar-Systems/incident-reporting-navigator-skill
 - https://github.com/Ansvar-Systems/cra-vulnerability-obligations-skill
+- https://github.com/Ansvar-Systems/iso-standards-expert-skill
 
 `.github/workflows/anti-drift.yml` fetches each canonical `SKILL.md` from
 `raw.githubusercontent.com` on every push and once a day, and fails CI red
 the moment the vendored copy here diverges from the canonical repo. Run
-`scripts/sync.sh` locally to re-vendor all three (or `scripts/sync.sh
+`scripts/sync.sh` locally to re-vendor all four (or `scripts/sync.sh
 --check` to diff without writing). See NOTICE for the full per-skill
 attribution and license statement.
 

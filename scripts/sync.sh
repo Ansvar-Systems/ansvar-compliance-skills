@@ -25,6 +25,7 @@ MAPPINGS=(
   "regulatory-threat-model-skill:regulatory-threat-model"
   "incident-reporting-navigator-skill:incident-reporting-navigator"
   "cra-vulnerability-obligations-skill:cra-vulnerability-obligations"
+  "iso-standards-expert-skill:iso-standards-expert"
 )
 
 STATUS=0
