@@ -14,7 +14,7 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.1"
+  version: "1.2"
 ---
 
 # ISO Standards Expert
@@ -52,15 +52,18 @@ either.
 
 - The **Ansvar Gateway** MCP connector must be connected:
   `https://gateway.ansvar.eu/mcp` (OAuth 2.1 with Dynamic Client
-  Registration; free account signup at https://ansvar.eu). Any MCP-capable
-  agent client can connect; skill/instruction support and MCP availability
-  vary by client and client plan — per-client setup guides:
+  Registration; free account signup at https://ansvar.eu). Any agent
+  client that supports remote MCP servers over HTTP with OAuth can
+  connect; skill/instruction support, MCP availability, and instruction
+  size limits vary by client and client plan — per-client setup guides:
   https://ansvar.eu/docs/quickstart.
 - Tools this skill uses: `search`, `get_provision`,
   `get_my_capabilities`. All three exist on every plan.
 - **Licensed clause text needs the ISO Standards add-on** for the specific
-  standard, purchased per standard and per person at any plan level
-  (including Free): https://ansvar.eu/standards. Without it, this skill
+  standard, purchased per standard and per seat at any plan level
+  (including Free): https://ansvar.eu/standards. A seat's holder is a
+  named individual, or a machine identity (service credential) operated
+  by the Customer — the agent itself can hold the seat. Without it, this skill
   still works in the free cross-reference lane described below.
 - If these tools are not available, stop and tell the user to connect the
   gateway. Do not answer from model knowledge.
@@ -117,9 +120,11 @@ per-standard sources instead.
    content must not be republished, resold, served onward to third
    parties, or exposed to colleagues without their own subscription —
    including through internal portals, shared repositories, or automated
-   relays — and that credentials must not be shared, pooled, or rotated.
-   The agent operates under the subscribed individual's own authenticated
-   account. The complete standard is available from SIS.
+   relays — and that credentials must not be shared, pooled, or rotated
+   across holders. The agent operates under the subscribed seat's own
+   authenticated identity: a named individual's account, or the machine
+   identity (service credential) the seat is assigned to. The complete
+   standard is available from SIS.
 5. **Bounded, user-directed retrieval only.** Fetch what the user's actual
    question needs. No systematic clause-by-clause traversal, no bulk
    enumeration, no "fetch the whole annex for context". If the licence
