@@ -22,10 +22,17 @@ the anti-drift CI gate that keeps the copies honest.
    License:        Creative Commons Attribution 4.0 International (CC BY 4.0)
    Copyright:      (c) 2026 Ansvar Systems AB
 
+4. skills/iso-standards-expert/SKILL.md
+   Canonical repo: https://github.com/Ansvar-Systems/iso-standards-expert-skill
+   License:        Creative Commons Attribution 4.0 International (CC BY 4.0)
+                   (the canonical repo's LICENSE excludes SIS/ISO/IEC/SAE
+                   trademarks and product designations from the grant)
+   Copyright:      (c) 2026 Ansvar Systems AB
+
 Full CC BY 4.0 legal text: https://creativecommons.org/licenses/by/4.0/legalcode
 
 Attribution notice per the license: when you share or adapt this plugin (or
-any of the three skills individually), credit Ansvar Systems AB, link to the
+any of the four skills individually), credit Ansvar Systems AB, link to the
 CC BY 4.0 license, and note any changes you made. This plugin makes no
 changes to the skill text — see .github/workflows/anti-drift.yml, which
 fails CI the moment a vendored copy diverges from its canonical repo.
