@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "ansvar-compliance-skills",
   "displayName": "Ansvar Compliance Skills",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Four Ansvar agent skills for EU security and compliance work: STRIDE/LINDDUN regulatory threat modeling, incident-reporting navigation across NIS2/GDPR/DORA/CRA, CRA vulnerability obligations, and cited clause-level ISO standards support (ISO/IEC 27001, 27002, 27005, 42001, ISO/SAE 21434) — every claim cited from officially published or licensed text via the Ansvar Gateway MCP connector. The first three run on the free plan; the ISO skill's licensed clause lane needs the paid per-standard ISO Standards add-on (its free SCF cross-reference lane works without it).",
   "author": {
     "name": "Ansvar Systems AB",
