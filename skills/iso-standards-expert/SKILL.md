@@ -14,7 +14,7 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.2"
+  version: "1.2.1"
 ---
 
 # ISO Standards Expert
@@ -63,7 +63,8 @@ either.
   standard, purchased per standard and per seat at any plan level
   (including Free): https://ansvar.eu/standards. A seat's holder is a
   named individual, or a machine identity (service credential) operated
-  by the Customer — the agent itself can hold the seat. Without it, this skill
+  by the Customer — machine-held seats are provisioned for organisations
+  by Ansvar today (sales-led); self-serve assignment is not yet live. Without it, this skill
   still works in the free cross-reference lane described below.
 - If these tools are not available, stop and tell the user to connect the
   gateway. Do not answer from model knowledge.
