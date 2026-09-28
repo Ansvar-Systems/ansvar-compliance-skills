@@ -1,8 +1,10 @@
 name: anti-drift
 
-# Guards against a fourth, unsynced mirror of the three canonical skill repos.
+# Guards against an unsynced mirror of the four canonical skill repos.
 # This plugin vendors SKILL.md byte-for-byte from Ansvar-Systems/*-skill (main).
-# Any drift between the vendored copy and the canonical repo is a red build.
+# Any drift between the vendored copy and the canonical repo is a red build,
+# and a red build opens (or comments on) one tracking issue so the failure
+# is seen instead of sitting unread in the Actions tab.
 
 on:
   push:
@@ -14,12 +16,60 @@ on:
 permissions:
   contents: read
 
+# One run at a time, so two overlapping failures cannot both find no issue
+# and each open one. The running check is never cancelled; if several runs
+# queue behind it, GitHub keeps only the newest pending one, which checks the
+# latest state anyway.
+concurrency:
+  group: anti-drift
+  cancel-in-progress: false
+
 jobs:
   check-vendored-skills:
+    # This repo is outside the ADR-106 admitted set (no Ansvar self-hosted runner lane); hosted runner by design.
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Diff vendored SKILL.md files against the canonical repos
-        run: bash scripts/sync.sh --check
+        id: check
+        run: |
+          set -o pipefail
+          bash scripts/sync.sh --check 2>&1 | tee "$RUNNER_TEMP/anti-drift.log"
+
+      - name: Open or update the drift issue
+        if: failure() && steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TITLE: "anti-drift: vendored skills diverge from canonical"
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          {
+            echo "The anti-drift check failed on \`${GITHUB_REF_NAME}\` (${GITHUB_EVENT_NAME})."
+            echo
+            echo "Run: ${RUN_URL}"
+            echo
+            echo "Fix: run \`bash scripts/sync.sh\` locally, review the diff, bump the plugin version, and open a PR."
+            echo
+            echo '<details><summary>sync.sh --check output (last 200 lines)</summary>'
+            echo
+            echo '```'
+            tail -n 200 "$RUNNER_TEMP/anti-drift.log" || true
+            echo '```'
+            echo '</details>'
+          } > "$RUNNER_TEMP/issue-body.md"
+          # Walk every open issue (paginated) and match the exact title, so the
+          # lookup has no result cap.
+          matches="$(gh api --paginate "repos/${GITHUB_REPOSITORY}/issues?state=open&per_page=100" \
+            --jq '.[] | select(.pull_request == null) | select(.title == env.TITLE) | .number')"
+          number="${matches%%$'\n'*}"
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/issue-body.md"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body-file "$RUNNER_TEMP/issue-body.md"
+          fi
