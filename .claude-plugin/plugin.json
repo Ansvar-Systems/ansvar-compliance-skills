@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "ansvar-compliance-skills",
   "displayName": "Ansvar Compliance Skills",
-  "version": "1.2.0",
-  "description": "Four Ansvar agent skills for EU security and compliance work: STRIDE/LINDDUN regulatory threat modeling, incident-reporting navigation across NIS2/GDPR/DORA/CRA, CRA vulnerability obligations, and cited clause-level ISO standards support (ISO/IEC 27001, 27002, 27005, 42001, ISO/SAE 21434) — every claim cited from officially published or licensed text via the Ansvar Gateway MCP connector. The first three run on the free plan; the ISO skill's licensed clause lane needs the paid per-standard ISO Standards add-on (its free SCF cross-reference lane works without it).",
+  "version": "2.0.0",
+  "description": "Fourteen Ansvar agent skills for EU security and compliance work. Four standalone skills: STRIDE/LINDDUN regulatory threat modeling, incident-reporting navigation across NIS2/GDPR/DORA/CRA, CRA vulnerability obligations, and cited clause-level ISO standards support (ISO/IEC 27001, 27002, 27005, 42001, ISO/SAE 21434). Plus the Ansvar workflow skill library: using-ansvar for cited legal and standards questions, and family skills for gap analysis, threat modelling, DPIA and FRIA, TARA, tender review, vulnerability decisions, tabletop exercises, document review and drone SORA. Every claim is cited from officially published or licensed text via the Ansvar Gateway MCP connector (free plan available, business sign-up); the ISO skill's licensed clause lane needs the paid per-standard ISO Standards add-on.",
   "author": {
     "name": "Ansvar Systems AB",
     "url": "https://ansvar.eu"
@@ -29,6 +29,20 @@
     "iso-42001",
     "iso-21434",
     "isms",
-    "iso-standards"
+    "iso-standards",
+    "gap-analysis",
+    "dpia",
+    "fria",
+    "tara",
+    "risk-assessment",
+    "tender-review",
+    "public-procurement",
+    "vex",
+    "cyclonedx",
+    "tabletop-exercise",
+    "sora",
+    "drone",
+    "document-review",
+    "gdpr-article-35"
   ]
 }

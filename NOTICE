@@ -2,10 +2,12 @@ Ansvar Compliance Skills plugin — third-party / upstream attribution
 =====================================================================
 
 This plugin bundles no original skill content. Every file under skills/ is
-a byte-identical vendored copy of SKILL.md from a canonical, independently
-published, independently licensed Ansvar Systems AB repository. The plugin
-adds only packaging: the plugin manifest, the MCP server declaration, and
-the anti-drift CI gate that keeps the copies honest.
+a byte-identical vendored copy of a SKILL.md published by Ansvar Systems AB:
+skills 1-4 from their own public repositories, skills 5-14 (the workflow
+skill library) as published at https://ansvar.eu/skills/<id>/SKILL.md from a
+pinned source commit recorded in skills-manifest.json. The plugin adds only
+packaging: the plugin manifest, the MCP server declaration, the sync script,
+and the anti-drift CI gate that keeps the copies honest.
 
 1. skills/regulatory-threat-model/SKILL.md
    Canonical repo: https://github.com/Ansvar-Systems/regulatory-threat-model-skill
@@ -29,17 +31,28 @@ the anti-drift CI gate that keeps the copies honest.
                    trademarks and product designations from the grant)
    Copyright:      (c) 2026 Ansvar Systems AB
 
+5-14. The workflow skill library: skills/using-ansvar, skills/gap-analysis,
+   skills/threat-model, skills/dpia, skills/tara, skills/tender-review,
+   skills/vulnerability-decisions, skills/tabletop, skills/document-review,
+   skills/drone-operations (each SKILL.md)
+   Published at:   https://ansvar.eu/skills/<id>/SKILL.md
+                   (source commit and per-file sha256 in skills-manifest.json)
+   License:        Creative Commons Attribution 4.0 International (CC BY 4.0),
+                   as stated in each SKILL.md
+   Copyright:      (c) 2026 Ansvar Systems AB
+
 Full CC BY 4.0 legal text: https://creativecommons.org/licenses/by/4.0/legalcode
 
 Attribution notice per the license: when you share or adapt this plugin (or
-any of the four skills individually), credit Ansvar Systems AB, link to the
+any of the fourteen skills individually), credit Ansvar Systems AB, link to the
 CC BY 4.0 license, and note any changes you made. This plugin makes no
 changes to the skill text — see .github/workflows/anti-drift.yml, which
-fails CI the moment a vendored copy diverges from its canonical repo.
+fails CI the moment a vendored copy diverges from its source.
 
-Each skill's SKILL.md carries its own note that this license covers the
-skill text only: regulatory and guidance content the skill fetches at
-runtime through the Ansvar Gateway MCP connector is served from its
-original official publisher under that publisher's own terms, cited per
-row (for example EUR-Lex content under Commission Decision 2011/833/EU;
-ENISA publications under CC BY 4.0).
+The licence covers the skill text only. Skills 1-4 say so in a note in
+their own SKILL.md; skills 5-14 state the licence in their frontmatter.
+Regulatory, standards and guidance content any skill fetches at runtime
+through the Ansvar Gateway MCP connector is served from its original
+official publisher under that publisher's own terms, cited per row (for
+example EUR-Lex content under Commission Decision 2011/833/EU; ENISA
+publications under CC BY 4.0).

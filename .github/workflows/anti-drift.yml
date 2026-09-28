@@ -1,8 +1,10 @@
 name: anti-drift
 
-# Guards against an unsynced mirror of the four canonical skill repos.
-# This plugin vendors SKILL.md byte-for-byte from Ansvar-Systems/*-skill (main).
-# Any drift between the vendored copy and the canonical repo is a red build,
+# Guards against an unsynced mirror of the fourteen vendored skills.
+# The four standalone skills are diffed against Ansvar-Systems/*-skill (main).
+# The ten library skills are hash-checked against skills-manifest.json and
+# compared with the copies published on ansvar.eu (see scripts/sync.sh).
+# Any drift is a red build,
 # and a red build opens (or comments on) one tracking issue so the failure
 # is seen instead of sitting unread in the Actions tab.
 
@@ -54,7 +56,7 @@ jobs:
             echo
             echo "Run: ${RUN_URL}"
             echo
-            echo "Fix: run \`bash scripts/sync.sh\` locally, review the diff, bump the plugin version, and open a PR."
+            echo "Fix: for a standalone skill run \`bash scripts/sync.sh\`; for a library skill run \`bash scripts/sync.sh --repin --wf-source <path> --ai-source <path>\` with read access to both source repos. Review the diff, bump the plugin version, and open a PR."
             echo
             echo '<details><summary>sync.sh --check output (last 200 lines)</summary>'
             echo
