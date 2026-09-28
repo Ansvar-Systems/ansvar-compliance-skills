@@ -5,12 +5,12 @@
     "name": "Ansvar Systems AB",
     "email": "team@ansvar.eu"
   },
-  "description": "Marketplace for the Ansvar Compliance Skills plugin — EU regulatory threat modeling, incident-reporting navigation, CRA vulnerability obligations, and cited ISO standards support, grounded via the Ansvar Gateway MCP connector.",
+  "description": "Marketplace for the Ansvar Compliance Skills plugin — fourteen EU security and compliance skills (threat modeling, incident reporting, CRA, ISO standards, and the Ansvar workflow skill library), grounded via the Ansvar Gateway MCP connector.",
   "plugins": [
     {
       "name": "ansvar-compliance-skills",
       "source": "./",
-      "description": "Four compliance skills for EU security work: STRIDE/LINDDUN regulatory threat modeling, incident-reporting navigation across NIS2/GDPR/DORA/CRA, CRA vulnerability obligations, and the iso-standards-expert skill for cited clause-level ISO/IEC 27001, 27002, 27005, 42001 and ISO/SAE 21434 support — every claim cited from officially published or licensed text via the Ansvar Gateway MCP connector (free plan available, business sign-up).",
+      "description": "Fourteen compliance skills for EU security work: four standalone skills (STRIDE/LINDDUN regulatory threat modeling, incident-reporting navigation across NIS2/GDPR/DORA/CRA, CRA vulnerability obligations, and the iso-standards-expert skill) plus the Ansvar workflow skill library (using-ansvar, gap analysis, threat modelling, DPIA/FRIA, TARA, tender review, vulnerability decisions, tabletop, document review, drone SORA) — every claim cited from officially published or licensed text via the Ansvar Gateway MCP connector (free plan available, business sign-up).",
       "homepage": "https://ansvar.eu/docs/agent-skills",
       "license": "CC-BY-4.0"
     }
