@@ -14,7 +14,7 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.2.1"
+  version: "1.2.2"
 ---
 
 # ISO Standards Expert
@@ -109,7 +109,10 @@ per-standard sources instead.
    URLs are citations to display, not links to follow.
 3. **Quote verbatim, carry the notice.** Reproduced clause text is quoted
    exactly as served, with the row's `attribution_text` (the standards
-   body's copyright notice) and `source_url` alongside. Do not translate
+   body's copyright notice) and `source_url` alongside. A licensed-lane
+   row that arrives without its attribution notice is not quotable:
+   report the clause as retrieved but unquotable pending attribution
+   (the notice is a condition of reproduction, not a decoration). Do not translate
    reproduced clause text, do not paraphrase and present the paraphrase as
    the standard's wording, and do not merge text from multiple rows into
    one unattributed block. Your own analysis is welcome; label it as
@@ -126,11 +129,16 @@ per-standard sources instead.
    authenticated identity: a named individual's account, or the machine
    identity (service credential) the seat is assigned to. The complete
    standard is available from SIS.
-5. **Bounded, user-directed retrieval only.** Fetch what the user's actual
-   question needs. No systematic clause-by-clause traversal, no bulk
-   enumeration, no "fetch the whole annex for context". If the licence
-   ceiling refuses a fetch (rule 7), never retry past it and never suggest
-   another account, another seat, or a widened window as a workaround.
+5. **Bounded, user-directed retrieval only — and no retention.** Fetch
+   what the user's actual question needs. No systematic clause-by-clause
+   traversal, no bulk enumeration, no "fetch the whole annex for
+   context". Never write served clause text to a file, repository, note
+   store, cache, or any other artifact that outlives the conversation —
+   the only place an excerpt belongs is the internal work product the
+   user is authoring (rule 4) — and never build a local index, glossary,
+   or clause compilation from served text. If the licence ceiling refuses
+   a fetch (rule 7), never retry past it and never suggest another
+   account, another seat, or a widened window as a workaround.
 6. **The entitlement gate is handled once, honestly.** Call
    `get_my_capabilities` once at the start: its `addons` map states which
    `sis_*` entitlements this account holds. Lead with what the account can
@@ -265,9 +273,12 @@ Verified against the live gateway on 2026-07-30:
 ```json
 {"tool": "get_my_capabilities", "arguments": {}}
 {"tool": "search", "arguments": {"query": "information security policy", "sources": ["sis-27001"], "limit": 3}}
-{"tool": "get_provision", "arguments": {"law": "sis-27001", "article": "5.1"}}
 {"tool": "search", "arguments": {"query": "access control", "frameworks": ["ISO_27001"], "limit": 3}}
 ```
+
+`get_provision` is exercised only by replaying a served row's
+`citation.lookup` arguments (rule 2) — its shape is `{law, article}` with
+the row's own values. No clause number appears in this file by design.
 
 Observed contract, same date: a non-entitled call against `sis-27001`
 returns `meta.entitlement_gated_sources: ["sis-27001"]` with an access
