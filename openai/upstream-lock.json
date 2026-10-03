@@ -1,0 +1,24 @@
+{
+  "workflow_repo": "Ansvar-Systems/ansvar-workflow-mcp",
+  "workflow_commit": "663b003ed871c1404f7ee42aa4f11bbfb85d453c",
+  "workflow_manifest_sha256": "87c87b9eb071c74d4aaff02f0da0f8803bb0b59cbfc6558cd00693810f4a051e",
+  "publication_repo": "Ansvar-Systems/ansvar-ai",
+  "publication_commit": "d8654443a9e219b62d21e0e033f5db33636ee045",
+  "fragments": [
+    {
+      "path": "openai/vendor/workflow-loop.md",
+      "source_path": "instructions/dist/fragments/workflow-loop.md",
+      "sha256": "527fb2c5a9a692631f42184896aa69f23650dea4141e43707fbe553a3bbbb0d6"
+    },
+    {
+      "path": "openai/vendor/delivery-rules.md",
+      "source_path": "instructions/dist/fragments/delivery-rules.md",
+      "sha256": "98431354e778e70b38920229c1562f03a0d9af7adac2bdfa10b9fa37317b5d58"
+    }
+  ],
+  "icon": {
+    "path": "openai/assets/icon.png",
+    "source_path": "public/apple-touch-icon.png",
+    "sha256": "0bbec4ea2948ddee0bb634646c312cacefe0e4326e69c94f54bcfe711339b50a"
+  }
+}

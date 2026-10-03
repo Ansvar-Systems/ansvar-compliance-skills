@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-03",
+  "scope": "Read-only probes through the existing connected Ansvar Gateway, not an installed-package end-to-end run.",
+  "identity_tier": "company",
+  "citation_probe": {
+    "reference": "GDPR:art_5",
+    "source_id": "eu-regulations",
+    "source_url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj#art_5",
+    "verdicts": [
+      {
+        "subject_id": "reference",
+        "verdict": "reference_resolved"
+      },
+      {
+        "subject_id": "matching",
+        "verdict": "quote_checked",
+        "quote": {
+          "matched_span": [
+            82,
+            168
+          ],
+          "span_space": "normalized",
+          "warnings": [
+            "unmarked_omitted_tail"
+          ]
+        }
+      },
+      {
+        "subject_id": "altered",
+        "verdict": "quote_mismatch",
+        "reason": "quotation_absent_from_retrieved_body"
+      }
+    ]
+  },
+  "ai_scope_probe": {
+    "workflow_type": "gap_analysis_ai_act",
+    "display_name": "Gap Analysis — EU AI Act (Regulation (EU) 2024/1689) high-risk provider conformity",
+    "available_to_caller": true,
+    "minimum_tier": "premium"
+  },
+  "not_run": [
+    "Fresh ChatGPT installation and OAuth connection for each ZIP",
+    "Full review cases under dedicated reviewer credentials",
+    "Free, premium and team account behavior",
+    "Document registration and complete DPA review",
+    "Complete AI compliance workflow with human gates",
+    "Demo video recording and portal submission"
+  ]
+}
