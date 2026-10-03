@@ -1,7 +1,7 @@
 Ansvar Compliance Skills plugin — third-party / upstream attribution
 =====================================================================
 
-This plugin bundles no original skill content. Every file under skills/ is
+The Claude plugin bundles no original skill content. Every file under skills/ is
 a byte-identical vendored copy of a SKILL.md published by Ansvar Systems AB:
 skills 1-4 from their own public repositories, skills 5-14 (the workflow
 skill library) as published at https://ansvar.eu/skills/<id>/SKILL.md from a
@@ -42,6 +42,9 @@ and the anti-drift CI gate that keeps the copies honest.
    Copyright:      (c) 2026 Ansvar Systems AB
 
 Full CC BY 4.0 legal text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+The separate OpenAI packages under openai/ add focused authored skills and
+reuse pinned workflow fragments. Their attribution is in openai/NOTICE.
 
 Attribution notice per the license: when you share or adapt this plugin (or
 any of the fourteen skills individually), credit Ansvar Systems AB, link to the

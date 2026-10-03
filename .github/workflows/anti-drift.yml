@@ -28,14 +28,20 @@ concurrency:
 
 jobs:
   check-vendored-skills:
-    # This repo is outside the ADR-106 admitted set (no Ansvar self-hosted runner lane); hosted runner by design.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # ADR-106 exception 4: issues:write publishes the drift finding; this repo has no admitted publish runner.
     permissions:
       contents: read
       issues: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Validate focused OpenAI packages
+        id: openai_check
+        run: |
+          python3 -m unittest discover -s tests -v
+          python3 scripts/openai_plugins.py build
+          python3 scripts/openai_plugins.py verify-dist
 
       - name: Diff vendored SKILL.md files against the canonical repos
         id: check
@@ -44,7 +50,7 @@ jobs:
           bash scripts/sync.sh --check 2>&1 | tee "$RUNNER_TEMP/anti-drift.log"
 
       - name: Open or update the drift issue
-        if: failure() && steps.check.outcome == 'failure'
+        if: failure() && (steps.check.outcome == 'failure' || steps.openai_check.outcome == 'failure')
         env:
           GH_TOKEN: ${{ github.token }}
           TITLE: "anti-drift: vendored skills diverge from canonical"
@@ -61,7 +67,11 @@ jobs:
             echo '<details><summary>sync.sh --check output (last 200 lines)</summary>'
             echo
             echo '```'
-            tail -n 200 "$RUNNER_TEMP/anti-drift.log" || true
+            if [ -f "$RUNNER_TEMP/anti-drift.log" ]; then
+              tail -n 200 "$RUNNER_TEMP/anti-drift.log"
+            else
+              echo 'The OpenAI package validation failed before the upstream sync check. Read the validation step in the linked run.'
+            fi
             echo '```'
             echo '</details>'
           } > "$RUNNER_TEMP/issue-body.md"

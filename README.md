@@ -1,5 +1,10 @@
 # Ansvar Compliance Skills
 
+Focused ChatGPT and Codex packages for Citation Check, AI Compliance and Privacy
+Review are built from [openai/](openai/README.md). That directory contains the
+build commands, release status and submission materials. The Claude package
+described below keeps its existing manifest and skill set.
+
 A Claude Code plugin that bundles fourteen published Ansvar Systems AB agent
 skills for EU security and compliance work. The plugin adds no skill content
 of its own: it packages the canonical skills, unmodified, so they install as

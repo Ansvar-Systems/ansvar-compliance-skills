@@ -1,0 +1,15 @@
+Ansvar focused ChatGPT and Codex packages
+Copyright 2026 Ansvar Systems AB. Skill text: CC BY 4.0.
+
+The focused skill instructions and ChatGPT-specific evidence/account boundaries
+are authored in this repository under openai/src and openai/shared.
+Workflow execution and report-delivery references are byte-identical compiled
+fragments from the Ansvar workflow instruction library. The build records their
+source commit and checks their upstream manifest hashes before packaging.
+The brand icon comes from Ansvar's website at the recorded commit.
+
+The skill-text licence does not license Ansvar trademarks or grant rights to
+third-party law, standards or other material retrieved at runtime. Runtime
+sources retain their own publisher attribution and terms.
+
+https://creativecommons.org/licenses/by/4.0/
