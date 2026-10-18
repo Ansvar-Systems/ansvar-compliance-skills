@@ -5,15 +5,15 @@ Review are built from [openai/](openai/README.md). That directory contains the
 build commands, release status and submission materials. The Claude package
 described below keeps its existing manifest and skill set.
 
-A Claude Code plugin that bundles fourteen published Ansvar Systems AB agent
+A Claude Code plugin that bundles fifteen published Ansvar Systems AB agent
 skills for EU security and compliance work. The plugin adds no skill content
 of its own: it packages the canonical skills, unmodified, so they install as
 one unit.
 
-The fourteen come in two groups:
+The fifteen come in two groups:
 
 - **Four standalone skills**, each published in its own public repository.
-- **The workflow skill library**: nine family skills compiled by Ansvar from
+- **The workflow skill library**: ten family skills compiled by Ansvar from
   its workflow definitions, plus `using-ansvar`, the routing skill for
   one-off legal and standards questions. These are the skills
   [ansvar.eu/docs/agent-skills](https://ansvar.eu/docs/agent-skills)
@@ -55,6 +55,7 @@ versions may show the `ansvar-` form.
 | `tabletop` | `/ansvar-compliance-skills:tabletop` | A crisis simulation run turn by turn against a scripted adversary, scored from the decisions the team made, with an after-action report. |
 | `document-review` | `/ansvar-compliance-skills:document-review` | Reviews an uploaded document against a regulatory baseline, with every finding anchored to a paragraph-level citation and a content hash. |
 | `drone-operations` | `/ansvar-compliance-skills:drone-operations` | A SORA determination chain for a specific-category UAS operation: ground and air risk, SAIL, the operational safety objectives with robustness levels, and containment. |
+| `product-horizon` | `/ansvar-compliance-skills:product-horizon` | A regulatory applicability register for one product, service or entity on the markets you name: the verdict per EU and national act with its cited basis, the facts still open, the national layer behind each EU act, and the dated obligations ahead. |
 
 Each family skill ends with openings you can paste to your agent. One from
 each:
@@ -68,6 +69,7 @@ each:
 - `tabletop`: "Using Ansvar, run a ransomware tabletop exercise for our incident response team."
 - `document-review`: "Using Ansvar, review our data processing agreement against GDPR Articles 28 and 32."
 - `drone-operations`: "Using Ansvar, run a SORA for BVLOS powerline inspection over sparsely populated terrain."
+- `product-horizon`: "Using Ansvar, which EU acts apply to our networked PLC sold in France and Germany, and why?"
 
 Start with "Using Ansvar". Without the name, the agent may answer from its
 own memory and never call the connector.
@@ -96,7 +98,7 @@ When both could fit, name the one you want by its command.
 
 Plan notes: the four standalone skills and `using-ansvar` state their own
 plan rules (summarised under [The connector
-requirement](#the-connector-requirement)). The nine family skills do not:
+requirement](#the-connector-requirement)). The ten family skills do not:
 at run time each calls `list_workflow_types`, and a workflow the caller's
 plan cannot start is marked `available_to_caller: false` with a tier
 caveat. The ISO skill's licensed clause lane needs the paid, per-standard
@@ -119,7 +121,7 @@ truth; this plugin is a wrapper.
 `scripts/sync.sh` fetches each `SKILL.md` from `raw.githubusercontent.com`
 and re-vendors it; `scripts/sync.sh --check` diffs without writing.
 
-**Workflow skill library.** The nine family skills are compiled in
+**Workflow skill library.** The ten family skills are compiled in
 Ansvar's workflow repository against a pinned workflow bundle, with a
 manifest that carries a sha256 per file; `using-ansvar` is maintained in
 Ansvar's website repository. Both repositories are private. ansvar.eu
@@ -176,7 +178,7 @@ email domains. Per skill:
 
 - **`using-ansvar`** — works on every plan, including Free; on Free each
   search carries exactly one jurisdiction or one framework.
-- **The nine family skills** — admission per workflow comes from the live
+- **The ten family skills** — admission per workflow comes from the live
   catalogue, as described under Plan notes above.
 
 No plan tier is required to install the plugin itself — only to run the
@@ -229,7 +231,7 @@ git clone https://github.com/Ansvar-Systems/ansvar-compliance-skills.git
 claude --plugin-dir ./ansvar-compliance-skills
 ```
 
-After install, run `/help` to see the fourteen skills listed under the
+After install, run `/help` to see the fifteen skills listed under the
 `ansvar-compliance-skills` namespace, or invoke one directly, for example:
 
 ```
