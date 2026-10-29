@@ -7,12 +7,12 @@ metadata:
   connector: https://gateway.ansvar.eu/mcp
   version: "1.0.0"
   build_identity:
-    source_identity: "05859cb6fc9922b322d92e3ad75b50cd5bf9153c4d04997aeaec8043a593bc27"
+    source_identity: "a13ed928317505ee65edfd3892c59d372e76abdf276ca0094f51fe7c24051fef"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.29.0@sha256:93788106d938aed6b4bfc097f8fa858069e25e1f01808c9a8d56c22c210914d8"
-      digest: "sha256:93788106d938aed6b4bfc097f8fa858069e25e1f01808c9a8d56c22c210914d8"
-      version_label: "1.29.0"
-    registry_snapshot_sha256: "f96b9be70856b249c6ce1b16e2e947da91b7675d82dacd7f87f7060a9bef7ade"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.38.0@sha256:d548c30e1e68b335af520e5876467dbb184a28e40857302e5403bde514ec21f2"
+      digest: "sha256:d548c30e1e68b335af520e5876467dbb184a28e40857302e5403bde514ec21f2"
+      version_label: "1.38.0"
+    registry_snapshot_sha256: "0905ec9d2c995f3907983fe3a03b12c443f717a2e6cf805b322c8044bc66b0b8"
 ---
 
 # Regulatory Applicability Register
@@ -68,6 +68,52 @@ projections set `relay_matched: true`; generation-only differences read
 `changes_since_relay`. An unavailable or unattested server horizon refuses the
 export. New reports use register v2; stored v1 revisions retain their v1 schema.
 
+
+### Choose the delivery with the person
+
+The same content model supports a repository and a file import:
+`ansvar.requirements.register.v1` rows, the register v2 run and the complete
+horizon object. Keep these in the customer's repository or workstation. Ansvar
+keeps no register or Owner email copy.
+
+For a repository delivery, use the released customer-scope tooling's
+`.github/scripts/register_to_requirements.py` to seed a new staging directory
+from the register v2 deliverable. Supply the instrument metadata and review dates
+the person confirms. Fill empty Owners, check the approach, then run the scope
+preflight before proposing a diff. Keep the run evidence, product profile and
+horizon with the rows. Configure the scheduled pull under the customer's service
+credential; review immutable pull records and close each expected review with
+the person's assessment in `requirements/reviews/`.
+
+Using Ansvar, seed my requirements register from this register v2 run, ask for
+missing instrument metadata and Owners, and show the repository diff for review.
+
+For a file import delivery, use the same exporter and active field
+map to produce `register.csv`, `register.mapped.json` and
+`expected-reviews.csv`. The person imports them into their own system and keeps
+the review log there. Confirm the destination and its import format first.
+`generic-csv` is available; a map for a named destination system waits for that
+system's import specification or a sample from the person.
+The `ismsonline` slot also awaits an export and refuses if its file is missing.
+Do not invent columns or promise compatibility with an unknown importer.
+The customer's agent or scheduler retains the complete horizon and passes it
+as `since` on the next `product_horizon` call. Use immutable pull records to
+export expected horizon reviews; never claim a notification or review happened
+because a CSV exists.
+
+Using Ansvar, export this product's requirements and expected reviews through the
+generic field map for import into our own system, and keep unknown fields open.
+
+Copy verdicts, run and receipt identities unchanged. Preserve a `conflict`
+determination with its `engine_conflict` expected-review key; keep it open until
+reviewed. Seed national applicability only from rows marked `selection: binding`.
+Keep informational and unselected national rows in the original run evidence.
+Use the person's `customer_reference`, or their explicit product/run/profile-hash
+mapping; refuse an unmappable run. An incomplete horizon stays latest and cannot
+establish a baseline. Fill Owners and pass preflight before treating a draft as
+an accepted register. Standard and contract rows need separate authoring; copy
+no licensed standard text.
+
 ## Run the workflow
 
 Ansvar workflows are server-driven. The engine owns the step order, the required
@@ -101,13 +147,28 @@ customer believes it has.
    instructions, its required fields, its `data_to_fetch` directives, and its
    `step_id`.
 4. Do what the step says. Fetch what its directives name, ask the human what it
-   says to ask, and answer in the shape it declares.
+   says to ask, and answer in the shape it declares. Pass `workflow_id` on every
+   `search` you make for the run (see below).
 5. `submit_response(workflow_id, step_id=<the id get_current_step returned>,
    responses={…}, fetched_data={…})`. Quality gates run server-side inside this
    call; a rejection comes back as `accepted: false` with a reason and a hint.
    Fix what the hint names and submit again.
 6. Repeat from step 3 until the engine reports `status: ready_for_report`, then
-   call `generate_report(workflow_id)`.
+   call `generate_report(workflow_id)`. If your client limits tool output size,
+   call with `include_report=false`: you get the receipt, its `display_markdown`
+   and the artifact links. Relay `delivery_receipt.display_markdown` unchanged;
+   get the full report with `include_report=true` or use the rendered artifacts.
+
+### Name the run on every search
+
+Every `search` you make during a run carries the run's id:
+`search(query=…, jurisdictions=[…], workflow_id=<the id start_workflow returned>)`.
+Add it to the params a `data_to_fetch` directive or a search plan gives you,
+and to your own enrichment searches. A search that names the run counts
+against the run's search allowance, not the daily search budget, so a long run
+is not cut off part way. Without `workflow_id` the search draws on the daily
+budget. Tiers without a run allowance ignore the parameter, and it never
+changes what is searched.
 
 When a step declares `data_to_fetch`, what you fetched rides `fetched_data`,
 keyed by the step's declared keys, each value a typed envelope: `{"status":
@@ -116,6 +177,12 @@ keyed by the step's declared keys, each value a typed envelope: `{"status":
 returned nothing, or `{"status": "error", "error_message": "..."}` for a call
 that failed. The engine rejects any other shape, and an empty result is
 recorded as empty — the refusal discipline below, in envelope form.
+
+Tools listed under `not_applicable_fetches` are not called and are not recorded
+in `fetched_data`: the server has already removed them from the step for your
+plan; follow the step note. Use `fetched_empty` only for genuinely empty
+results. A declared call that the gateway refuses, or a tool/downstream
+failure, takes the failed-fetch envelope with the returned reason.
 
 ### Cite the row you fetched
 
@@ -140,6 +207,9 @@ has stored so far. Each entry carries a `handle` (`wfrow:v1:...`), the row's
   fetched row supports. It is recorded as your own analysis, not as a citation,
   and it names no reference.
 
+Paste each row as the gateway returned it, including citation.publisher and citation.license;
+the report attributes a source only from them.
+
 When `get_current_step` returns a `citation_instruction`, use these shapes in
 every citation slot of that run (`citations`, `regulatory_citations`,
 `regulatory_basis`, `attribution`, `framework_mappings`), whatever
@@ -160,8 +230,10 @@ served, line breaks and hyphens included. A shorter fragment, such as
 `"incident handling"`, is too short to compare reliably, and the report does
 not count it as a checked quotation.
 
-Run every fetch a step declares, and put each fetch's rows in `fetched_data`
-with their text unchanged. A handle to an earlier step's row does not replace a
+Run every fetch a step declares, and put each row in `fetched_data` whole,
+as the tool returned it, including its `citation` block (`corpus_id`, `edition`).
+A trimmed row loses its edition. The report cannot pin the corpus, and the twin
+refuses to record the model. A handle to an earlier step's row does not replace a
 step's own fetches: in a gap analysis, a control whose own pass-1 fetch
 returned nothing reads as unresolved in the report, whatever the control
 cites. A call you made beyond the declared fetches rides `fetched_data` under a
@@ -209,7 +281,8 @@ it opens with instead of the legal question. When the input is a matter or a
 description:
 
 1. Name the distinct legal issues it raises.
-2. Run one `search` per issue, scoped with `jurisdictions`, in the law's words
+2. Run one `search` per issue, scoped with `jurisdictions` and naming the run
+   with `workflow_id`, in the law's words
    for the issue rather than the matter's own words: one concept per call, in
    at most five words, in the language of that jurisdiction's corpus. For a
    Dutch summary-dismissal matter, run `ontslag op staande voet`, `dringende
@@ -360,7 +433,7 @@ sentence of your own before it if the conversation needs one; do not rewrite,
 reorder, shorten, or re-summarize what it contains. Do not summarize the findings
 yourself — the server assembles the report from stored data, and a summary you
 compose in its place drops the parts that are least comfortable to read: the
-refusal flags, the unresolved citations, the preview watermark.
+refusal flags, the unresolved citations, the integrity warnings.
 
 The receipt is a receipt, not a second copy of the report. It may preview a few
 findings when labelled as a subset ("3 highest-severity of 27"); the full set
