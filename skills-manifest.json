@@ -3,13 +3,13 @@
   "generated_by": "scripts/sync.sh --repin",
   "workflow_library": {
     "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-    "commit": "f88aeaa2ac117c6443a7535f497d58f6dbd24d75",
+    "commit": "dd055ae10a9cf6f8ad097fc7d03d1a686845c438",
     "manifest_path": "instructions/dist/manifest.json",
     "manifest_sha256": "9a3b472f1737b781d99ae6ac4cf960b142f6d341bd08f848c3ded4a4202c75e6",
     "content_bundle_version": "1.38.0",
     "pinned_by": {
       "repo": "Ansvar-Systems/ansvar-ai",
-      "commit": "60c179ce6b4cb545441e13a599a18dc8e9e6141f",
+      "commit": "6d6b2a7a7d4a0565b7edc52e3cf4b16e267d992a",
       "path": "scripts/workflow-skills.pin.json"
     }
   },
@@ -24,7 +24,7 @@
       "sha256": "2ad6ccacdbc8f65cdd437534a4e5043a5287f28dd52ec749828484472cd1cc21",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "f88aeaa2ac117c6443a7535f497d58f6dbd24d75",
+        "commit": "dd055ae10a9cf6f8ad097fc7d03d1a686845c438",
         "path": "instructions/dist/document-review/SKILL.md"
       }
     },
@@ -37,7 +37,7 @@
       "sha256": "3f71d86d901d2ac4087d379acaf94bcc355bb3baba64c68f6c0a468dff6f2890",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "f88aeaa2ac117c6443a7535f497d58f6dbd24d75",
+        "commit": "dd055ae10a9cf6f8ad097fc7d03d1a686845c438",
         "path": "instructions/dist/dpia/SKILL.md"
       }
     },
@@ -50,7 +50,7 @@
       "sha256": "6415eb5e9c6b4ffecef6d2378a5b2551391e6b658c1d54380dc8bf869fe73fd7",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "f88aeaa2ac117c6443a7535f497d58f6dbd24d75",
+        "commit": "dd055ae10a9cf6f8ad097fc7d03d1a686845c438",
         "path": "instructions/dist/drone-operations/SKILL.md"
       }
     },
@@ -63,7 +63,7 @@
       "sha256": "5a78d23d55328a162a1dc4c89107f06a574711bcc1dc9383957c138660c595f2",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "f88aeaa2ac117c6443a7535f497d58f6dbd24d75",
+        "commit": "dd055ae10a9cf6f8ad097fc7d03d1a686845c438",
         "path": "instructions/dist/gap-analysis/SKILL.md"
       }
     },
@@ -76,7 +76,7 @@
       "sha256": "34a4ed67c4ae83e97cc9eb5ef01b994d070dc4640bd948b898c62f647993b1ca",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "f88aeaa2ac117c6443a7535f497d58f6dbd24d75",
+        "commit": "dd055ae10a9cf6f8ad097fc7d03d1a686845c438",
         "path": "instructions/dist/product-horizon/SKILL.md"
       }
     },
@@ -89,7 +89,7 @@
       "sha256": "2ec1c57e2bb0a612cd8b5c39c195e7a5fec038f843a2a7107e33161b9e9cf392",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "f88aeaa2ac117c6443a7535f497d58f6dbd24d75",
+        "commit": "dd055ae10a9cf6f8ad097fc7d03d1a686845c438",
         "path": "instructions/dist/tabletop/SKILL.md"
       }
     },
@@ -102,7 +102,7 @@
       "sha256": "1454514a08337e7a067e32428a1ee06aaa4366f76047f777fc13956c1d3db2d8",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "f88aeaa2ac117c6443a7535f497d58f6dbd24d75",
+        "commit": "dd055ae10a9cf6f8ad097fc7d03d1a686845c438",
         "path": "instructions/dist/tara/SKILL.md"
       }
     },
@@ -115,7 +115,7 @@
       "sha256": "3ea51c94ad84e16acd64a69e9bf25688c65b78a57e3b6318ea502491af446e3c",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "f88aeaa2ac117c6443a7535f497d58f6dbd24d75",
+        "commit": "dd055ae10a9cf6f8ad097fc7d03d1a686845c438",
         "path": "instructions/dist/tender-review/SKILL.md"
       }
     },
@@ -128,7 +128,7 @@
       "sha256": "b69f67b8cca9290aaefa4f73b5b76f196be07f4709d86a90866c8929d1e008e9",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "f88aeaa2ac117c6443a7535f497d58f6dbd24d75",
+        "commit": "dd055ae10a9cf6f8ad097fc7d03d1a686845c438",
         "path": "instructions/dist/threat-model/SKILL.md"
       }
     },
@@ -139,7 +139,7 @@
       "sha256": "bb0daa63e49bb97111e77621a23ded256aa6a8b0ea784c46c730db27eccf1c40",
       "source": {
         "repo": "Ansvar-Systems/ansvar-ai",
-        "commit": "60c179ce6b4cb545441e13a599a18dc8e9e6141f",
+        "commit": "6d6b2a7a7d4a0565b7edc52e3cf4b16e267d992a",
         "path": "public/skills/using-ansvar/SKILL.md"
       }
     },
@@ -152,7 +152,7 @@
       "sha256": "8e66956e642bb619fca206fb18b17e8f442536b96045d14237d2720146e12170",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "f88aeaa2ac117c6443a7535f497d58f6dbd24d75",
+        "commit": "dd055ae10a9cf6f8ad097fc7d03d1a686845c438",
         "path": "instructions/dist/vulnerability-decisions/SKILL.md"
       }
     }
