@@ -29,7 +29,7 @@ class ClaudePackaging(unittest.TestCase):
         self.assertEqual((focused / '.mcp.json').read_bytes(), (ROOT / '.mcp.json').read_bytes())
         for base in (ROOT, focused):
             self.assertEqual(json.loads((base / '.claude-plugin/plugin.json').read_text())['version'],
-                             '2.2.0')
+                             '2.2.1')
 
 
 if __name__ == '__main__':

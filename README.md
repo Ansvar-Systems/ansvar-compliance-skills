@@ -1,16 +1,33 @@
 # Ansvar Compliance Skills
 
-Focused ChatGPT and Codex packages for Citation Check, AI Compliance, Privacy
-Review and Vulnerability Management are built from [openai/](openai/README.md).
-That directory contains the
-build commands, release status and submission materials. The Claude package
-described below includes seventeen skills. The focused Claude vulnerability
-management plugin includes its compiled skill and `using-ansvar`.
+Seventeen agent skills for EU security and compliance work: gap analyses
+against NIS2, DORA, the Cyber Resilience Act and the AI Act, STRIDE and
+LINDDUN threat models, DPIAs and fundamental rights impact assessments, TARA,
+public tender review, vulnerability management, zero trust maturity, incident
+reporting deadlines, ISO standards support and product applicability registers.
+Every claim is cited from officially published or licensed text that your
+agent fetches through the Ansvar Gateway connector, with the source URL,
+publisher and licence of each row.
 
-A Claude Code plugin that bundles seventeen published Ansvar Systems AB agent
-skills for EU security and compliance work. The plugin adds no skill content
-of its own: it packages the canonical skills, unmodified, so they install as
-one unit.
+Try it after installing: "Using Ansvar, run a NIS2 gap analysis for our
+managed hosting business in the Netherlands."
+
+The plugin packages Ansvar Systems AB's published skills, unmodified, so they
+install as one unit. A separate focused plugin, `ansvar-vulnerability-management`,
+holds only the vulnerability management skill and `using-ansvar`
+([plugins/ansvar-vulnerability-management](plugins/ansvar-vulnerability-management/README.md)).
+Focused ChatGPT and Codex packages are built from [openai/](openai/README.md).
+
+### What it sends
+
+The skills are instructions to your agent. The plugin runs no scripts or hooks
+and reads no files or credentials from your machine. When a skill runs, your
+agent sends the Ansvar Gateway (`https://gateway.ansvar.eu/mcp`) the content
+the task needs: your questions, interview answers, and any document, SBOM or
+scanner export you choose to share. Ansvar handles that data under its
+[privacy policy](https://ansvar.eu/privacy) and [terms](https://ansvar.eu/terms).
+Results support human review; they do not certify compliance and are not
+legal advice.
 
 The seventeen come in two groups:
 
