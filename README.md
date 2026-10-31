@@ -20,8 +20,11 @@ Focused ChatGPT and Codex packages are built from [openai/](openai/README.md).
 
 ### What it sends
 
-The skills are instructions to your agent. The plugin runs no scripts or hooks
-and reads no files or credentials from your machine. When a skill runs, your
+The skills are instructions to your agent. The plugin ships no hooks or
+scripts, so nothing runs on install or by itself. A few skills ask your agent to
+do local work with your approval, such as inspecting a repository you point it
+at (`regulatory-threat-model`) or running an exporter you choose to set up
+(`product-horizon`). When a skill runs, your
 agent sends the Ansvar Gateway (`https://gateway.ansvar.eu/mcp`) the content
 the task needs: your questions, interview answers, and any document, SBOM or
 scanner export you choose to share. Ansvar handles that data under its
