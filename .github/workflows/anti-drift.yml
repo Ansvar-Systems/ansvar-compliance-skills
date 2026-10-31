@@ -1,8 +1,8 @@
 name: anti-drift
 
-# Guards against an unsynced mirror of the sixteen vendored skills.
+# Guards against an unsynced mirror of the seventeen vendored skills.
 # The four standalone skills are diffed against Ansvar-Systems/*-skill (main).
-# The twelve library skills are hash-checked against skills-manifest.json and
+# The thirteen library skills are hash-checked against skills-manifest.json and
 # compared with the copies published on ansvar.eu (see scripts/sync.sh).
 # Any drift is a red build,
 # and a red build opens (or comments on) one tracking issue so the failure
