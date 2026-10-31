@@ -9,9 +9,9 @@
 #    navigator, cra-vulnerability-obligations, iso-standards-expert). Each has
 #    its own public repo; this script raw-fetches SKILL.md from its main branch.
 #
-# 2. The workflow skill library (the family skills in skills-manifest.json).
-#    Ten family skills are compiled in Ansvar-Systems/ansvar-workflow-mcp
-#    (instructions/dist/) against a pinned workflow bundle, and using-ansvar is
+# 2. The sixteen-skill workflow library (listed in skills-manifest.json).
+#    Eleven family skills and four focused skills are compiled in
+#    Ansvar-Systems/ansvar-workflow-mcp (instructions/dist/) against a pinned workflow bundle, and using-ansvar is
 #    hand-published by Ansvar-Systems/ansvar-ai. Both repositories are PRIVATE,
 #    so CI cannot fetch from them with this repository's token. Instead:
 #      - skills-manifest.json records the wf-mcp pin (commit + sha256 of
@@ -27,7 +27,7 @@
 #
 # Usage:
 #   scripts/sync.sh            # re-vendor the four standalone skills; verify the library
-#   scripts/sync.sh --check    # verify all seventeen; write nothing; exit 1 on any drift
+#   scripts/sync.sh --check    # verify all twenty; write nothing; exit 1 on any drift
 #   scripts/sync.sh --repin --wf-source <ansvar-workflow-mcp checkout> \
 #                           --ai-source <ansvar-ai checkout> [--ai-ref origin/main]
 #       # refresh the library from the wf-mcp commit that ansvar-ai pins at

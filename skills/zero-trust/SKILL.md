@@ -7,12 +7,12 @@ metadata:
   connector: https://gateway.ansvar.eu/mcp
   version: "1.0.0"
   build_identity:
-    source_identity: "b358ac656c5427006d8931b6f123384c66a05d26a9758d446180cb8a48529859"
+    source_identity: "6c01eea7dbef3031668c5f7ed8052a95eea4e0deccac0d5130b38ca711f31441"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.46.0@sha256:b8c08ab44992cb27ef813b0cbc1afdcdd01861614112efdabb1cbc3dc2321f5e"
-      digest: "sha256:b8c08ab44992cb27ef813b0cbc1afdcdd01861614112efdabb1cbc3dc2321f5e"
-      version_label: "1.46.0"
-    registry_snapshot_sha256: "87836f39d4f993b651c2c002d1be7a862996a81fb66b7fa7d4c4335ebeed0c24"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.48.0@sha256:f09674c7b63baf4ceefe58c7dbced44c9d5758a9e33a7088c1bd1993130a4e18"
+      digest: "sha256:f09674c7b63baf4ceefe58c7dbced44c9d5758a9e33a7088c1bd1993130a4e18"
+      version_label: "1.48.0"
+    registry_snapshot_sha256: "8c2309e3d235fade8ae409d13635cea71e629a5a07c78b664853f20cdfed14c9"
 ---
 
 # Ansvar Zero Trust Assessment
@@ -676,9 +676,13 @@ pillar. Start `gap_analysis_zero_trust`. Follow the served steps, fetch their
 rows, and cite them. Submit `maturity_pillar`, `current_stage`, `target_stage`
 and `basis`; an unknown current stage is null. Keep compliance and maturity
 separate. Record evidenced implicit trust with component, flow and zone refs
-or the quoted interview answer. Label control mappings related-to until
-reviewed. If control-library access is unavailable, keep
-`controls: unavailable_on_tier` beside the gap; retain obligations and fixes.
+or the quoted interview answer. Retain obligations and fixes.
+CISA ZTMM v2.0 and NIST SP 800-207 are guidance and practice references; citing
+them does not establish a legal obligation. Determine any binding requirement
+separately after verifying current authority and applicability.
+No control-library candidates are fetched for zero trust because no ZTMM to
+NIST SP 800-53 crosswalk is available yet. Do not submit `library_controls` or
+map controls from memory. The receipt reports control mappings as unsupported.
 
 Present every human gate to the person and wait for an actual answer. Never
 acknowledge a gate on their behalf. Deliver the register and roadmap through
@@ -687,6 +691,11 @@ Group priorities by pillar with effort and target stage. Offer a next cycle:
 what to fix first, what evidence to collect, and how to pass the receipt's
 `report_id` as `baseline_report_id`. A changed twin fact needs re-verification;
 closure requires an observed or stated assessment at the target stage.
+
+ZTMM stages, target attainment and closure statuses describe evidenced maturity
+for the organisation's own self-assessment. They do not establish legal compliance
+or readiness, constitute legal advice, or certify compliance or maturity. Unknown
+evidence does not establish a stage.
 
 ## Workflows in this family
 

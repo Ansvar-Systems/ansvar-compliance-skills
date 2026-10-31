@@ -1,8 +1,8 @@
 # Focused ChatGPT and Codex plugins
 
 This directory builds Ansvar Citation Check, Ansvar AI Compliance and Ansvar
-Privacy Review plus Vulnerability Management as separate portable Agent Plugins packages. Each bundles its
-own focused skill and the existing authenticated Ansvar Gateway connection.
+Privacy Review plus Vulnerability Management and Zero Trust as separate portable
+Agent Plugins packages. Each bundles its own focused skill and the existing authenticated Ansvar Gateway connection.
 
 These are release candidates. Local package checks and read-only gateway probes
 have run; no candidate has been installed through ChatGPT, submitted or published.
@@ -27,8 +27,8 @@ ZIP bytes, archive roster and checksums with the current sources. Run
 allowlist and contain no repository internals, credentials or review results.
 
 Author focused instructions in `src/`, except the generated Vulnerability
-Management skill. Its compiled source is locked in `vendor/`; `repin` applies
-the reviewed ChatGPT adapter and `check` refuses source or adaptation drift.
+Management and Zero Trust skills. Their compiled sources are locked in `vendor/`;
+`repin` applies the reviewed ChatGPT adapters and `check` refuses source or adaptation drift.
 The adapter must be reviewed if upstream commercial wording changes.
 
 Keep listing text and review cases in `catalog.json`, and account/evidence boundaries in `shared/`. The build copies
@@ -114,5 +114,9 @@ Official references consulted on 2026-10-03:
 
 Vulnerability Management v2.2.0 release copy and remaining founder actions:
 [submission packet](review/v2.2.0-submission-packet.md). The OpenAI batch version
-is 0.2.0. The full product name exceeds the listing limit, so its display name
+is 0.3.0. The full product name exceeds the listing limit, so its display name
 is **Ansvar Vulnerability Mgmt**; the id remains `ansvar-vulnerability-management`.
+
+Zero Trust v2.3.0 release fields and founder steps:
+[submission packet](review/v2.3.0-submission-packet.md). The batch rebuilds all
+five candidates at 0.3.0; re-test them before submission.

@@ -7,12 +7,12 @@ metadata:
   connector: https://gateway.ansvar.eu/mcp
   version: "1.2.0"
   build_identity:
-    source_identity: "b358ac656c5427006d8931b6f123384c66a05d26a9758d446180cb8a48529859"
+    source_identity: "6c01eea7dbef3031668c5f7ed8052a95eea4e0deccac0d5130b38ca711f31441"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.46.0@sha256:b8c08ab44992cb27ef813b0cbc1afdcdd01861614112efdabb1cbc3dc2321f5e"
-      digest: "sha256:b8c08ab44992cb27ef813b0cbc1afdcdd01861614112efdabb1cbc3dc2321f5e"
-      version_label: "1.46.0"
-    registry_snapshot_sha256: "87836f39d4f993b651c2c002d1be7a862996a81fb66b7fa7d4c4335ebeed0c24"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.48.0@sha256:f09674c7b63baf4ceefe58c7dbced44c9d5758a9e33a7088c1bd1993130a4e18"
+      digest: "sha256:f09674c7b63baf4ceefe58c7dbced44c9d5758a9e33a7088c1bd1993130a4e18"
+      version_label: "1.48.0"
+    registry_snapshot_sha256: "8c2309e3d235fade8ae409d13635cea71e629a5a07c78b664853f20cdfed14c9"
 ---
 
 # Threat Analysis and Risk Assessment

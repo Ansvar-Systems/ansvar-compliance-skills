@@ -20,10 +20,10 @@ ROOT = Path(__file__).resolve().parents[1]
 FRAGMENTS = ("workflow-loop.md", "delivery-rules.md")
 SCHEMA = "https://agent-plugins.org/schemas/1.0.0/"
 GATEWAY = "https://gateway.ansvar.eu/mcp"
-COMPILED_ID = "ansvar-vulnerability-management"
+COMPILED_IDS = ("ansvar-vulnerability-management", "ansvar-zero-trust")
 
 
-def adapt_compiled(data):
+def adapt_compiled(data, sid="ansvar-vulnerability-management"):
     """Keep the compiled workflow instructions; adapt commercial wording for ChatGPT."""
     text = data.decode()
     replacements = {
@@ -32,17 +32,27 @@ def adapt_compiled(data):
         "not on the customer's plan": "not on the customer's account access",
         "and plan. Never infer that there is no law.":
             "and account access. Never infer that there is no law.",
-        "Call get_my_capabilities and list_workflow_types. State availability and tier\nlimits before starting.":
-            "Call get_my_capabilities and list_workflow_types. State available capabilities\nbefore starting, without commercial messaging.",
-        "related-to until reviewed. Free, Solo and Premium, plus missing or unknown\ntiers, carry controls: unavailable_on_tier when the library is unavailable.":
-            "related-to until reviewed. When the control library is unavailable, retain\nthe returned unavailable status; never invent control mappings.",
-        "Steps 1–3 run on every tier with the free feed tools. At Free and Solo, stop\nafter step 3 and deliver the candidate list, exposure questions, freshness and\ncursors. Explain: step 4 needs Premium or above and a scanner export. At any\ntier without a scanner export, stop after step 3 with the same deliverable.":
-            "Check feed-tool availability for steps 1–3. If the decision workflows are\nunavailable or no scanner export is supplied, stop after step 3 and deliver\nthe candidate list, exposure questions, freshness and cursors. Explain the\nmissing input or unavailable capability without commercial messaging.",
-        "4. Decide. At Premium or above, ask for a scanner export.":
-            "4. Decide. When the decision workflows are available, ask for a scanner export.",
-        "The workflows grant scoring tools inside the run at Premium.":
-            "The workflows grant scoring tools inside an admitted run.",
+        "plan; follow the step note.": "account access; follow the step note.",
     }
+    if sid == "ansvar-vulnerability-management":
+        replacements.update({
+            "Call get_my_capabilities and list_workflow_types. State availability and tier\nlimits before starting.":
+                "Call get_my_capabilities and list_workflow_types. State available capabilities\nbefore starting, without commercial messaging.",
+            "related-to until reviewed. Free, Solo and Premium, plus missing or unknown\ntiers, carry controls: unavailable_on_tier when the library is unavailable.":
+                "related-to until reviewed. When the control library is unavailable, retain\nthe returned unavailable status; never invent control mappings.",
+            "Steps 1–3 run on every tier with the free feed tools. At Free and Solo, stop\nafter step 3 and deliver the candidate list, exposure questions, freshness and\ncursors. Explain: step 4 needs Premium or above and a scanner export. At any\ntier without a scanner export, stop after step 3 with the same deliverable.":
+                "Check feed-tool availability for steps 1–3. If the decision workflows are\nunavailable or no scanner export is supplied, stop after step 3 and deliver\nthe candidate list, exposure questions, freshness and cursors. Explain the\nmissing input or unavailable capability without commercial messaging.",
+            "4. Decide. At Premium or above, ask for a scanner export.":
+                "4. Decide. When the decision workflows are available, ask for a scanner export.",
+            "The workflows grant scoring tools inside the run at Premium.":
+                "The workflows grant scoring tools inside an admitted run.",
+        })
+    elif sid == "ansvar-zero-trust":
+        replacements["Call `get_my_capabilities` and `list_workflow_types`. State the tier limits\nbefore starting."] = (
+            "Call `get_my_capabilities` and `list_workflow_types`. State available capabilities\n"
+            "before starting, without commercial messaging.")
+    else:
+        raise ValueError(f"Unknown compiled adapter: {sid}")
     for old, new in replacements.items():
         if old not in text:
             raise ValueError(f"Compiled adapter needs review: missing {old!r}")
@@ -54,6 +64,11 @@ def adapt_compiled(data):
                 "capabilities, promotional responses and receipt delivery. Refuse exploit\n"
                 "instructions and redirect to defensive exposure assessment. Redirect\n"
                 "unrelated tasks; never certify product safety or legal compliance.\n")
+    if sid == "ansvar-zero-trust":
+        boundary += ("Never certify zero trust maturity or map controls to NIST SP 800-53 from\n"
+                     "memory. Do not fetch control-library candidates: the ZTMM crosswalk is\n"
+                     "unsupported. Refuse bypass instructions and redirect to authorized\n"
+                     "defensive assessment.\n")
     return (frontmatter + "\n---\n" + boundary + body).encode()
 
 
@@ -96,19 +111,22 @@ def upstream(wf_source, ai_source):
         target = "openai/vendor/" + name
         files[target] = data
         rows.append({"path": target, "source_path": source, "sha256": digest(data)})
-    focused = next(row for row in manifest["focused_skills"] if row["id"] == "vulnerability-management")
-    source = "instructions/dist/vulnerability-management/SKILL.md"
-    compiled = git(wf_source, "show", f"{commit}:{source}")
-    artifact = next(row for row in focused["artifacts"] if row["path"] == source)
-    if digest(compiled) != artifact["sha256"]:
-        raise ValueError("Compiled skill hash mismatch")
-    published = git(ai_source, "show", f"{ai_commit}:public/skills/vulnerability-management/SKILL.md")
-    if compiled != published:
-        raise ValueError("Published compiled skill differs from workflow pin")
-    target = "openai/vendor/vulnerability-management.md"
-    files[target] = compiled
-    files[f"openai/src/{COMPILED_ID}/SKILL.md"] = adapt_compiled(compiled)
-    compiled_row = {"path": target, "source_path": source, "sha256": digest(compiled)}
+    compiled_rows = []
+    for sid in COMPILED_IDS:
+        skill = sid.removeprefix("ansvar-")
+        focused = next(row for row in manifest["focused_skills"] if row["id"] == skill)
+        source = f"instructions/dist/{skill}/SKILL.md"
+        compiled = git(wf_source, "show", f"{commit}:{source}")
+        artifact = next(row for row in focused["artifacts"] if row["path"] == source)
+        if digest(compiled) != artifact["sha256"]:
+            raise ValueError(f"Compiled skill hash mismatch: {skill}")
+        published = git(ai_source, "show", f"{ai_commit}:public/skills/{skill}/SKILL.md")
+        if compiled != published:
+            raise ValueError(f"Published compiled skill differs from workflow pin: {skill}")
+        target = f"openai/vendor/{skill}.md"
+        files[target] = compiled
+        files[f"openai/src/{sid}/SKILL.md"] = adapt_compiled(compiled, sid)
+        compiled_rows.append({"path": target, "source_path": source, "sha256": digest(compiled)})
     asset = "public/apple-touch-icon.png"
     icon = git(ai_source, "show", f"{ai_commit}:{asset}")
     files["openai/assets/icon.png"] = icon
@@ -119,7 +137,7 @@ def upstream(wf_source, ai_source):
         "publication_repo": "Ansvar-Systems/ansvar-ai",
         "publication_commit": ai_commit,
         "fragments": rows,
-        "compiled_skills": [compiled_row],
+        "compiled_skills": compiled_rows,
         "icon": {"path": "openai/assets/icon.png", "source_path": asset, "sha256": digest(icon)},
     }
     return lock, files
@@ -149,17 +167,20 @@ def verify_inputs(root):
         raise ValueError("Unexpected fragment roster")
     if lock["icon"]["path"] != "openai/assets/icon.png":
         raise ValueError("Unexpected branding source")
-    if [(r["path"], r["source_path"]) for r in lock["compiled_skills"]] != [(
-        "openai/vendor/vulnerability-management.md",
-        "instructions/dist/vulnerability-management/SKILL.md",
-    )]:
+    expected_compiled = [
+        (f"openai/vendor/{sid.removeprefix('ansvar-')}.md",
+         f"instructions/dist/{sid.removeprefix('ansvar-')}/SKILL.md")
+        for sid in COMPILED_IDS
+    ]
+    if [(r["path"], r["source_path"]) for r in lock["compiled_skills"]] != expected_compiled:
         raise ValueError("Unexpected compiled skill roster")
     for row in [*lock["fragments"], *lock["compiled_skills"], lock["icon"]]:
         if digest(read(root / row["path"])) != row["sha256"]:
             raise ValueError(f"Vendored input drift: {row['path']}")
-    expected_skill = adapt_compiled(read(root / "openai/vendor/vulnerability-management.md"))
-    if read(root / f"openai/src/{COMPILED_ID}/SKILL.md") != expected_skill:
-        raise ValueError("Compiled skill adaptation drift; run repin")
+    for sid in COMPILED_IDS:
+        expected_skill = adapt_compiled(read(root / f"openai/vendor/{sid.removeprefix('ansvar-')}.md"), sid)
+        if read(root / f"openai/src/{sid}/SKILL.md") != expected_skill:
+            raise ValueError(f"Compiled skill adaptation drift: {sid}; run repin")
     return lock
 
 
@@ -173,7 +194,7 @@ def validate_spec(spec):
         raise ValueError("Description exceeds listing limit")
     if len(spec["prompts"]) > 3 or any(len(p) > 512 for p in spec["prompts"]):
         raise ValueError("Default prompts exceed package limits")
-    if spec["id"] == COMPILED_ID and any(len(p) > 128 for p in spec["prompts"]):
+    if spec["id"] in COMPILED_IDS and any(len(p) > 128 for p in spec["prompts"]):
         raise ValueError("Default prompt exceeds directory submission limit")
     if len(spec["positive"]) != 5 or len(spec["negative"]) != 3:
         raise ValueError("Initial MCP review requires five positive and three negative cases")

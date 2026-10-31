@@ -48,7 +48,7 @@ AI_VENDORED_MANIFEST = "src/data/workflow-skills.manifest.json"
 # The one library skill that is not a compiled family. It is named here
 # because it is hand-published and appears in no upstream manifest.
 HAND_PUBLISHED = {"using-ansvar": "public/skills/using-ansvar/SKILL.md"}
-FOCUSED_PLUGIN = "plugins/ansvar-vulnerability-management"
+FOCUSED_PLUGINS = ("vulnerability-management", "zero-trust")
 PUBLISHED_URL = "https://ansvar.eu/skills/{id}/SKILL.md"
 # Skill directories that scripts/sync.sh raw-fetches from their own public
 # repositories. Keep in step with MAPPINGS in scripts/sync.sh.
@@ -64,10 +64,13 @@ ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
 
 def focused_files(root: Path) -> dict[str, bytes]:
-    return {
-        f"{FOCUSED_PLUGIN}/skills/{sid}/SKILL.md": (root / f"skills/{sid}/SKILL.md").read_bytes()
-        for sid in ("vulnerability-management", "using-ansvar")
-    } | {f"{FOCUSED_PLUGIN}/.mcp.json": (root / ".mcp.json").read_bytes()}
+    files = {}
+    for skill in FOCUSED_PLUGINS:
+        plugin = f"plugins/ansvar-{skill}"
+        for sid in (skill, "using-ansvar"):
+            files[f"{plugin}/skills/{sid}/SKILL.md"] = (root / f"skills/{sid}/SKILL.md").read_bytes()
+        files[f"{plugin}/.mcp.json"] = (root / ".mcp.json").read_bytes()
+    return files
 
 
 def valid_id(sid: object) -> bool:

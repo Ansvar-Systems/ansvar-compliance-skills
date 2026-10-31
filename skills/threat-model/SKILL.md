@@ -7,12 +7,12 @@ metadata:
   connector: https://gateway.ansvar.eu/mcp
   version: "1.8.1"
   build_identity:
-    source_identity: "b358ac656c5427006d8931b6f123384c66a05d26a9758d446180cb8a48529859"
+    source_identity: "6c01eea7dbef3031668c5f7ed8052a95eea4e0deccac0d5130b38ca711f31441"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.46.0@sha256:b8c08ab44992cb27ef813b0cbc1afdcdd01861614112efdabb1cbc3dc2321f5e"
-      digest: "sha256:b8c08ab44992cb27ef813b0cbc1afdcdd01861614112efdabb1cbc3dc2321f5e"
-      version_label: "1.46.0"
-    registry_snapshot_sha256: "87836f39d4f993b651c2c002d1be7a862996a81fb66b7fa7d4c4335ebeed0c24"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.48.0@sha256:f09674c7b63baf4ceefe58c7dbced44c9d5758a9e33a7088c1bd1993130a4e18"
+      digest: "sha256:f09674c7b63baf4ceefe58c7dbced44c9d5758a9e33a7088c1bd1993130a4e18"
+      version_label: "1.48.0"
+    registry_snapshot_sha256: "8c2309e3d235fade8ae409d13635cea71e629a5a07c78b664853f20cdfed14c9"
 ---
 
 # Threat Modelling
@@ -889,6 +889,100 @@ that its conclusion remains current.
 
 Scoped threat delta fetches use only gateway tools with jurisdictions or frameworks taken from the twin's organisation profile and the scoped read's obligations and standing threat tags, and the sector pass adds the profile's sector; case law uses the premium search fan-out, and a missing or invalid scope produces a named refusal without an unscoped call.
 The report lists source refusals with their pass, tool, scope and reason, counts each pass emptied by refusals alongside distinct unresolved obligations, and carries evidence coverage into both the report and receipt while the receipt's attention items retain the refusals.
+
+
+### Threat register producer fields (vocabulary v1)
+
+Keep every source conclusion, including two conclusions on the same applicability.
+Do not merge away source conclusions using STRIDE, techniques, titles or signature.
+The twin resolves scenario and applicability identity and may hold an item as E8.
+A missing or unknown vocabulary value must survive unchanged; never drop a source
+item or relabel it just to fit a list. Explain an unexpressible distinction in
+`asserted_distinction`.
+
+Each threat carries `mechanism`, `violated_property`, `object_class` and `targets`.
+Use one source `threat_id` for one conclusion across several targets. Each target
+is `{target, instance, paths}`: target is a stable concrete `service:`,
+`data_store:`, `technology_node:` or `application:` ref, or `connection:` for harm
+in transit. A trust zone is placement, never a target. Default instance is
+`default`; use a named instance only when the pinned twin records it. The twin
+forms the protected object as `<target>#<object_class>/<instance>`.
+
+Each path supplies a stable `id`, `entry_interface`, `attacker_position`, ordered
+`boundary_crossings` (pairs of stable `trust_zone:` refs), `preconditions` and
+`evidence_refs` as full `kind:id@revision` pins from the read. Submit each path's
+`severity_judgements` in the scoring step, using the existing judgement format;
+the engine computes its `rating` with the deterministic scorer. Do not submit
+made-up path ratings or share a rating across different paths. Alternative routes
+to one harm are paths of that applicability. Preserve path ids across reruns.
+`controls_credited` lists only observed pinned control refs.
+
+`tier_scope_bypass` retains the caller's identity while crossing its tier/scope
+limit (basic caller invokes an enterprise tool). `confused_deputy` substitutes the
+service's greater authority (gateway identity fetches a restricted backend for a
+caller). They are counterexamples to each other. Authorization bypass to
+`tool_execution` and to `routing_configuration` are different protected objects.
+`interception` and `tampering` mean reading or changing data IN TRANSIT and must
+name the actual pinned connection. Stored document changes instead use
+`stored_data_tampering`; stored document leaks use `data_disclosure`. Never invent
+a connection when the twin lacks it; preserve the unresolved target for E8.
+
+For a complete run, submit `run_completeness: {complete: true,
+coverage_manifest: [{ref, state, reason?}]}` with the final human review at
+`remediation_planning.remediation_review`. Cover every asset,
+server-owned connection and shared control in the pinned inventory, including
+those without threats. States are `assessed`, `not_applicable` with a nonempty
+reason, or `unknown`. Unassessed inventory stays unknown. Preserve the scoped
+read's `current_head` and `inventory_snapshot` verbatim; the producer uses the
+observed head or `none` on a first run. Without these pins, declare a partial run
+with `complete: false`; never claim a head. Complete-run admission and publication
+remain the twin's decisions.
+
+Closed violated_property values: `accountability`, `authenticity`, `authorization`, `availability`, `confidentiality`, `integrity`.
+
+Closed object_class values: `administrative_configuration`, `audit_trail`, `credentials_or_tokens`, `document_content`, `host_privilege`, `routing_configuration`, `runtime_code`, `service_capacity`, `service_response`, `session_state`, `source_corpus_content`, `tenant_data`, `tool_execution`.
+
+Closed mechanism values: `attribution_gap`, `audit_suppression`, `authentication_bypass`, `authorization_bypass`, `confused_deputy`, `credential_replay`, `data_disclosure`, `excessive_privilege`, `fanout_amplification`, `identity_impersonation`, `input_injection`, `interception`, `parser_exploitation`, `recursive_invocation`, `resource_exhaustion`, `runtime_substitution`, `stored_data_tampering`, `tampering`, `tier_scope_bypass`.
+
+Vocabulary v1 canonical data SHA-256: `31d1d65e4e64a6e19603fd4afc96319429a521544488faf3bf96de14024039b9`.
+
+- `attribution_gap` (service): A protected operation leaves no reliable record binding it to the acting principal. Examples: Tool calls lack caller identity; Document uploads cannot be attributed. Counterexamples: Audit records are actively suppressed; Tool invocation refused for missing permission.
+
+- `audit_suppression` (service): An attacker prevents audit events from being recorded or retained. Examples: Audit writer disabled to hide actions; Attacker deletes audit events. Counterexamples: Audit has no actor field by design; Audit content passively disclosed.
+
+- `authentication_bypass` (service): An entry interface accepts a caller without required identity verification. Examples: Internal gateway port skips OAuth; Cache accepts unauthenticated clients. Counterexamples: Authenticated caller exceeds tool tier; Verified identity lacks object permission.
+
+- `authorization_bypass` (service): An operation succeeds without the required permission on the protected object; tier enforcement and deputy substitution have their own mechanisms. Examples: Unpermitted gateway tool executes; Unpermitted gateway route is changed. Counterexamples: Caller crosses a tool tier limit; Gateway substitutes its authority.
+
+- `confused_deputy` (service): A service substitutes its own greater authority for a caller's request, failing to bind delegated authority to that caller. Examples: Gateway service identity accesses backend for a restricted caller; Workflow uses its service privilege to fetch another tenant's document. Counterexamples: Caller retains identity while crossing a tier limit; Token stolen from the caller.
+
+- `credential_replay` (service): A stolen bearer credential is reused to authenticate an attacker. Examples: Stolen OAuth token replayed at gateway; Stolen admin client credential reused. Counterexamples: TLS traffic passively observed; Gateway uses its own credential as deputy.
+
+- `data_disclosure` (service): A service exposes protected stored or processed content to an unintended recipient. Examples: OCR retains and leaks document text; Gateway returns backend topology in errors. Counterexamples: TLS traffic captured in transit; Tool executed without permission.
+
+- `excessive_privilege` (service): A compromised principal or process exercises unnecessarily broad administrative authority. Examples: Ingress worker escalates with excessive process authority; Audit database account has excessive privileges. Counterexamples: Unverified client logs in without authentication; Tier limit bypass with caller identity.
+
+- `fanout_amplification` (service): One request multiplies into excessive downstream work through fan-out. Examples: Gateway fans one request to every backend; Batch request multiplies backend queries. Counterexamples: Single expensive OCR document; Recursive gateway callback.
+
+- `identity_impersonation` (service): A caller is accepted as another principal by supplying a false or compromised identity assertion. Examples: Workload claims gateway identity; Client forges forwarded identity. Counterexamples: No authentication is performed; A valid caller exceeds its permissions.
+
+- `input_injection` (service): Untrusted input is interpreted as an executable instruction instead of constrained data. Examples: Tool arguments inject backend commands; Upload handler executes embedded commands. Counterexamples: Valid requests exhaust CPU; An unauthenticated request reaches an API.
+
+- `interception` (connection): An attacker reads protected data while it traverses a communication path. Examples: Bearer token sniffed on an admin link; Customer document read on an internal flow. Counterexamples: Packets modified in transit; Documents leaked from storage.
+
+- `parser_exploitation` (service): A crafted input exploits a parser implementation to execute code or corrupt its runtime. Examples: Malicious document exploits OCR parser; Crafted upload triggers parser memory corruption. Counterexamples: Large valid document consumes capacity; Document content is disclosed by retrieval.
+
+- `recursive_invocation` (service): A cycle of service invocations repeatedly calls itself until capacity is lost. Examples: Gateway-workflow callback loop; Tool invokes its own upstream recursively. Counterexamples: Finite fan-out to many backends; Independent upload flooding.
+
+- `resource_exhaustion` (service): Requests consume bounded service capacity until legitimate work cannot progress. Examples: Uploads fill document capacity; Expensive documents exhaust OCR workers. Counterexamples: Gateway recursively calls workflow; Attacker changes a stored document.
+
+- `runtime_substitution` (service): An unverified executable or image is substituted in a service runtime. Examples: Identity service runs an unverified image; Unsigned build artifact replaces deployed code. Counterexamples: Document parser exploited at runtime; Routing configuration changed by an API.
+
+- `stored_data_tampering` (service): An attacker changes persisted protected state through a write interface. Examples: Cached tier state overwritten; Stored documents changed by malicious upload. Counterexamples: OCR response altered in transit; Source document read without permission.
+
+- `tampering` (connection): An attacker alters protected data in transit on a communication path. Examples: Backend tool arguments changed on the wire; OCR response changed in transit. Counterexamples: Passive capture of network traffic; Stored document overwritten through an API.
+
+- `tier_scope_bypass` (service): A caller crosses an enforced tool tier or scope limit using its own identity; the service does not substitute its authority. Examples: Basic caller invokes enterprise tool; Scoped caller invokes another scope's tool. Counterexamples: Gateway substitutes its service identity; A network packet is modified.
 
 ## Workflows in this family
 
