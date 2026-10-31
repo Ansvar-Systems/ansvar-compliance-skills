@@ -11,10 +11,10 @@ class ClaudePackaging(unittest.TestCase):
     def test_manifest_roster_and_focused_copies(self):
         manifest = json.loads((ROOT / 'skills-manifest.json').read_text())
         marketplace = json.loads((ROOT / '.claude-plugin/marketplace.json').read_text())
-        self.assertEqual(len(list((ROOT / 'skills').glob('*/SKILL.md'))), 16)
-        self.assertNotIn('zero-trust', {s['id'] for s in manifest['skills']})
+        self.assertEqual(len(list((ROOT / 'skills').glob('*/SKILL.md'))), 17)
+        self.assertIn('zero-trust', {s['id'] for s in manifest['skills']})
         self.assertEqual(manifest['workflow_library']['commit'],
-                         '08b906e82f6845796f3aa4cdd0c03b1e404efc71')
+                         '2d23495b8c999539e6dc69d368fb258f9a482ede')
         for entry in manifest['skills']:
             self.assertEqual(hashlib.sha256((ROOT / entry['path']).read_bytes()).hexdigest(),
                              entry['sha256'])

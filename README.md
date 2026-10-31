@@ -4,19 +4,19 @@ Focused ChatGPT and Codex packages for Citation Check, AI Compliance, Privacy
 Review and Vulnerability Management are built from [openai/](openai/README.md).
 That directory contains the
 build commands, release status and submission materials. The Claude package
-described below includes sixteen skills. The focused Claude vulnerability
+described below includes seventeen skills. The focused Claude vulnerability
 management plugin includes its compiled skill and `using-ansvar`.
 
-A Claude Code plugin that bundles sixteen published Ansvar Systems AB agent
+A Claude Code plugin that bundles seventeen published Ansvar Systems AB agent
 skills for EU security and compliance work. The plugin adds no skill content
 of its own: it packages the canonical skills, unmodified, so they install as
 one unit.
 
-The sixteen come in two groups:
+The seventeen come in two groups:
 
 - **Four standalone skills**, each published in its own public repository.
-- **The workflow skill library**: ten family skills and one focused vulnerability
-  management skill compiled by Ansvar from
+- **The workflow skill library**: ten family skills and two focused skills
+  (vulnerability management and zero trust) compiled by Ansvar from
   its workflow definitions, plus `using-ansvar`, the routing skill for
   one-off legal and standards questions. These are the skills
   [ansvar.eu/docs/agent-skills](https://ansvar.eu/docs/agent-skills)
@@ -59,9 +59,10 @@ versions may show the `ansvar-` form.
 | `document-review` | `/ansvar-compliance-skills:document-review` | Reviews an uploaded document against a regulatory baseline, with every finding anchored to a paragraph-level citation and a content hash. |
 | `drone-operations` | `/ansvar-compliance-skills:drone-operations` | A SORA determination chain for a specific-category UAS operation: ground and air risk, SAIL, the operational safety objectives with robustness levels, and containment. |
 | `vulnerability-management` | `/ansvar-compliance-skills:vulnerability-management` | Programme assessment against served criteria and a defensive feed cycle with KEV, EPSS, exposure questions and per-source cursors; scanner findings are required for decision workflows. |
+| `zero-trust` | `/ansvar-compliance-skills:zero-trust` | Zero trust maturity assessment against the CISA Zero Trust Maturity Model v2.0 functions, with cited evidence, the obligations that apply to you, and a baseline to re-run the next cycle against. |
 | `product-horizon` | `/ansvar-compliance-skills:product-horizon` | A regulatory applicability register for one product, service or entity on the markets you name: the verdict per EU and national act with its cited basis, the facts still open, the national layer behind each EU act, and the dated obligations ahead. |
 
-The focused skill and each family skill end with openings you can paste to your agent. One from
+The focused skills and each family skill end with openings you can paste to your agent. One from
 each:
 
 - `gap-analysis`: "Using Ansvar, run a NIS2 gap analysis for our managed hosting business in the Netherlands."
@@ -74,6 +75,7 @@ each:
 - `document-review`: "Using Ansvar, review our data processing agreement against GDPR Articles 28 and 32."
 - `drone-operations`: "Using Ansvar, run a SORA for BVLOS powerline inspection over sparsely populated terrain."
 - `vulnerability-management`: "Using Ansvar, assess our vulnerability management process. We make industrial gateways sold in Germany and the Netherlands."
+- `zero-trust`: "Using Ansvar, assess our zero trust maturity for the systems we name."
 - `product-horizon`: "Using Ansvar, which EU acts apply to our networked PLC sold in France and Germany, and why?"
 
 Start with "Using Ansvar". Without the name, the agent may answer from its
@@ -194,6 +196,10 @@ and `list_workflow_types`; an assessment is not promised on Free or Solo.
 A monthly teaser is usable only where the live catalogue admits it within the
 shared allowance. See the [submission packet](openai/review/v2.2.0-submission-packet.md).
 
+**`zero-trust`**: access to the zero trust assessment is checked with
+`get_my_capabilities` and `list_workflow_types`; run it only where the live
+catalogue admits it on your account.
+
 No plan tier is required to install the plugin itself — only to run the
 gateway-backed workflows a given skill invokes.
 
@@ -245,7 +251,7 @@ git clone https://github.com/Ansvar-Systems/ansvar-compliance-skills.git
 claude --plugin-dir ./ansvar-compliance-skills
 ```
 
-After install, run `/help` to see the sixteen skills listed under the
+After install, run `/help` to see the seventeen skills listed under the
 `ansvar-compliance-skills` namespace, or invoke one directly, for example:
 
 ```

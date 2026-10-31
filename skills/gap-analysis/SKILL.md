@@ -7,12 +7,12 @@ metadata:
   connector: https://gateway.ansvar.eu/mcp
   version: "1.5.0"
   build_identity:
-    source_identity: "e5f5720e03e898c47ed1c600ed9f45edb21c73fbaf8b0f404900fd77332bc799"
+    source_identity: "b358ac656c5427006d8931b6f123384c66a05d26a9758d446180cb8a48529859"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.40.0@sha256:9e6bb4c4b33b33ab39af39e49e175f4da3b8377f3526672157d97fc6c6c6c17d"
-      digest: "sha256:9e6bb4c4b33b33ab39af39e49e175f4da3b8377f3526672157d97fc6c6c6c17d"
-      version_label: "1.40.0"
-    registry_snapshot_sha256: "891abefeb06ffe16bbda7a512311c6aa82b6a88200a271fce46d3e169c6ec55c"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.46.0@sha256:b8c08ab44992cb27ef813b0cbc1afdcdd01861614112efdabb1cbc3dc2321f5e"
+      digest: "sha256:b8c08ab44992cb27ef813b0cbc1afdcdd01861614112efdabb1cbc3dc2321f5e"
+      version_label: "1.46.0"
+    registry_snapshot_sha256: "87836f39d4f993b651c2c002d1be7a862996a81fb66b7fa7d4c4335ebeed0c24"
 ---
 
 # Regulatory Gap Analysis
@@ -51,9 +51,9 @@ primary regime, horizontal regimes, sector-regulator routing, case-law
 validation, and authority guidance. A control that comes back empty after all
 five is flagged `regulatory_basis_unresolved`, never guessed.
 
-Horizontal regimes are not optional context. A NIS2 assessment that never
-considers GDPR, or a CRA assessment that ignores the AI Act where the product
-carries a model, has missed obligations the customer is subject to.
+Screen potentially relevant horizontal regimes, including GDPR and the AI Act.
+Record obligations only after confirming applicability to the entity, role,
+activity and jurisdiction.
 
 ## Run the workflow
 
@@ -671,6 +671,7 @@ Read from the workflow content the deployed image serves. `list_workflow_types` 
 | `gap_analysis_dora` | Gap Analysis — DORA (Regulation (EU) 2022/2554) | EU · dora | Gap analysis for a financial entity against DORA Chapter II ICT risk management (Art. 5-14) — governance and control framework, protection and prevention, detection, response and recovery… |
 | `gap_analysis_dora_ict_contracts` | Gap Analysis — DORA ICT contracts and subcontracting | EU · dora_ict_contracts | Assessment of financial-entity ICT contracts against DORA Articles 28–30 and the subcontracting RTS, Commission Delegated Regulation (EU) 2025/532. Contractual provisions are assessed by… |
 | `gap_analysis_dora_register_of_information` | Gap Analysis — DORA register of information | EU · dora_register_of_information | Assessment of the financial entity’s register under DORA Article 28(3) and Commission Implementing Regulation (EU) 2024/2956. Controls cover register maintenance, template families and… |
+| `gap_analysis_grundschutz` | Gap Analysis — BSI Grundschutz++ (Anwenderkatalog, Pilotphase) | DE · bsi_grundschutz_pp | Gap analysis of an organisation against the BSI Grundschutz++ Anwenderkatalog (pilot publication), assessed per BSI requirement id (e.g. GC.1.1, DET.4.2) from the bsi-grundschutz corpus.… |
 | `gap_analysis_ivdr` | Gap Analysis — In Vitro Diagnostic Regulation (Regulation (EU) 2017/746) | EU · IVDR | Gap analysis against IVDR Annex I General Safety and Performance Requirements for an in vitro diagnostic device: Chapter I general requirements including risk management, Chapter II… |
 | `gap_analysis_mdcg_cyber` | Gap Analysis — Medical Device Cybersecurity (MDCG 2019-16 rev.1) | EU · MDCG_2019_16 | Gap analysis of medical-device cybersecurity against MDCG 2019-16 rev.1, which reads the security requirements already inside MDR Annex I (14.2(d), 17.1-17.4, 18.8, 23.4) and the IVDR… |
 | `gap_analysis_mdr` | Gap Analysis — Medical Device Regulation (Regulation (EU) 2017/745) | EU · MDR | Gap analysis against MDR Annex I General Safety and Performance Requirements for a medical device: Chapter I general requirements including risk management and use-error reduction, Chapter… |
@@ -680,6 +681,7 @@ Read from the workflow content the deployed image serves. `list_workflow_types` 
 | `gap_analysis_nis2_pl` | Gap Analysis — NIS2 Poland (ustawa o KSC, Dz.U. 2018 poz. 1560; t.j. Dz.U. 2026 poz. 20, zm. Dz.U. 2026 poz. 252) | PL · nis2 | Analiza luk względem polskiej transpozycji NIS2 w ustawie o krajowym systemie cyberbezpieczeństwa, znowelizowanej ustawą z dnia 23 stycznia 2026 r. (Dz.U. 2026 poz. 252). Art. 8 KSC… |
 | `gap_analysis_r155` | Gap Analysis — UNECE R155 Cyber Security Management System (CSMS) | EU · unece_r155 | Gap analysis of conformity against UNECE R155: the CSMS process controls 7.2.1-7.2.5 and the vehicle-type controls 7.3.1-7.3.6. Scoping fixes the role - an OEM holds the CSMS Certificate… |
 | `gap_analysis_vulnerability_management` | Ansvar Vulnerability Management | VULN_MGMT | Assess vulnerability management functions against served criteria and compare compliance across cycles. |
+| `gap_analysis_zero_trust` | Ansvar Zero Trust Assessment | ZERO_TRUST | Assess zero trust maturity against the 40 CISA ZTMM v2.0 functions and compare stages across cycles. |
 | `ot_machinery_gap` | Machinery Regulation Gap Analysis — EHSRs (EU) 2023/1230 | EU · machinery_2023_1230 | Gap analysis of a manufacturer's obligations for machinery placed on the EU market against the Machinery Regulation (EU) 2023/1230 Annex III Essential Health & Safety Requirements and the… |
 
 ## Starting a run

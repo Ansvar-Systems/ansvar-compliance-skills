@@ -7,12 +7,12 @@ metadata:
   connector: https://gateway.ansvar.eu/mcp
   version: "1.0.0"
   build_identity:
-    source_identity: "e5f5720e03e898c47ed1c600ed9f45edb21c73fbaf8b0f404900fd77332bc799"
+    source_identity: "b358ac656c5427006d8931b6f123384c66a05d26a9758d446180cb8a48529859"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.40.0@sha256:9e6bb4c4b33b33ab39af39e49e175f4da3b8377f3526672157d97fc6c6c6c17d"
-      digest: "sha256:9e6bb4c4b33b33ab39af39e49e175f4da3b8377f3526672157d97fc6c6c6c17d"
-      version_label: "1.40.0"
-    registry_snapshot_sha256: "891abefeb06ffe16bbda7a512311c6aa82b6a88200a271fce46d3e169c6ec55c"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.46.0@sha256:b8c08ab44992cb27ef813b0cbc1afdcdd01861614112efdabb1cbc3dc2321f5e"
+      digest: "sha256:b8c08ab44992cb27ef813b0cbc1afdcdd01861614112efdabb1cbc3dc2321f5e"
+      version_label: "1.46.0"
+    registry_snapshot_sha256: "87836f39d4f993b651c2c002d1be7a862996a81fb66b7fa7d4c4335ebeed0c24"
 ---
 
 # Regulatory Applicability Register
