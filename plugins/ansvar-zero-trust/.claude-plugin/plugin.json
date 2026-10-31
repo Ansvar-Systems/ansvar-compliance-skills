@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "ansvar-zero-trust",
+  "displayName": "Ansvar Zero Trust Assessment",
+  "version": "2.3.0",
+  "description": "Assess zero trust maturity against CISA ZTMM v2.0 with fetched guidance, interview or twin evidence, a gap register and a roadmap for the next cycle. Includes using-ansvar for cited legal and standards questions.",
+  "author": {
+    "name": "Ansvar Systems AB",
+    "url": "https://ansvar.eu"
+  },
+  "homepage": "https://ansvar.eu/docs/agent-skills",
+  "repository": "https://github.com/Ansvar-Systems/ansvar-compliance-skills",
+  "license": "CC-BY-4.0",
+  "icon": "./.claude-plugin/icon.png",
+  "documentationUrl": "https://ansvar.eu/docs/agent-skills",
+  "supportUrl": "https://ansvar.eu/contact",
+  "privacyPolicyUrl": "https://ansvar.eu/privacy",
+  "termsOfServiceUrl": "https://ansvar.eu/terms",
+  "keywords": [
+    "zero-trust",
+    "ztmm",
+    "cisa",
+    "nist-sp-800-207",
+    "800-207",
+    "nis2",
+    "maturity-assessment"
+  ]
+}

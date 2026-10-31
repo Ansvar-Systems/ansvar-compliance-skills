@@ -1,10 +1,11 @@
 # Ansvar Compliance Skills
 
-Seventeen agent skills for EU security and compliance work: gap analyses
+Twenty agent skills for EU security and compliance work: gap analyses
 against NIS2, DORA, the Cyber Resilience Act and the AI Act, STRIDE and
 LINDDUN threat models, DPIAs and fundamental rights impact assessments, TARA,
 public tender review, vulnerability management, zero trust maturity, incident
-reporting deadlines, ISO standards support and product applicability registers.
+reporting deadlines, CMMC self-assessments, ISO standards support and product
+applicability registers.
 Every claim is cited from officially published or licensed text that your
 agent fetches through the Ansvar Gateway connector, with the source URL,
 publisher and licence of each row.
@@ -16,6 +17,8 @@ The plugin packages Ansvar Systems AB's published skills, unmodified, so they
 install as one unit. A separate focused plugin, `ansvar-vulnerability-management`,
 holds only the vulnerability management skill and `using-ansvar`
 ([plugins/ansvar-vulnerability-management](plugins/ansvar-vulnerability-management/README.md)).
+The focused [Ansvar Zero Trust plugin](plugins/ansvar-zero-trust/README.md)
+holds `zero-trust` and `using-ansvar`.
 Focused ChatGPT and Codex packages are built from [openai/](openai/README.md).
 
 ### What it sends
@@ -32,12 +35,12 @@ scanner export you choose to share. Ansvar handles that data under its
 Results support human review; they do not certify compliance and are not
 legal advice.
 
-The seventeen come in two groups:
+The twenty come in two groups:
 
 - **Four standalone skills**, each published in its own public repository.
-- **The workflow skill library**: ten family skills and two focused skills
-  (vulnerability management and zero trust) compiled by Ansvar from
-  its workflow definitions, plus `using-ansvar`, the routing skill for
+- **Sixteen workflow library skills**: eleven family skills and four focused skills
+  (vulnerability management, zero trust, CMMC Level 1 and Level 2) compiled
+  by Ansvar from its workflow definitions, plus `using-ansvar`, the routing skill for
   one-off legal and standards questions. These are the skills
   [ansvar.eu/docs/agent-skills](https://ansvar.eu/docs/agent-skills)
   publishes.
@@ -81,9 +84,12 @@ versions may show the `ansvar-` form.
 | `vulnerability-management` | `/ansvar-compliance-skills:vulnerability-management` | Programme assessment against served criteria and a defensive feed cycle with KEV, EPSS, exposure questions and per-source cursors; scanner findings are required for decision workflows. |
 | `zero-trust` | `/ansvar-compliance-skills:zero-trust` | Zero trust maturity assessment against the CISA Zero Trust Maturity Model v2.0 functions, with cited evidence, the obligations that apply to you, and a baseline to re-run the next cycle against. |
 | `product-horizon` | `/ansvar-compliance-skills:product-horizon` | A regulatory applicability register for one product, service or entity on the markets you name: the verdict per EU and national act with its cited basis, the facts still open, the national layer behind each EU act, and the dated obligations ahead. |
+| `cmmc` | `/ansvar-compliance-skills:cmmc` | CMMC self-assessment family for the workflow and scope you select; Team and Company plans. |
+| `cmmc-level-1` | `/ansvar-compliance-skills:cmmc-level-1` | Level 1 self-assessment for Federal Contract Information. `cmmc_l1_self` is a Free/Solo monthly teaser type within the shared ADR-090 allowance and runs on Premium, Team and Company. |
+| `cmmc-level-2` | `/ansvar-compliance-skills:cmmc-level-2` | Level 2 self-assessment for Controlled Unclassified Information, with a current System Security Plan; Team and Company plans. |
 
-The focused skills and each family skill end with openings you can paste to your agent. One from
-each:
+The focused skills and each family skill end with openings you can paste to
+your agent. Examples:
 
 - `gap-analysis`: "Using Ansvar, run a NIS2 gap analysis for our managed hosting business in the Netherlands."
 - `threat-model`: "Using Ansvar, run a STRIDE threat model on the OT network at our bottling plant."
@@ -125,7 +131,7 @@ When both could fit, name the one you want by its command.
 
 Plan notes: the four standalone skills and `using-ansvar` state their own
 plan rules (summarised under [The connector
-requirement](#the-connector-requirement)). The ten family skills do not:
+requirement](#the-connector-requirement)). The workflow library checks access:
 at run time each calls `list_workflow_types`, and a workflow the caller's
 plan cannot start is marked `available_to_caller: false` with a tier
 caveat. The ISO skill's licensed clause lane needs the paid, per-standard
@@ -148,8 +154,8 @@ truth; this plugin is a wrapper.
 `scripts/sync.sh` fetches each `SKILL.md` from `raw.githubusercontent.com`
 and re-vendors it; `scripts/sync.sh --check` diffs without writing.
 
-**Workflow skill library.** The ten family skills and one focused skill are compiled in
-Ansvar's workflow repository against a pinned workflow bundle, with a
+**Workflow skill library.** Eleven family skills and four focused skills
+are compiled in Ansvar's workflow repository against a pinned workflow bundle, with a
 manifest that carries a sha256 per file; `using-ansvar` is maintained in
 Ansvar's website repository. Both repositories are private. ansvar.eu
 publishes the exact bytes at `https://ansvar.eu/skills/<id>/SKILL.md`
@@ -207,7 +213,7 @@ email domains. Per skill:
 
 - **`using-ansvar`** — works on every plan, including Free; on Free each
   search carries exactly one jurisdiction or one framework.
-- **The ten family skills** — admission per workflow comes from the live
+- **The eleven family skills** — admission per workflow comes from the live
   catalogue, as described under Plan notes above.
 
 **`vulnerability-management`**: the feed cycle uses free feed tools. Programme
@@ -216,9 +222,14 @@ and `list_workflow_types`; an assessment is not promised on Free or Solo.
 A monthly teaser is usable only where the live catalogue admits it within the
 shared allowance. See the [submission packet](openai/review/v2.2.0-submission-packet.md).
 
-**`zero-trust`**: access to the zero trust assessment is checked with
-`get_my_capabilities` and `list_workflow_types`; run it only where the live
-catalogue admits it on your account.
+**`zero-trust`**: The zero trust assessment runs on Team and Company plans.
+On Free, search and cite CISA ZTMM v2.0 and NIST SP 800-207 from the
+`zero-trust-frameworks` corpus. The assessment has no Free teaser.
+
+**CMMC**: the base and Level 2 run on Team and Company. `cmmc_l1_self` is
+a Free/Solo monthly teaser type within the shared ADR-090 allowance and runs
+on Premium, Team and Company. For all these workflows, live availability is
+decided by `get_my_capabilities` and `list_workflow_types`.
 
 No plan tier is required to install the plugin itself — only to run the
 gateway-backed workflows a given skill invokes.
@@ -250,13 +261,14 @@ ansvar-compliance-skills@synced`.
 
 ### Directly from this repository
 
-This repository is itself a marketplace containing two plugin entries, so
+This repository is itself a marketplace containing three plugin entries, so
 you can add it without a claude.ai account:
 
 ```
 /plugin marketplace add Ansvar-Systems/ansvar-compliance-skills
 /plugin install ansvar-compliance-skills@ansvar-compliance-skills
 /plugin install ansvar-vulnerability-management@ansvar-compliance-skills
+/plugin install ansvar-zero-trust@ansvar-compliance-skills
 /reload-plugins
 ```
 
@@ -271,7 +283,7 @@ git clone https://github.com/Ansvar-Systems/ansvar-compliance-skills.git
 claude --plugin-dir ./ansvar-compliance-skills
 ```
 
-After install, run `/help` to see the seventeen skills listed under the
+After install, run `/help` to see the twenty skills listed under the
 `ansvar-compliance-skills` namespace, or invoke one directly, for example:
 
 ```
@@ -281,7 +293,8 @@ After install, run `/help` to see the seventeen skills listed under the
 ## Validation
 
 `claude plugin validate .` validates the marketplace and bundle. Validate the focused
-plugin with `claude plugin validate plugins/ansvar-vulnerability-management`.
+plugins with `claude plugin validate plugins/ansvar-vulnerability-management`
+and `claude plugin validate plugins/ansvar-zero-trust`.
 
 ## License
 

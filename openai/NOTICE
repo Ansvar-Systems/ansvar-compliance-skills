@@ -3,8 +3,8 @@ Copyright 2026 Ansvar Systems AB. Skill text: CC BY 4.0.
 
 The focused skill instructions and ChatGPT-specific evidence/account boundaries
 are authored in this repository under openai/src and openai/shared, except
-Vulnerability Management, generated from the pinned compiled skill. Its adapter
-replaces commercial access wording and adds the ChatGPT evidence boundary;
+Vulnerability Management and Zero Trust, generated from pinned compiled skills.
+Their adapters replace commercial access wording and add the ChatGPT evidence boundary;
 the unmodified source and source hash are retained in vendor/ and upstream-lock.json.
 Workflow execution and report-delivery references are byte-identical compiled
 fragments from the Ansvar workflow instruction library. The build records their

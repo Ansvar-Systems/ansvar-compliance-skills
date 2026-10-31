@@ -18,7 +18,9 @@ spec.loader.exec_module(builder)
 class Packages(unittest.TestCase):
     def test_compiled_adaptation_and_source_tampering_refuse(self):
         for path in ("openai/vendor/vulnerability-management.md",
-                     "openai/src/ansvar-vulnerability-management/SKILL.md"):
+                     "openai/src/ansvar-vulnerability-management/SKILL.md",
+                     "openai/vendor/zero-trust.md",
+                     "openai/src/ansvar-zero-trust/SKILL.md"):
             with self.subTest(path=path), tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp)
                 shutil.copytree(ROOT / "openai", root / "openai", ignore=shutil.ignore_patterns("dist"))
@@ -35,6 +37,30 @@ class Packages(unittest.TestCase):
         for contract in ("scanner findings", "cursor_expired", "snapshot_required",
                          "baseline_report_id", "Unknown basis cannot close a gap"):
             self.assertIn(contract, adapted)
+
+    def test_zero_trust_contract_and_commercial_adapter(self):
+        compiled = (ROOT / "openai/vendor/zero-trust.md").read_bytes()
+        with self.assertRaisesRegex(ValueError, "adapter needs review"):
+            builder.adapt_compiled(compiled.replace(b"State the tier limits", b"State access"),
+                                   "ansvar-zero-trust")
+        adapted = builder.adapt_compiled(compiled, "ansvar-zero-trust").decode()
+        self.assertNotRegex(adapted, r"\b(?:Premium|Solo|Free|Team|Company|upgrade)\b")
+        self.assertNotIn("State the tier limits", adapted)
+        for contract in ("Grounding mode: interview", "baseline_report_id",
+                         "No control-library candidates", "Do not submit `library_controls`",
+                         "guidance and practice references", "self-assessment",
+                         "wait for an actual answer", "does not establish a stage"):
+            self.assertIn(contract, adapted)
+        catalog = json.loads((ROOT / "openai/catalog.json").read_text())
+        self.assertEqual(catalog["version"], "0.3.0")
+        self.assertEqual(len(catalog["plugins"]), 5)
+        item = next(p for p in catalog["plugins"] if p["id"] == "ansvar-zero-trust")
+        self.assertTrue(all(len(p) <= 128 for p in item["prompts"]))
+        broken = copy.deepcopy(item)
+        broken["prompts"][0] = "Using Ansvar, " + "x" * 128
+        with self.assertRaisesRegex(ValueError, "submission limit"):
+            builder.validate_spec(broken)
+        self.assertEqual(len(builder.verify_inputs(ROOT)["compiled_skills"]), 2)
 
     def test_reproducible_and_self_contained(self):
         first = builder.build(ROOT)

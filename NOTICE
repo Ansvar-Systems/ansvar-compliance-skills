@@ -3,8 +3,8 @@ Ansvar Compliance Skills plugin — third-party / upstream attribution
 
 The Claude plugin bundles no original skill content. Every file under skills/ is
 a byte-identical vendored copy of a SKILL.md published by Ansvar Systems AB:
-skills 1-4 from their own public repositories, skills 5-17 (the workflow
-skill library) as published at https://ansvar.eu/skills/<id>/SKILL.md from a
+skills 1-4 from their own public repositories, skills 5-20 (the workflow
+skill library: sixteen skills) as published at https://ansvar.eu/skills/<id>/SKILL.md from a
 pinned source commit recorded in skills-manifest.json. The plugin adds only
 packaging: the plugin manifest, the MCP server declaration, the sync script,
 and the anti-drift CI gate that keeps the copies honest.
@@ -31,11 +31,12 @@ and the anti-drift CI gate that keeps the copies honest.
                    trademarks and product designations from the grant)
    Copyright:      (c) 2026 Ansvar Systems AB
 
-5-17. The workflow skill library: skills/using-ansvar, skills/gap-analysis,
+5-20. The workflow skill library: skills/using-ansvar, skills/gap-analysis,
    skills/threat-model, skills/dpia, skills/tara, skills/tender-review,
    skills/vulnerability-decisions, skills/tabletop, skills/document-review,
    skills/drone-operations, skills/product-horizon, skills/vulnerability-management,
-   skills/zero-trust (each SKILL.md)
+   skills/zero-trust, skills/cmmc, skills/cmmc-level-1, skills/cmmc-level-2
+   (each SKILL.md)
    Published at:   https://ansvar.eu/skills/<id>/SKILL.md
                    (source commit and per-file sha256 in skills-manifest.json)
    License:        Creative Commons Attribution 4.0 International (CC BY 4.0),
@@ -48,15 +49,18 @@ The separate OpenAI packages under openai/ add focused authored skills and
 reuse pinned workflow fragments. Their attribution is in openai/NOTICE.
 
 Attribution notice per the license: when you share or adapt this plugin (or
-any of the seventeen skills individually), credit Ansvar Systems AB, link to the
+any of the twenty skills individually), credit Ansvar Systems AB, link to the
 CC BY 4.0 license, and note any changes you made. This plugin makes no
 changes to the skill text — see .github/workflows/anti-drift.yml, which
 fails CI the moment a vendored copy diverges from its source.
 
 The licence covers the skill text only. Skills 1-4 say so in a note in
-their own SKILL.md; skills 5-17 state the licence in their frontmatter.
+their own SKILL.md; skills 5-20 state the licence in their frontmatter.
 Regulatory, standards and guidance content any skill fetches at runtime
 through the Ansvar Gateway MCP connector is served from its original
 official publisher under that publisher's own terms, cited per row (for
 example EUR-Lex content under Commission Decision 2011/833/EU; ENISA
 publications under CC BY 4.0).
+
+Both focused Claude plugins copy their skill and using-ansvar from the bundle
+without changes. The same source attribution and licence apply.
