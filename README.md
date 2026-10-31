@@ -1,19 +1,22 @@
 # Ansvar Compliance Skills
 
-Focused ChatGPT and Codex packages for Citation Check, AI Compliance and Privacy
-Review are built from [openai/](openai/README.md). That directory contains the
+Focused ChatGPT and Codex packages for Citation Check, AI Compliance, Privacy
+Review and Vulnerability Management are built from [openai/](openai/README.md).
+That directory contains the
 build commands, release status and submission materials. The Claude package
-described below keeps its existing manifest and skill set.
+described below includes sixteen skills. The focused Claude vulnerability
+management plugin includes its compiled skill and `using-ansvar`.
 
-A Claude Code plugin that bundles fifteen published Ansvar Systems AB agent
+A Claude Code plugin that bundles sixteen published Ansvar Systems AB agent
 skills for EU security and compliance work. The plugin adds no skill content
 of its own: it packages the canonical skills, unmodified, so they install as
 one unit.
 
-The fifteen come in two groups:
+The sixteen come in two groups:
 
 - **Four standalone skills**, each published in its own public repository.
-- **The workflow skill library**: ten family skills compiled by Ansvar from
+- **The workflow skill library**: ten family skills and one focused vulnerability
+  management skill compiled by Ansvar from
   its workflow definitions, plus `using-ansvar`, the routing skill for
   one-off legal and standards questions. These are the skills
   [ansvar.eu/docs/agent-skills](https://ansvar.eu/docs/agent-skills)
@@ -55,9 +58,10 @@ versions may show the `ansvar-` form.
 | `tabletop` | `/ansvar-compliance-skills:tabletop` | A crisis simulation run turn by turn against a scripted adversary, scored from the decisions the team made, with an after-action report. |
 | `document-review` | `/ansvar-compliance-skills:document-review` | Reviews an uploaded document against a regulatory baseline, with every finding anchored to a paragraph-level citation and a content hash. |
 | `drone-operations` | `/ansvar-compliance-skills:drone-operations` | A SORA determination chain for a specific-category UAS operation: ground and air risk, SAIL, the operational safety objectives with robustness levels, and containment. |
+| `vulnerability-management` | `/ansvar-compliance-skills:vulnerability-management` | Programme assessment against served criteria and a defensive feed cycle with KEV, EPSS, exposure questions and per-source cursors; scanner findings are required for decision workflows. |
 | `product-horizon` | `/ansvar-compliance-skills:product-horizon` | A regulatory applicability register for one product, service or entity on the markets you name: the verdict per EU and national act with its cited basis, the facts still open, the national layer behind each EU act, and the dated obligations ahead. |
 
-Each family skill ends with openings you can paste to your agent. One from
+The focused skill and each family skill end with openings you can paste to your agent. One from
 each:
 
 - `gap-analysis`: "Using Ansvar, run a NIS2 gap analysis for our managed hosting business in the Netherlands."
@@ -69,6 +73,7 @@ each:
 - `tabletop`: "Using Ansvar, run a ransomware tabletop exercise for our incident response team."
 - `document-review`: "Using Ansvar, review our data processing agreement against GDPR Articles 28 and 32."
 - `drone-operations`: "Using Ansvar, run a SORA for BVLOS powerline inspection over sparsely populated terrain."
+- `vulnerability-management`: "Using Ansvar, assess our vulnerability management process. We make industrial gateways sold in Germany and the Netherlands."
 - `product-horizon`: "Using Ansvar, which EU acts apply to our networked PLC sold in France and Germany, and why?"
 
 Start with "Using Ansvar". Without the name, the agent may answer from its
@@ -121,7 +126,7 @@ truth; this plugin is a wrapper.
 `scripts/sync.sh` fetches each `SKILL.md` from `raw.githubusercontent.com`
 and re-vendors it; `scripts/sync.sh --check` diffs without writing.
 
-**Workflow skill library.** The ten family skills are compiled in
+**Workflow skill library.** The ten family skills and one focused skill are compiled in
 Ansvar's workflow repository against a pinned workflow bundle, with a
 manifest that carries a sha256 per file; `using-ansvar` is maintained in
 Ansvar's website repository. Both repositories are private. ansvar.eu
@@ -130,7 +135,9 @@ from a pin (source commit plus manifest sha256), and this plugin follows
 the same pin. `skills-manifest.json` records it: the source commit, the
 manifest sha256, the website commit the pin was read from, and the sha256
 of each vendored file. Nothing in this repository lists the families by
-hand; `--repin` takes them from the upstream manifest.
+hand; `--repin` takes families and focused skills from the upstream manifest. It also
+refreshes the focused Claude plugin copies; `--check` verifies those copies
+and their gateway declaration against the bundle.
 
 - `scripts/sync.sh --check` verifies each library file against
   `skills-manifest.json` without network access, fails on any skill
@@ -181,6 +188,12 @@ email domains. Per skill:
 - **The ten family skills** — admission per workflow comes from the live
   catalogue, as described under Plan notes above.
 
+**`vulnerability-management`**: the feed cycle uses free feed tools. Programme
+assessment and decision workflow access are checked with `get_my_capabilities`
+and `list_workflow_types`; an assessment is not promised on Free or Solo.
+A monthly teaser is usable only where the live catalogue admits it within the
+shared allowance. See the [submission packet](openai/review/v2.2.0-submission-packet.md).
+
 No plan tier is required to install the plugin itself — only to run the
 gateway-backed workflows a given skill invokes.
 
@@ -211,12 +224,13 @@ ansvar-compliance-skills@synced`.
 
 ### Directly from this repository
 
-This repository is itself a marketplace containing one plugin entry, so
+This repository is itself a marketplace containing two plugin entries, so
 you can add it without a claude.ai account:
 
 ```
 /plugin marketplace add Ansvar-Systems/ansvar-compliance-skills
 /plugin install ansvar-compliance-skills@ansvar-compliance-skills
+/plugin install ansvar-vulnerability-management@ansvar-compliance-skills
 /reload-plugins
 ```
 
@@ -231,7 +245,7 @@ git clone https://github.com/Ansvar-Systems/ansvar-compliance-skills.git
 claude --plugin-dir ./ansvar-compliance-skills
 ```
 
-After install, run `/help` to see the fifteen skills listed under the
+After install, run `/help` to see the sixteen skills listed under the
 `ansvar-compliance-skills` namespace, or invoke one directly, for example:
 
 ```
@@ -240,9 +254,8 @@ After install, run `/help` to see the fifteen skills listed under the
 
 ## Validation
 
-`claude plugin validate .` passes against this repository (it validates both
-`.claude-plugin/marketplace.json` and the embedded `.claude-plugin/plugin.json`
-entry, since the marketplace's single plugin entry uses a local `./` source).
+`claude plugin validate .` validates the marketplace and bundle. Validate the focused
+plugin with `claude plugin validate plugins/ansvar-vulnerability-management`.
 
 ## License
 

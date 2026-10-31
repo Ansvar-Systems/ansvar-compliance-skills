@@ -7,12 +7,12 @@ metadata:
   connector: https://gateway.ansvar.eu/mcp
   version: "1.5.0"
   build_identity:
-    source_identity: "a13ed928317505ee65edfd3892c59d372e76abdf276ca0094f51fe7c24051fef"
+    source_identity: "e5f5720e03e898c47ed1c600ed9f45edb21c73fbaf8b0f404900fd77332bc799"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.38.0@sha256:d548c30e1e68b335af520e5876467dbb184a28e40857302e5403bde514ec21f2"
-      digest: "sha256:d548c30e1e68b335af520e5876467dbb184a28e40857302e5403bde514ec21f2"
-      version_label: "1.38.0"
-    registry_snapshot_sha256: "0905ec9d2c995f3907983fe3a03b12c443f717a2e6cf805b322c8044bc66b0b8"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.40.0@sha256:9e6bb4c4b33b33ab39af39e49e175f4da3b8377f3526672157d97fc6c6c6c17d"
+      digest: "sha256:9e6bb4c4b33b33ab39af39e49e175f4da3b8377f3526672157d97fc6c6c6c17d"
+      version_label: "1.40.0"
+    registry_snapshot_sha256: "891abefeb06ffe16bbda7a512311c6aa82b6a88200a271fce46d3e169c6ec55c"
 ---
 
 # Regulatory Gap Analysis
@@ -679,6 +679,7 @@ Read from the workflow content the deployed image serves. `list_workflow_types` 
 | `gap_analysis_nis2_nl` | Gap Analysis — NIS2 Netherlands (Cyberbeveiligingswet, Stb. 2026, 187) | NL · nis2 | Gap analysis against the Dutch NIS2 transposition - Cyberbeveiligingswet (Stb. 2026, 187) and Cyberbeveiligingsbesluit (Stb. 2026, 189), both in force 15 August 2026 - using the NIS2 Art.… |
 | `gap_analysis_nis2_pl` | Gap Analysis — NIS2 Poland (ustawa o KSC, Dz.U. 2018 poz. 1560; t.j. Dz.U. 2026 poz. 20, zm. Dz.U. 2026 poz. 252) | PL · nis2 | Analiza luk względem polskiej transpozycji NIS2 w ustawie o krajowym systemie cyberbezpieczeństwa, znowelizowanej ustawą z dnia 23 stycznia 2026 r. (Dz.U. 2026 poz. 252). Art. 8 KSC… |
 | `gap_analysis_r155` | Gap Analysis — UNECE R155 Cyber Security Management System (CSMS) | EU · unece_r155 | Gap analysis of conformity against UNECE R155: the CSMS process controls 7.2.1-7.2.5 and the vehicle-type controls 7.3.1-7.3.6. Scoping fixes the role - an OEM holds the CSMS Certificate… |
+| `gap_analysis_vulnerability_management` | Ansvar Vulnerability Management | VULN_MGMT | Assess vulnerability management functions against served criteria and compare compliance across cycles. |
 | `ot_machinery_gap` | Machinery Regulation Gap Analysis — EHSRs (EU) 2023/1230 | EU · machinery_2023_1230 | Gap analysis of a manufacturer's obligations for machinery placed on the EU market against the Machinery Regulation (EU) 2023/1230 Annex III Essential Health & Safety Requirements and the… |
 
 ## Starting a run
