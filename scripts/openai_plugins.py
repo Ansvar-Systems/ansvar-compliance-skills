@@ -20,6 +20,41 @@ ROOT = Path(__file__).resolve().parents[1]
 FRAGMENTS = ("workflow-loop.md", "delivery-rules.md")
 SCHEMA = "https://agent-plugins.org/schemas/1.0.0/"
 GATEWAY = "https://gateway.ansvar.eu/mcp"
+COMPILED_ID = "ansvar-vulnerability-management"
+
+
+def adapt_compiled(data):
+    """Keep the compiled workflow instructions; adapt commercial wording for ChatGPT."""
+    text = data.decode()
+    replacements = {
+        "with a tier caveat": "with an access caveat",
+        "Tiers without a run allowance": "Accounts without a run allowance",
+        "not on the customer's plan": "not on the customer's account access",
+        "and plan. Never infer that there is no law.":
+            "and account access. Never infer that there is no law.",
+        "Call get_my_capabilities and list_workflow_types. State availability and tier\nlimits before starting.":
+            "Call get_my_capabilities and list_workflow_types. State available capabilities\nbefore starting, without commercial messaging.",
+        "related-to until reviewed. Free, Solo and Premium, plus missing or unknown\ntiers, carry controls: unavailable_on_tier when the library is unavailable.":
+            "related-to until reviewed. When the control library is unavailable, retain\nthe returned unavailable status; never invent control mappings.",
+        "Steps 1–3 run on every tier with the free feed tools. At Free and Solo, stop\nafter step 3 and deliver the candidate list, exposure questions, freshness and\ncursors. Explain: step 4 needs Premium or above and a scanner export. At any\ntier without a scanner export, stop after step 3 with the same deliverable.":
+            "Check feed-tool availability for steps 1–3. If the decision workflows are\nunavailable or no scanner export is supplied, stop after step 3 and deliver\nthe candidate list, exposure questions, freshness and cursors. Explain the\nmissing input or unavailable capability without commercial messaging.",
+        "4. Decide. At Premium or above, ask for a scanner export.":
+            "4. Decide. When the decision workflows are available, ask for a scanner export.",
+        "The workflows grant scoring tools inside the run at Premium.":
+            "The workflows grant scoring tools inside an admitted run.",
+    }
+    for old, new in replacements.items():
+        if old not in text:
+            raise ValueError(f"Compiled adapter needs review: missing {old!r}")
+        text = text.replace(old, new)
+    frontmatter, body = text.split("\n---\n", 1)
+    boundary = ("\n\n## Client boundaries\n\n"
+                "Read [account and evidence boundaries](references/grounding.md) before any\n"
+                "tool call. Those rules govern this entire skill, including unavailable\n"
+                "capabilities, promotional responses and receipt delivery. Refuse exploit\n"
+                "instructions and redirect to defensive exposure assessment. Redirect\n"
+                "unrelated tasks; never certify product safety or legal compliance.\n")
+    return (frontmatter + "\n---\n" + boundary + body).encode()
 
 
 def digest(data):
@@ -61,6 +96,19 @@ def upstream(wf_source, ai_source):
         target = "openai/vendor/" + name
         files[target] = data
         rows.append({"path": target, "source_path": source, "sha256": digest(data)})
+    focused = next(row for row in manifest["focused_skills"] if row["id"] == "vulnerability-management")
+    source = "instructions/dist/vulnerability-management/SKILL.md"
+    compiled = git(wf_source, "show", f"{commit}:{source}")
+    artifact = next(row for row in focused["artifacts"] if row["path"] == source)
+    if digest(compiled) != artifact["sha256"]:
+        raise ValueError("Compiled skill hash mismatch")
+    published = git(ai_source, "show", f"{ai_commit}:public/skills/vulnerability-management/SKILL.md")
+    if compiled != published:
+        raise ValueError("Published compiled skill differs from workflow pin")
+    target = "openai/vendor/vulnerability-management.md"
+    files[target] = compiled
+    files[f"openai/src/{COMPILED_ID}/SKILL.md"] = adapt_compiled(compiled)
+    compiled_row = {"path": target, "source_path": source, "sha256": digest(compiled)}
     asset = "public/apple-touch-icon.png"
     icon = git(ai_source, "show", f"{ai_commit}:{asset}")
     files["openai/assets/icon.png"] = icon
@@ -71,6 +119,7 @@ def upstream(wf_source, ai_source):
         "publication_repo": "Ansvar-Systems/ansvar-ai",
         "publication_commit": ai_commit,
         "fragments": rows,
+        "compiled_skills": [compiled_row],
         "icon": {"path": "openai/assets/icon.png", "source_path": asset, "sha256": digest(icon)},
     }
     return lock, files
@@ -81,7 +130,7 @@ def repin(root, wf_source, ai_source, check=False):
     if check:
         existing = json.loads(read(root / "openai/upstream-lock.json"))
         # The website commit can move for unrelated work; compare the actual inputs.
-        for key in ("workflow_commit", "workflow_manifest_sha256", "fragments", "icon"):
+        for key in ("workflow_commit", "workflow_manifest_sha256", "fragments", "compiled_skills", "icon"):
             if existing[key] != lock[key]:
                 raise ValueError(f"Published input changed: {key}; review and repin")
         verify_inputs(root)
@@ -100,9 +149,17 @@ def verify_inputs(root):
         raise ValueError("Unexpected fragment roster")
     if lock["icon"]["path"] != "openai/assets/icon.png":
         raise ValueError("Unexpected branding source")
-    for row in [*lock["fragments"], lock["icon"]]:
+    if [(r["path"], r["source_path"]) for r in lock["compiled_skills"]] != [(
+        "openai/vendor/vulnerability-management.md",
+        "instructions/dist/vulnerability-management/SKILL.md",
+    )]:
+        raise ValueError("Unexpected compiled skill roster")
+    for row in [*lock["fragments"], *lock["compiled_skills"], lock["icon"]]:
         if digest(read(root / row["path"])) != row["sha256"]:
             raise ValueError(f"Vendored input drift: {row['path']}")
+    expected_skill = adapt_compiled(read(root / "openai/vendor/vulnerability-management.md"))
+    if read(root / f"openai/src/{COMPILED_ID}/SKILL.md") != expected_skill:
+        raise ValueError("Compiled skill adaptation drift; run repin")
     return lock
 
 
@@ -114,6 +171,10 @@ def validate_spec(spec):
             raise ValueError(f"{spec['id']}: {key} must fit the listing's 30-character limit")
     if len(spec["description"]) > 4000:
         raise ValueError("Description exceeds listing limit")
+    if len(spec["prompts"]) > 3 or any(len(p) > 512 for p in spec["prompts"]):
+        raise ValueError("Default prompts exceed package limits")
+    if spec["id"] == COMPILED_ID and any(len(p) > 128 for p in spec["prompts"]):
+        raise ValueError("Default prompt exceeds directory submission limit")
     if len(spec["positive"]) != 5 or len(spec["negative"]) != 3:
         raise ValueError("Initial MCP review requires five positive and three negative cases")
     prompts = spec["prompts"] + [c["prompt"] for c in spec["positive"] + spec["negative"]]
@@ -153,7 +214,7 @@ def package_files(root, spec, version, lock):
             "interface": interface,
             "review": {"test_cases": {"positive": spec["positive"], "negative": spec["negative"]},
                        "commerce": False},
-            "publication": {"release_notes": "Initial focused workflow package using the Ansvar Gateway."},
+            "publication": {"release_notes": spec.get("release_notes", "Initial focused workflow package using the Ansvar Gateway.")},
         }},
     }
     files = {

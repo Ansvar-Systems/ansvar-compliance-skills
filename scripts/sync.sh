@@ -27,7 +27,7 @@
 #
 # Usage:
 #   scripts/sync.sh            # re-vendor the four standalone skills; verify the library
-#   scripts/sync.sh --check    # verify all fifteen; write nothing; exit 1 on any drift
+#   scripts/sync.sh --check    # verify all seventeen; write nothing; exit 1 on any drift
 #   scripts/sync.sh --repin --wf-source <ansvar-workflow-mcp checkout> \
 #                           --ai-source <ansvar-ai checkout> [--ai-ref origin/main]
 #       # refresh the library from the wf-mcp commit that ansvar-ai pins at

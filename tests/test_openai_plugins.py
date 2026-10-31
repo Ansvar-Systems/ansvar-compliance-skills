@@ -16,6 +16,26 @@ spec.loader.exec_module(builder)
 
 
 class Packages(unittest.TestCase):
+    def test_compiled_adaptation_and_source_tampering_refuse(self):
+        for path in ("openai/vendor/vulnerability-management.md",
+                     "openai/src/ansvar-vulnerability-management/SKILL.md"):
+            with self.subTest(path=path), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                shutil.copytree(ROOT / "openai", root / "openai", ignore=shutil.ignore_patterns("dist"))
+                (root / path).write_text("tampered")
+                with self.assertRaisesRegex(ValueError, "drift"):
+                    builder.verify_inputs(root)
+
+    def test_compiled_adapter_requires_review_on_upstream_change(self):
+        compiled = (ROOT / "openai/vendor/vulnerability-management.md").read_bytes()
+        with self.assertRaisesRegex(ValueError, "adapter needs review"):
+            builder.adapt_compiled(compiled.replace(b"At Premium or above", b"When authorized"))
+        adapted = builder.adapt_compiled(compiled).decode()
+        self.assertNotRegex(adapted, r"\b(?:Premium|Solo|Free|upgrade)\b")
+        for contract in ("scanner findings", "cursor_expired", "snapshot_required",
+                         "baseline_report_id", "Unknown basis cannot close a gap"):
+            self.assertIn(contract, adapted)
+
     def test_reproducible_and_self_contained(self):
         first = builder.build(ROOT)
         self.assertEqual(first, builder.build(ROOT))

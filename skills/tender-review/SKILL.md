@@ -7,12 +7,12 @@ metadata:
   connector: https://gateway.ansvar.eu/mcp
   version: "1.2.0"
   build_identity:
-    source_identity: "a13ed928317505ee65edfd3892c59d372e76abdf276ca0094f51fe7c24051fef"
+    source_identity: "b358ac656c5427006d8931b6f123384c66a05d26a9758d446180cb8a48529859"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.38.0@sha256:d548c30e1e68b335af520e5876467dbb184a28e40857302e5403bde514ec21f2"
-      digest: "sha256:d548c30e1e68b335af520e5876467dbb184a28e40857302e5403bde514ec21f2"
-      version_label: "1.38.0"
-    registry_snapshot_sha256: "0905ec9d2c995f3907983fe3a03b12c443f717a2e6cf805b322c8044bc66b0b8"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.46.0@sha256:b8c08ab44992cb27ef813b0cbc1afdcdd01861614112efdabb1cbc3dc2321f5e"
+      digest: "sha256:b8c08ab44992cb27ef813b0cbc1afdcdd01861614112efdabb1cbc3dc2321f5e"
+      version_label: "1.46.0"
+    registry_snapshot_sha256: "87836f39d4f993b651c2c002d1be7a862996a81fb66b7fa7d4c4335ebeed0c24"
 ---
 
 # Tender Review and Audit

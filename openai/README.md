@@ -1,7 +1,7 @@
 # Focused ChatGPT and Codex plugins
 
 This directory builds Ansvar Citation Check, Ansvar AI Compliance and Ansvar
-Privacy Review as separate portable Agent Plugins packages. Each bundles its
+Privacy Review plus Vulnerability Management as separate portable Agent Plugins packages. Each bundles its
 own focused skill and the existing authenticated Ansvar Gateway connection.
 
 These are release candidates. Local package checks and read-only gateway probes
@@ -26,8 +26,12 @@ ZIP bytes, archive roster and checksums with the current sources. Run
 `verify-dist` immediately before uploading. Zip contents use an explicit
 allowlist and contain no repository internals, credentials or review results.
 
-Author focused instructions in `src/`, listing text and review cases in
-`catalog.json`, and account/evidence boundaries in `shared/`. The build copies
+Author focused instructions in `src/`, except the generated Vulnerability
+Management skill. Its compiled source is locked in `vendor/`; `repin` applies
+the reviewed ChatGPT adapter and `check` refuses source or adaptation drift.
+The adapter must be reviewed if upstream commercial wording changes.
+
+Keep listing text and review cases in `catalog.json`, and account/evidence boundaries in `shared/`. The build copies
 these to each package. Update the catalog version when preparing a new release.
 
 The workflow execution and report-delivery fragments in `vendor/` and the
@@ -107,3 +111,8 @@ Official references consulted on 2026-10-03:
 - [Plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines)
 - [Portable manifest schema](https://agent-plugins.org/schemas/1.0.0/plugin.schema.json)
 - [Portable MCP schema](https://agent-plugins.org/schemas/1.0.0/mcp.schema.json)
+
+Vulnerability Management v2.2.0 release copy and remaining founder actions:
+[submission packet](review/v2.2.0-submission-packet.md). The OpenAI batch version
+is 0.2.0. The full product name exceeds the listing limit, so its display name
+is **Ansvar Vulnerability Mgmt**; the id remains `ansvar-vulnerability-management`.

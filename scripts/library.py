@@ -48,6 +48,7 @@ AI_VENDORED_MANIFEST = "src/data/workflow-skills.manifest.json"
 # The one library skill that is not a compiled family. It is named here
 # because it is hand-published and appears in no upstream manifest.
 HAND_PUBLISHED = {"using-ansvar": "public/skills/using-ansvar/SKILL.md"}
+FOCUSED_PLUGIN = "plugins/ansvar-vulnerability-management"
 PUBLISHED_URL = "https://ansvar.eu/skills/{id}/SKILL.md"
 # Skill directories that scripts/sync.sh raw-fetches from their own public
 # repositories. Keep in step with MAPPINGS in scripts/sync.sh.
@@ -60,6 +61,13 @@ STANDALONE = {
 
 
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+
+
+def focused_files(root: Path) -> dict[str, bytes]:
+    return {
+        f"{FOCUSED_PLUGIN}/skills/{sid}/SKILL.md": (root / f"skills/{sid}/SKILL.md").read_bytes()
+        for sid in ("vulnerability-management", "using-ansvar")
+    } | {f"{FOCUSED_PLUGIN}/.mcp.json": (root / ".mcp.json").read_bytes()}
 
 
 def valid_id(sid: object) -> bool:
@@ -171,6 +179,10 @@ def cmd_check(root: Path) -> int:
         for p in problems:
             print(f"  {p}")
         return 1
+    for rel, data in focused_files(root).items():
+        if not (root / rel).is_file() or (root / rel).read_bytes() != data:
+            print(f"DRIFT DETECTED: {rel}; run scripts/sync.sh --repin")
+            return 1
     wf = manifest.get("workflow_library", {})
     print(
         f"OK: {len(entries)} library skills match {MANIFEST_NAME} "
@@ -236,7 +248,7 @@ def cmd_repin(root: Path, wf_source: Path, ai_source: Path, ai_ref: str) -> int:
     if sha256(ai_vendored) != pin["manifest_sha256"]:
         fail(f"{AI_REPO}@{ai_commit[:12]}:{AI_VENDORED_MANIFEST} does not match its own pin")
     upstream = json.loads(manifest_bytes)
-    families = upstream.get("families") or []
+    families = (upstream.get("families") or []) + (upstream.get("focused_skills") or [])
     if not families:
         fail("upstream manifest lists no families")
 
@@ -266,7 +278,7 @@ def cmd_repin(root: Path, wf_source: Path, ai_source: Path, ai_ref: str) -> int:
             (
                 {
                     "id": fid,
-                    "lane": "workflow-family",
+                    "lane": "workflow-focused" if fam.get("parent_family") else "workflow-family",
                     "title": fam.get("title"),
                     "instruction_version": fam.get("instruction_version"),
                     "path": f"skills/{fid}/SKILL.md",
@@ -337,6 +349,11 @@ def cmd_repin(root: Path, wf_source: Path, ai_source: Path, ai_ref: str) -> int:
         if d.exists():
             shutil.rmtree(d)  # raises on failure; the manifest is not rewritten
             print(f"  - skills/{sid} (no longer published)")
+
+    for rel, data in focused_files(root).items():
+        target = root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        write_atomic(target, data)
 
     out = {
         "schema": 1,
