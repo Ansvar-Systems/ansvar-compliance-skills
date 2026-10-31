@@ -31,13 +31,28 @@ customer believes it has.
    instructions, its required fields, its `data_to_fetch` directives, and its
    `step_id`.
 4. Do what the step says. Fetch what its directives name, ask the human what it
-   says to ask, and answer in the shape it declares.
+   says to ask, and answer in the shape it declares. Pass `workflow_id` on every
+   `search` you make for the run (see below).
 5. `submit_response(workflow_id, step_id=<the id get_current_step returned>,
    responses={…}, fetched_data={…})`. Quality gates run server-side inside this
    call; a rejection comes back as `accepted: false` with a reason and a hint.
    Fix what the hint names and submit again.
 6. Repeat from step 3 until the engine reports `status: ready_for_report`, then
-   call `generate_report(workflow_id)`.
+   call `generate_report(workflow_id)`. If your client limits tool output size,
+   call with `include_report=false`: you get the receipt, its `display_markdown`
+   and the artifact links. Relay `delivery_receipt.display_markdown` unchanged;
+   get the full report with `include_report=true` or use the rendered artifacts.
+
+### Name the run on every search
+
+Every `search` you make during a run carries the run's id:
+`search(query=…, jurisdictions=[…], workflow_id=<the id start_workflow returned>)`.
+Add it to the params a `data_to_fetch` directive or a search plan gives you,
+and to your own enrichment searches. A search that names the run counts
+against the run's search allowance, not the daily search budget, so a long run
+is not cut off part way. Without `workflow_id` the search draws on the daily
+budget. Tiers without a run allowance ignore the parameter, and it never
+changes what is searched.
 
 When a step declares `data_to_fetch`, what you fetched rides `fetched_data`,
 keyed by the step's declared keys, each value a typed envelope: `{"status":
@@ -46,6 +61,80 @@ keyed by the step's declared keys, each value a typed envelope: `{"status":
 returned nothing, or `{"status": "error", "error_message": "..."}` for a call
 that failed. The engine rejects any other shape, and an empty result is
 recorded as empty — the refusal discipline below, in envelope form.
+
+Tools listed under `not_applicable_fetches` are not called and are not recorded
+in `fetched_data`: the server has already removed them from the step for your
+plan; follow the step note. Use `fetched_empty` only for genuinely empty
+results. A declared call that the gateway refuses, or a tool/downstream
+failure, takes the failed-fetch envelope with the returned reason.
+
+### Cite the row you fetched
+
+A citation names the fetched row it rests on; the server writes the row's
+identity into the stored citation. Never retype a reference or a link: a
+retyped `NIS2 Art. 21` or a copied URL is a string the verifier cannot resolve,
+and the report then shows the finding as unverified.
+
+Every accepted `submit_response` returns `row_handles`, one per row you put in
+`fetched_data`, and `get_current_step` returns `citable_rows`, the rows the run
+has stored so far. Each entry carries a `handle` (`wfrow:v1:...`), the row's
+`canonical_ref` and its `title`. Cite with one of these shapes:
+
+- `{"row": "<handle>"}` for a row an earlier submission stored. Add
+  `"quotation"` and `"tier"` if you need them; nothing else.
+- `{"row": "fetched_data.<key>[<i>]"}` for a row in the same submission's
+  `fetched_data`, before it has a handle.
+- `{"lookup": {...}}` with the row's `citation.lookup` copied exactly.
+- `"doc://<uuid>/segment/paragraph/<ref>"` for the customer's own document,
+  resolved with `resolve_document_segment` first.
+- `{"provenance": "analyst_knowledge", "statement": "..."}` for a point no
+  fetched row supports. It is recorded as your own analysis, not as a citation,
+  and it names no reference.
+
+Paste each row as the gateway returned it, including citation.publisher and citation.license;
+the report attributes a source only from them.
+
+When `get_current_step` returns a `citation_instruction`, use these shapes in
+every citation slot of that run (`citations`, `regulatory_citations`,
+`regulatory_basis`, `attribution`, `framework_mappings`), whatever
+`citation_contract` the run carries, and even where a step's questions still
+show an identifier string or an object with `ref`, `law`, `section` or `url`.
+`attribution` and the tender `regulatory_basis` take the object form
+`{"row": ...}` only, never a bare string. A step that returns no
+`citation_instruction` (decision review, supplier assurance, the
+applicability register, the micro threat model, the deferral dossier) keeps
+the citation shape its own questions state. A `framework_mappings` value is a
+reference too: `{"scf": {"row": "<handle>"}, "NIS2": {"row": "<handle>"}}`,
+never `{"scf": "IAC-11"}`. Copy a handle exactly as listed; a handle you build
+yourself names no row.
+
+A `quotation` is a full clause copied verbatim from the row's served text, at
+least 25 characters (6 in Chinese, Japanese or Korean). Keep the text as
+served, line breaks and hyphens included. A shorter fragment, such as
+`"incident handling"`, is too short to compare reliably, and the report does
+not count it as a checked quotation.
+
+Run every fetch a step declares, and put each row in `fetched_data` whole,
+as the tool returned it, including its `citation` block (`corpus_id`, `edition`).
+A trimmed row loses its edition. The report cannot pin the corpus, and the twin
+refuses to record the model. A handle to an earlier step's row does not replace a
+step's own fetches: in a gap analysis, a control whose own pass-1 fetch
+returned nothing reads as unresolved in the report, whatever the control
+cites. A call you made beyond the declared fetches rides `fetched_data` under a
+key of your own, so its rows can be cited the same way.
+
+Do not add `canonical_ref`, `ref`, `source_url` or `source_id` beside a row
+citation. If you copy them, they must equal the row's; a different value is
+refused as `identity_retyped`. When `start_workflow` returns
+`citation_contract: by_reference`, a citation in any other shape is refused with
+`citation_not_addressable`. Each violation names the field, the reason and up to
+five candidate rows: replace the citation with `{"row": "<handle>"}` for the row
+that supports the point, fetch the row first, or record the point as
+`analyst_knowledge`. The server offers candidates; it never picks one for you.
+
+A user asks for this in their own words, for example: *Using Ansvar, run a NIS2
+gap analysis for our managed service and cite each finding to the provision you
+fetched.*
 
 Read every `step_id` from `get_current_step`. Step ids live in the workflow
 definition, they differ per type and per variant, and dynamic stages mint one
@@ -67,6 +156,38 @@ actually said. Never submit `user_approved: true` on your own reading of the
 material, and never fill a consent field to keep the loop moving. Approval you
 manufactured is the one defect nobody downstream can detect.
 
+### Search case law one issue at a time
+
+Case-law search matches the words of your query against the decisions. A
+matter, a case file or a long case description fails as a query: the search
+refuses it for length, and a copy cut down to fit ranks decisions on the facts
+it opens with instead of the legal question. When the input is a matter or a
+description:
+
+1. Name the distinct legal issues it raises.
+2. Run one `search` per issue, scoped with `jurisdictions` and naming the run
+   with `workflow_id`, in the law's words
+   for the issue rather than the matter's own words: one concept per call, in
+   at most five words, in the language of that jurisdiction's corpus. For a
+   Dutch summary-dismissal matter, run `ontslag op staande voet`, `dringende
+   reden` and `billijke vergoeding` as three searches; `klachtplicht` alone is
+   a full query. When the issue needs case law, ask for `limit: 50`: the
+   decisions that answer it often rank below the first ten.
+3. Merge the answers by reference. Count a decision that two issue queries
+   returned once, and say which issues it answers.
+
+If `search` refuses a query with `query_too_long` (the refusal carries
+`max_chars` and `query_chars`), split the query into issue queries and run
+those. Do not shorten it to fit: a shortened description finds almost nothing.
+A gateway without that refusal may report an over-long query as a failed source
+or as every endpoint failing, so rerun it as issue queries before you report a
+source unavailable. When a step's `data_to_fetch` supplies the query, follow
+its purpose text, and split the query the same way if the gateway refuses it
+for length.
+
+An issue query that returns nothing leaves that issue unresolved under the
+refusal discipline below. Do not fill the gap with case law you remember.
+
 ### Refusal discipline
 
 When a fetch comes back empty after the passes a step declares, say so in the
@@ -79,6 +200,86 @@ relaying the result. An invented article number reads exactly like a real one to
 the customer, which is why the workflow would rather deliver a gap than a
 plausible citation. The run always finishes; gaps surface as flagged sections
 instead of stopping progress.
+
+### Check the claim before you state it
+
+Before a conclusion about what the law requires reaches the customer, a step
+answer, or the report, check it with `validate_claim`, called on the same gateway
+session as the fetches. It runs after the enrichment passes the step declares,
+over the rows those passes returned.
+
+Pass `graph` as an object with `schema: "ansvar.claim-graph.v2"`, `question`,
+and `nodes`; a JSON-encoded string of the same object is also accepted.
+`variables` and `gaps` are optional. Every node has `id` and `kind`:
+
+- A `clause` per fetched provision: `canonical_ref`, verbatim `quote`,
+  `quote_language`, `binding` (`mandate|prohibition|permission|designation|definition`),
+  and `lookup` copied verbatim from the served row's `citation.lookup.args`.
+  Those args must contain `source_id` and a `canonical_ref` equal to the node's;
+  include `jurisdiction` when the source is registered under several codes.
+- An `evidence` node for a regulatory update (`source_id: "reg-intel"`),
+  CVE (`source_id: "cve-intel"`), or decision: `source_id`, `reference`,
+  `jurisdiction` where required, and optional `quotation`.
+- A `fact` with `statement` and `provenance: "customer"` for customer input;
+  an `assumption` with `statement` and `provenance: "assumed"` for your own inputs.
+- An `interpretation` or `conclusion` with `statement`, `typing` (`DET|INT`),
+  and `depends_on` naming the nodes it rests on.
+
+The served tool description is the contract; this step names the shape. Call
+once per report section, or once for the whole graph while it has at most 60
+clause and evidence nodes combined, within the other graph limits.
+
+The served response opens with a summary block. Relay
+`summary.display_markdown` to the customer unchanged before adding any analysis;
+do not replace it with your own summary. Treat summary outcomes as what each
+conclusion rests on, never as a verdict. Keep per-node status and per-conclusion
+`evidence_ceiling` (legacy `strength`) as machine fields for structured use.
+The summary schema is `ansvar.claim-check.summary.v2`: match on each
+conclusion's `outcome_code` (`not_established|evidence|assumption|fact|reading|matched`)
+and `declared_code` (`DET|INT`); the `outcome` and `declared` phrases are
+display text, not identifiers. If the summary
+reports `status: projection_error`, say the summary could not be rendered and
+keep the machine result available; do not invent replacement display text.
+
+- In the answer, step field and report, communicate the summary's outcome phrase
+  and the separate "declared settled, came back weaker" flag. Relay attention
+  items unparaphrased; do not force machine codes such as `UNVERIFIED` or `INT`
+  into customer prose, however cleanly the clauses refetched.
+- Name `not_checked` items as unchecked. Unchecked is not verified, and a clause
+  the refetch budget did not reach (`bounded: true`) is unchecked.
+- For `withheld`, relay the summary's own wording and the returned reason;
+  reasons include licensing, held editions, parent-source refusals, path scope,
+  and plan. Never infer that there is no law.
+  `unavailable` can mean downstream failure or refetch-budget exhaustion, or
+  unusable evidence despite a resolved source — for example, a quotation
+  mismatch. Inspect `evidence_checks` and the resolution reasons; it does not
+  establish absence.
+- There is no pass verdict. Never say the check passes, verifies, or validates
+  a conclusion.
+- A matched quotation shows the cited text exists as quoted, not that it
+  supports the conclusion. `claim_support` is always `not_checked`, whatever
+  the `evidence_ceiling`. The DET/INT typing under `agent_assessment` is your
+  own judgment; never present it as something the check established.
+- Each node's `evidence_checks` records what was checked: `source_resolution`,
+  `quotation_match`, `served_language`, `dependencies`, and, on
+  interpretations and conclusions, `stated_quantities`. That last one says
+  whether each plain deadline, duration, percentage or euro amount in the
+  statement appears in the cited text: `all_in_cited_text`,
+  `not_in_cited_text`, `not_checked` (including non-English text) or
+  `not_applicable`. With `not_in_cited_text`, `stated_quantities_detail`
+  gives `missing`, `cited`, `cited_from` and `suggested_correction`. It is a
+  fact about the text, not a finding that the conclusion is false: the value
+  may be derived ("half of 72 hours"). Show where the value comes from or
+  correct it; claim support stays `not_checked`.
+
+Two limits belong in what you say about it. The check does not prove a row was
+served to this caller earlier, and it does not judge whether your logic
+translates the law: a wrong reading can bind to real text.
+
+The result is yours to read, not evidence to submit. It never goes into
+`fetched_data`, and it does not move the report's own `citation_validation`,
+which the server computes from what the run submitted. If you need a row as
+evidence, fetch it; a checked graph is not a fetch.
 
 ### No simulation
 

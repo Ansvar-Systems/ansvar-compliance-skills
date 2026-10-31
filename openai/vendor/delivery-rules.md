@@ -13,7 +13,7 @@ sentence of your own before it if the conversation needs one; do not rewrite,
 reorder, shorten, or re-summarize what it contains. Do not summarize the findings
 yourself — the server assembles the report from stored data, and a summary you
 compose in its place drops the parts that are least comfortable to read: the
-refusal flags, the unresolved citations, the preview watermark.
+refusal flags, the unresolved citations, the integrity warnings.
 
 The receipt is a receipt, not a second copy of the report. It may preview a few
 findings when labelled as a subset ("3 highest-severity of 27"); the full set
