@@ -83,7 +83,7 @@ versions may show the `ansvar-` form.
 | `tabletop` | `/ansvar-compliance-skills:tabletop` | A crisis simulation run turn by turn against a scripted adversary, scored from the decisions the team made, with an after-action report. |
 | `document-review` | `/ansvar-compliance-skills:document-review` | Reviews an uploaded document against a regulatory baseline, with every finding anchored to a paragraph-level citation and a content hash. |
 | `drone-operations` | `/ansvar-compliance-skills:drone-operations` | A SORA determination chain for a specific-category UAS operation: ground and air risk, SAIL, the operational safety objectives with robustness levels, and containment. |
-| `vulnerability-management` | `/ansvar-compliance-skills:vulnerability-management` | Programme assessment against served criteria and a defensive feed cycle with KEV, EPSS, exposure questions and per-source cursors; scanner findings are required for decision workflows. |
+| `vulnerability-management` | `/ansvar-compliance-skills:vulnerability-management` | Programme assessment against served criteria and a defensive feed cycle with KEV, EPSS, exposure questions, national advisories and one cursor across all feeds; scanner findings are required for decision workflows. |
 | `zero-trust` | `/ansvar-compliance-skills:zero-trust` | Zero trust maturity assessment against the CISA Zero Trust Maturity Model v2.0 functions, with cited evidence, the obligations that apply to you, and a baseline to re-run the next cycle against. |
 | `product-horizon` | `/ansvar-compliance-skills:product-horizon` | A regulatory applicability register for one product, service or entity on the markets you name: the verdict per EU and national act with its cited basis, the facts still open, the national layer behind each EU act, and the dated obligations ahead. |
 | `cmmc` | `/ansvar-compliance-skills:cmmc` | CMMC self-assessment family for the workflow and scope you select; Team and Company plans. |
@@ -218,14 +218,18 @@ email domains. Per skill:
 - **The eleven family skills** — admission per workflow comes from the live
   catalogue, as described under Plan notes above.
 
-**`vulnerability-management`**: the feed cycle uses free feed tools. Free
-plans include one assessment run a month, shared across the included
-workflows (Solo two); paid plans include more. Decision workflows start at
-Premium. Access is checked with `get_my_capabilities` and
-`list_workflow_types` before a run.
+**`vulnerability-management`**: cycle steps 1 to 3 (scope, signals,
+exposure) use free feed tools on every plan; step 4, scoring a scanner
+export, needs Premium or above. The assessment runs on every plan: Free and
+Solo include one and two workflow runs a month, shared across the included
+workflows; Premium and above use the monthly allowance. Control-library
+mappings need Team or above. Access is checked with `get_my_capabilities`
+and `list_workflow_types` before a run.
 
-**`zero-trust`**: Free plans include one assessment run a month, shared
-across the included workflows (Solo two); paid plans include more.
+**`zero-trust`**: Free and Solo include one and two workflow runs a month,
+shared across the included workflows; Premium and above use the monthly
+allowance. The report carries no control-library mappings while no
+ZTMM-to-800-53 crosswalk is available.
 
 **CMMC**: the base and Level 2 run on Team and Company. `cmmc_l1_self` is
 a Free/Solo monthly teaser type within the shared ADR-090 allowance and runs

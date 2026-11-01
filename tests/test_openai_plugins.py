@@ -43,18 +43,18 @@ class Packages(unittest.TestCase):
     def test_zero_trust_contract_and_commercial_adapter(self):
         compiled = (ROOT / "openai/vendor/zero-trust.md").read_bytes()
         with self.assertRaisesRegex(ValueError, "adapter needs review"):
-            builder.adapt_compiled(compiled.replace(b"State the tier limits", b"State access"),
+            builder.adapt_compiled(compiled.replace(b"Free and Solo include one and two assessment", b"Accounts include"),
                                    "ansvar-zero-trust")
         adapted = builder.adapt_compiled(compiled, "ansvar-zero-trust").decode()
         self.assertNotRegex(adapted, r"\b(?:Premium|Solo|Free|Team|Company|upgrade)\b")
-        self.assertNotIn("State the tier limits", adapted)
-        for contract in ("Grounding mode: interview", "baseline_report_id",
+        self.assertNotIn("tier_caveat", adapted)
+        for contract in ("never submit it to a step", "baseline_report_id",
                          "No control-library candidates", "Do not submit `library_controls`",
                          "guidance and practice references", "self-assessment",
                          "wait for an actual answer", "does not establish a stage"):
             self.assertIn(contract, adapted)
         catalog = json.loads((ROOT / "openai/catalog.json").read_text())
-        self.assertEqual(catalog["version"], "0.4.0")
+        self.assertEqual(catalog["version"], "0.5.0")
         self.assertEqual(len(catalog["plugins"]), 6)
         item = next(p for p in catalog["plugins"] if p["id"] == "ansvar-zero-trust")
         self.assertTrue(all(len(p) <= 128 for p in item["prompts"]))
