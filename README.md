@@ -18,7 +18,9 @@ install as one unit. A separate focused plugin, `ansvar-vulnerability-management
 holds only the vulnerability management skill and `using-ansvar`
 ([plugins/ansvar-vulnerability-management](plugins/ansvar-vulnerability-management/README.md)).
 The focused [Ansvar Zero Trust plugin](plugins/ansvar-zero-trust/README.md)
-holds `zero-trust` and `using-ansvar`.
+holds `zero-trust` and `using-ansvar`. The focused
+[Ansvar CMMC Self-Assessment plugin](plugins/ansvar-cmmc/README.md) holds
+`cmmc-level-1`, `cmmc-level-2` and `using-ansvar`.
 Focused ChatGPT and Codex packages are built from [openai/](openai/README.md).
 
 ### What it sends
@@ -261,7 +263,7 @@ ansvar-compliance-skills@synced`.
 
 ### Directly from this repository
 
-This repository is itself a marketplace containing three plugin entries, so
+This repository is itself a marketplace containing four plugin entries, so
 you can add it without a claude.ai account:
 
 ```
@@ -269,6 +271,7 @@ you can add it without a claude.ai account:
 /plugin install ansvar-compliance-skills@ansvar-compliance-skills
 /plugin install ansvar-vulnerability-management@ansvar-compliance-skills
 /plugin install ansvar-zero-trust@ansvar-compliance-skills
+/plugin install ansvar-cmmc@ansvar-compliance-skills
 /reload-plugins
 ```
 
@@ -293,8 +296,9 @@ After install, run `/help` to see the twenty skills listed under the
 ## Validation
 
 `claude plugin validate .` validates the marketplace and bundle. Validate the focused
-plugins with `claude plugin validate plugins/ansvar-vulnerability-management`
-and `claude plugin validate plugins/ansvar-zero-trust`.
+plugins with `claude plugin validate plugins/ansvar-vulnerability-management`,
+`claude plugin validate plugins/ansvar-zero-trust` and
+`claude plugin validate plugins/ansvar-cmmc`.
 
 ## License
 

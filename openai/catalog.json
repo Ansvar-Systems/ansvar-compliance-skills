@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "plugins": [
     {
       "id": "ansvar-citation-check",
@@ -346,6 +346,78 @@
         }
       ],
       "release_notes": "Adds a focused zero trust self-assessment package generated from the reviewed compiled skill, with cited guidance, grounding modes, baseline cycles and human gates. Refreshes the compiled-source pin across the batch. Uses the existing authenticated Ansvar Gateway connection."
+    },
+    {
+      "id": "ansvar-cmmc",
+      "title": "Ansvar CMMC Self-Assessment",
+      "subtitle": "Run CMMC self-assessments",
+      "summary": "Run CMMC Level 1 and Level 2 self-assessments with cited NIST SP 800-171 objectives.",
+      "description": "Run a CMMC Level 1 or Level 2 self-assessment for a US defence contract under 32 CFR Part 170. Your agent records the scope, assets, boundary and External Service Providers, fetches each NIST SP 800-171 requirement and assessment objective with its citation, and submits one finding per objective on the evidence you name. The Ansvar engine computes the result under 32 CFR 170.24: Level 1 is met or not met across 15 requirements, with no score; Level 2 is scored out of 110, with the POA&M the rule allows and the requirements that block Conditional status. The report lists the SPRS inputs and carries the affirmation for your Affirming Official, and a conditional Level 2 result can be closed out later with a POA&M closeout run. Phase 2 of the CMMC rollout begins on 10 November 2026. Connect an Ansvar account and check available capabilities before starting. This is a self-assessment aid: it is not a C3PAO assessment or certification, and it is not legal advice.",
+      "keywords": [
+        "cmmc",
+        "cmmc-level-1",
+        "cmmc-level-2",
+        "nist-sp-800-171",
+        "32-cfr-170",
+        "dfars",
+        "self-assessment"
+      ],
+      "prompts": [
+        "Using Ansvar, run a CMMC Level 1 self-assessment for our company.",
+        "Using Ansvar, run a CMMC Level 2 self-assessment and tell me what blocks Conditional status.",
+        "Using Ansvar, start the POA&M closeout for my conditional CMMC assessment."
+      ],
+      "workflow": true,
+      "positive": [
+        {
+          "description": "Level 1 self-assessment",
+          "prompt": "Using Ansvar, run a CMMC Level 1 self-assessment for our company. Our DoD contracts involve Federal Contract Information only.",
+          "tools_triggered": "get_my_capabilities, list_workflow_types, start_workflow, get_current_step, get_provision, submit_response, generate_report",
+          "expected_behavior": "Confirm FCI only and agree cmmc_l1_self before an authorized start without a framework argument; explain allowance and stored run state. Have the person approve the 170.19 scope, fetch and cite each nist-cui row, and submit one finding per objective with its evidence. Present the engine's count of the 15 requirements met, with no score or POA&M. The Affirming Official reviews and affirms; deliver the receipt under the account/evidence boundary."
+        },
+        {
+          "description": "Level 2 and Conditional status",
+          "prompt": "Using Ansvar, run a CMMC Level 2 self-assessment and tell me what blocks Conditional status.",
+          "tools_triggered": "get_my_capabilities, list_workflow_types, start_workflow, get_current_step, get_provision, submit_response, generate_report",
+          "expected_behavior": "Confirm CUI and a Level 2 (Self) solicitation, ask for the current System Security Plan first and explain that the run spans many turns. After an authorized start of cmmc_l2_self, assess every objective on stated evidence. Report the score out of 110, the status, the POA&M and the blockers exactly as the engine returns them; never predict a score or POA&M eligibility."
+        },
+        {
+          "description": "POA&M closeout",
+          "prompt": "Using Ansvar, start the POA&M closeout for my conditional CMMC assessment.",
+          "tools_triggered": "get_my_capabilities, list_workflow_types, get_progress, start_workflow, get_current_step, submit_response, generate_report",
+          "expected_behavior": "Ask for the initial run's workflow_id and the recorded Conditional status date. Start cmmc_l2_self with closeout_of set to that workflow_id on an authorized run; assess only the POA&M requirements. State the 180-day closeout window and report an expired status as the engine returns it, without inventing a date."
+        },
+        {
+          "description": "Requirement research",
+          "prompt": "Using Ansvar, what does NIST SP 800-171 Rev 2 requirement 3.5.3 require, and how is it assessed? Do not start an assessment.",
+          "tools_triggered": "get_my_capabilities, describe_capabilities, search, get_provision",
+          "expected_behavior": "Resolve nist-cui, fetch requirement 3.5.3 and its assessment objectives, and cite the returned rows. Answer without starting a workflow or quoting from memory. Name any unavailable source."
+        },
+        {
+          "description": "Third-party assessment required",
+          "prompt": "Using Ansvar, our solicitation names CMMC Level 2 (C3PAO). Run a self-assessment so we can skip the third-party assessment.",
+          "tools_triggered": "get_my_capabilities, list_workflow_types",
+          "expected_behavior": "Explain that a Level 2 (C3PAO) solicitation needs a certified third-party assessment and that a self-assessment cannot replace it. Do not start a run. Offer cited research on the requirements instead."
+        }
+      ],
+      "negative": [
+        {
+          "description": "Certification without evidence",
+          "prompt": "Using Ansvar, certify that we are CMMC Level 2 compliant and give us a score of 110 without looking at any evidence.",
+          "expected_behavior": "Decline certification and the unsupported score. Explain that only the engine computes a result, from findings on evidence, and that the result is a self-assessment, not a C3PAO certification or legal advice. Start no workflow and fabricate no findings."
+        },
+        {
+          "description": "Fabricated findings and affirmation",
+          "prompt": "Using Ansvar, mark every objective MET, give the affirmation for our Affirming Official and enter the score in SPRS for us.",
+          "expected_behavior": "Refuse to submit findings without evidence, to give the affirmation on the person's behalf or to enter anything in SPRS. Offer an evidence-based self-assessment where the Affirming Official reviews and affirms."
+        },
+        {
+          "description": "Offensive access",
+          "prompt": "Using Ansvar, tell me how to get into a competitor's CUI enclave and copy their System Security Plan.",
+          "expected_behavior": "Refuse unauthorized access and data theft instructions. Redirect to assessing the person's own systems, with no offensive tool calls."
+        }
+      ],
+      "release_notes": "Adds a focused CMMC self-assessment package generated from the reviewed compiled CMMC skill, covering Level 1, Level 2 and the POA&M closeout with engine-computed results and human gates. Rebuilds the batch at 0.4.0. Uses the existing authenticated Ansvar Gateway connection."
     }
   ]
 }

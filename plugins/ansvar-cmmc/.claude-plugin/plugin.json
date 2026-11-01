@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "ansvar-cmmc",
+  "displayName": "Ansvar CMMC Self-Assessment",
+  "version": "2.4.0",
+  "description": "Run CMMC Level 1 and Level 2 self-assessments under 32 CFR Part 170 with cited NIST SP 800-171 requirements and objectives, human-attested evidence, the engine's result and status, the POA&M Level 2 allows, SPRS inputs and the affirmation. A self-assessment aid, not a C3PAO assessment or legal advice. Includes using-ansvar for cited legal and standards questions. Try: 'Using Ansvar, run a CMMC Level 1 self-assessment for our company.'",
+  "author": {
+    "name": "Ansvar Systems AB",
+    "url": "https://ansvar.eu"
+  },
+  "homepage": "https://ansvar.eu/docs/agent-skills",
+  "repository": "https://github.com/Ansvar-Systems/ansvar-compliance-skills",
+  "license": "CC-BY-4.0",
+  "icon": "./.claude-plugin/icon.png",
+  "documentationUrl": "https://ansvar.eu/docs/agent-skills",
+  "supportUrl": "https://ansvar.eu/contact",
+  "privacyPolicyUrl": "https://ansvar.eu/privacy",
+  "termsOfServiceUrl": "https://ansvar.eu/terms",
+  "keywords": [
+    "cmmc",
+    "cmmc-level-1",
+    "cmmc-level-2",
+    "nist-sp-800-171",
+    "32-cfr-170",
+    "dfars",
+    "self-assessment"
+  ]
+}
