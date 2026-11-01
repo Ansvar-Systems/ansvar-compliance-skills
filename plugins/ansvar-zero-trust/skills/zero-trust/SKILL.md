@@ -5,13 +5,13 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.1.0"
+  version: "1.2.0"
   build_identity:
-    source_identity: "bca1c3e7ee2e119db93a663d28c462061a1424d9ae5bdb9fc5d68dbb0ec0257d"
+    source_identity: "e19271f882c0915129eee6e68bb718b378a2dbb226bc422efe6c7456998c11f9"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.48.0@sha256:f09674c7b63baf4ceefe58c7dbced44c9d5758a9e33a7088c1bd1993130a4e18"
-      digest: "sha256:f09674c7b63baf4ceefe58c7dbced44c9d5758a9e33a7088c1bd1993130a4e18"
-      version_label: "1.48.0"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.49.0@sha256:bc4a2fab6e745bcf0a86eff9dd34fa6bfe447c7315666900f627f46762fac156"
+      digest: "sha256:bc4a2fab6e745bcf0a86eff9dd34fa6bfe447c7315666900f627f46762fac156"
+      version_label: "1.49.0"
     registry_snapshot_sha256: "8c2309e3d235fade8ae409d13635cea71e629a5a07c78b664853f20cdfed14c9"
 ---
 
@@ -677,11 +677,14 @@ Then give the person this preflight in plain words, before any question:
   and above run it from the monthly allowance. Starting a run spends one, and on
   Free and Solo a cancelled run is not handed back. Name the workflow and get
   their OK before `start_workflow`.
-- **How long:** in Ansvar's own run on 1 November 2026 the person answered six
-  times: scope, jurisdictions, whether to draw a diagram, scope approval,
-  findings review, and the opening request. Between those replies the agent
-  records the 40 functions one by one; that part takes the longest, and the
-  person can answer several functions at once from their records.
+- **How long:** in Ansvar's own runs on 1 November 2026 the person replied
+  eight times when the 40 function answers came from existing records in
+  batches: the opening request, scope and targets, jurisdictions, whether to
+  draw a diagram, scope approval, the function answers, the stage
+  confirmation and the findings review. Answering function by function, live,
+  adds a question and a confirmation for each of the 40 functions. Between
+  replies the agent makes about 170 lookups and records each function, so
+  expect it to work for a while on its own.
 - **Have ready:** the systems in scope; how people and services sign in
   (identity provider, MFA, service credentials); how devices are managed; network
   segmentation and remote access; how applications are deployed and tested; data
@@ -711,8 +714,8 @@ far do you want to be in the next 12 to 24 months? Traditional is where most
 organisations start (manual, static, perimeter-based), Initial adds some
 automation, Advanced makes most decisions automatically from current context,
 Optimal is fully automated and continuous." Record what they choose; never
-pick for them. If they are not sure for a pillar, record the target as open and
-say the report cannot show progress against it.
+pick for them. Every pillar needs a target: if they are not sure, ask them to
+choose one for this cycle and say it can change at the next cycle.
 
 ### Running the functions
 
@@ -724,7 +727,10 @@ follow it, but never read it out. Fetch the rows in `data_to_fetch`; rows in
 `shared_rows` were fetched once for the whole run and are cited by handle. Show
 the stage you propose and let the person correct it before you submit.
 
-Every function records `priority` (P1 first), `effort` (S, M, L), the
+The level follows from the stages: at or above the target stage is fully
+compliant, one stage below is partial, two or more below (or unknown) is not
+implemented, and a function at its target carries no P1 action. Every function
+records `priority` (P1 first), `effort` (S, M, L), the
 regulations it bears on with their applicability (`obligations`), and
 `open_questions`. A regulation you fetched and verified is not, by itself, an
 obligation: DORA applies only to financial entities, Regulation 2023/2841 only
@@ -735,9 +741,12 @@ establish a legal obligation. Determine any binding requirement separately after
 verifying current authority and applicability. Keep compliance and maturity
 separate. Record evidenced implicit trust with component, flow and zone refs or
 the quoted interview answer.
-No control-library candidates are fetched for zero trust because no ZTMM to
-NIST SP 800-53 crosswalk is available yet. Do not submit `library_controls` or
-map controls from memory. The receipt reports control mappings as unsupported.
+On Team and Company, each function fetches the NIST SP 1800-35 crosswalk for
+its components (`crosswalk` from `nist-sp1800-35` to `nist-800-53`). Submit
+`library_controls` only from those fetched rows, as `related-to`; they are
+controls to review, not coverage. With no fetched crosswalk rows (the tool is
+Team and Company only), submit no `library_controls` and never map controls
+from memory.
 
 ### Gates and delivery
 
@@ -753,6 +762,8 @@ ZTMM stages, target attainment and closure statuses describe evidenced maturity
 for the organisation's own self-assessment. They do not establish legal compliance
 or readiness, constitute legal advice, or certify compliance or maturity. Unknown
 evidence does not establish a stage.
+
+For a stated answer, record `interview_attestation` with `respondent` (the person or role who answered) and `statement` (their verbatim answer, matching `assessment`). The engine stores a step-bound interview reference. It is self-asserted evidence, not independently verified. Practice evidence requires verified `doc://` records or an explicit interview attestation. External URLs belong in source citations and cannot satisfy practice evidence, including links to your own policy; upload the record or use a stated interview attestation. Unknown evidence requires `not_implemented` and a null current stage.
 
 ## Workflows in this family
 

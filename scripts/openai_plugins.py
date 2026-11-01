@@ -53,6 +53,9 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
         })
     elif sid == "ansvar-zero-trust":
         replacements.update({
+            "On Team and Company, each function fetches":
+                "When available to this account, each function fetches",
+            "Team and Company only": "available only with the required account access",
             "say so\nwith the row's `tier_caveat` and stop.":
                 "say so\nwithout commercial messaging and stop.",
             "- **Plan:** Free and Solo include one and two assessment runs a month; Premium\n  and above run it from the monthly allowance. Starting a run spends one, and on\n  Free and Solo a cancelled run is not handed back. Name the workflow and get\n  their OK before `start_workflow`.":
@@ -76,8 +79,8 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
                 "unrelated tasks; never certify product safety or legal compliance.\n")
     if sid == "ansvar-zero-trust":
         boundary += ("Never certify zero trust maturity or map controls to NIST SP 800-53 from\n"
-                     "memory. Do not fetch control-library candidates: the ZTMM crosswalk is\n"
-                     "unsupported. Refuse bypass instructions and redirect to authorized\n"
+                     "memory. Use only the served SP 1800-35 crosswalk rows when available,\n"
+                     "as related-to candidates for review. Refuse bypass instructions and redirect to authorized\n"
                      "defensive assessment.\n")
     if sid == "ansvar-cmmc":
         boundary += ("This is a self-assessment aid. Never certify CMMC compliance or status,\n"

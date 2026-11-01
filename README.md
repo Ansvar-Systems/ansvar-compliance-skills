@@ -228,8 +228,8 @@ and `list_workflow_types` before a run.
 
 **`zero-trust`**: Free and Solo include one and two workflow runs a month,
 shared across the included workflows; Premium and above use the monthly
-allowance. The report carries no control-library mappings while no
-ZTMM-to-800-53 crosswalk is available.
+allowance. Team and Company can fetch SP 1800-35 crosswalk candidates for
+related-to NIST SP 800-53 review; these do not establish coverage.
 
 **CMMC**: the base and Level 2 run on Team and Company. `cmmc_l1_self` is
 a Free/Solo monthly teaser type within the shared ADR-090 allowance and runs

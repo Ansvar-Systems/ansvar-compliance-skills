@@ -49,7 +49,8 @@ class Packages(unittest.TestCase):
         self.assertNotRegex(adapted, r"\b(?:Premium|Solo|Free|Team|Company|upgrade)\b")
         self.assertNotIn("tier_caveat", adapted)
         for contract in ("never submit it to a step", "baseline_report_id",
-                         "No control-library candidates", "Do not submit `library_controls`",
+                         "fetched crosswalk rows", "never map controls", "related-to",
+                         "interview_attestation", "Unknown evidence requires",
                          "guidance and practice references", "self-assessment",
                          "wait for an actual answer", "does not establish a stage"):
             self.assertIn(contract, adapted)
