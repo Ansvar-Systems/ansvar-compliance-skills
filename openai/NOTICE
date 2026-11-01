@@ -7,8 +7,10 @@ Vulnerability Management, Zero Trust and CMMC Self-Assessment, generated from
 pinned compiled skills.
 Their adapters replace commercial access wording and add the ChatGPT evidence boundary;
 the unmodified source and source hash are retained in vendor/ and upstream-lock.json.
-Workflow execution and report-delivery references are byte-identical compiled
-fragments from the Ansvar workflow instruction library. The build records their
+Workflow execution and report-delivery references in the authored workflow
+packages are byte-identical compiled fragments from the Ansvar workflow
+instruction library. The generated packages carry that shared core inline,
+adapted, and do not ship the raw fragments. The build records their
 source commit and checks their upstream manifest hashes before packaging.
 The brand icon comes from Ansvar's website at the recorded commit.
 

@@ -271,7 +271,9 @@ def package_files(root, spec, version, lock):
             if not path.is_file() or path.suffix != ".md":
                 raise ValueError(f"Unexpected reference: {path}")
             files[prefix + "references/" + path.name] = read(path)
-    if spec["workflow"]:
+    # Compiled skills already carry the shared core inline, adapted for ChatGPT;
+    # the raw fragments would ship its unadapted plan and tier wording.
+    if spec["workflow"] and sid not in COMPILED_IDS:
         for name in FRAGMENTS:
             files[prefix + "references/" + name] = read(root / "openai/vendor" / name)
     validate_files(files)

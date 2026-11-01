@@ -37,7 +37,10 @@ Keep listing text and review cases in `catalog.json`, and account/evidence bound
 these to each package. Update the catalog version when preparing a new release.
 
 The workflow execution and report-delivery fragments in `vendor/` and the
-brand icon in `assets/` are generated imports. Do not edit them. Their source
+brand icon in `assets/` are generated imports. Do not edit them. Only the
+authored workflow packages (AI Compliance, Privacy Review) ship the fragments;
+the generated packages carry the same core inline through their adapter, so
+the raw fragments' plan and tier wording never reaches a ChatGPT package. Their source
 commits and hashes live in `upstream-lock.json`. The importer follows the
 workflow release pinned by the public website, verifies its manifest, and reads
 immutable git objects. To check or update after fetching the source checkouts:

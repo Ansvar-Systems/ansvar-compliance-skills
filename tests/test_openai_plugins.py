@@ -84,6 +84,21 @@ class Packages(unittest.TestCase):
         self.assertNotRegex(listing, r"(?i)\b(?:premium|solo|free|team|company|upgrade|plan|pricing|checkout)\b")
         self.assertIn("not a C3PAO assessment", item["description"])
 
+    def test_compiled_archives_carry_no_commercial_wording(self):
+        catalog = json.loads((ROOT / "openai/catalog.json").read_text())
+        lock = builder.verify_inputs(ROOT)
+        for spec in catalog["plugins"]:
+            if spec["id"] not in builder.COMPILED_IDS:
+                continue
+            files = builder.package_files(ROOT, spec, catalog["version"], lock)
+            for name in builder.FRAGMENTS:
+                self.assertNotIn(f"skills/{spec['id']}/references/{name}", files)
+            for name, data in files.items():
+                if name.endswith(".md") and not name.endswith("grounding.md"):
+                    with self.subTest(package=spec["id"], file=name):
+                        self.assertNotRegex(data.decode(),
+                                            r"(?i)(?<![-\w\"])(?:premium|solo|free|team|company|upgrade|tiers?)\b(?!-)")
+
     def test_reproducible_and_self_contained(self):
         first = builder.build(ROOT)
         self.assertEqual(first, builder.build(ROOT))
