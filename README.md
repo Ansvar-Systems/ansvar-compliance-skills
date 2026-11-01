@@ -218,15 +218,14 @@ email domains. Per skill:
 - **The eleven family skills** — admission per workflow comes from the live
   catalogue, as described under Plan notes above.
 
-**`vulnerability-management`**: the feed cycle uses free feed tools. Programme
-assessment and decision workflow access are checked with `get_my_capabilities`
-and `list_workflow_types`; an assessment is not promised on Free or Solo.
-A monthly teaser is usable only where the live catalogue admits it within the
-shared allowance. See the [submission packet](openai/review/v2.2.0-submission-packet.md).
+**`vulnerability-management`**: the feed cycle uses free feed tools. Free
+plans include one assessment run a month, shared across the included
+workflows (Solo two); paid plans include more. Decision workflows start at
+Premium. Access is checked with `get_my_capabilities` and
+`list_workflow_types` before a run.
 
-**`zero-trust`**: The zero trust assessment runs on Team and Company plans.
-On Free, search and cite CISA ZTMM v2.0 and NIST SP 800-207 from the
-`zero-trust-frameworks` corpus. The assessment has no Free teaser.
+**`zero-trust`**: Free plans include one assessment run a month, shared
+across the included workflows (Solo two); paid plans include more.
 
 **CMMC**: the base and Level 2 run on Team and Company. `cmmc_l1_self` is
 a Free/Solo monthly teaser type within the shared ADR-090 allowance and runs

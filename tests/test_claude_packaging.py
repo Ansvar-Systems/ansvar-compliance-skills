@@ -22,7 +22,7 @@ class ClaudePackaging(unittest.TestCase):
         self.assertEqual(len(manifest['skills']), 16)
         self.assertTrue({'zero-trust', 'cmmc', 'cmmc-level-1', 'cmmc-level-2'} <=
                         {s['id'] for s in manifest['skills']})
-        self.assertEqual(marketplace['metadata']['version'], '2.4.0')
+        self.assertEqual(marketplace['metadata']['version'], '2.4.1')
         self.assertEqual({p['name'] for p in marketplace['plugins']},
                          {'ansvar-compliance-skills', 'ansvar-vulnerability-management',
                           'ansvar-zero-trust', 'ansvar-cmmc'})
@@ -40,7 +40,7 @@ class ClaudePackaging(unittest.TestCase):
             self.assertEqual((focused / '.mcp.json').read_bytes(), (ROOT / '.mcp.json').read_bytes())
         for base in bases:
             plugin = json.loads((base / '.claude-plugin/plugin.json').read_text())
-            self.assertEqual(plugin['version'], '2.4.0')
+            self.assertEqual(plugin['version'], '2.4.1')
             for field in ('icon', 'documentationUrl', 'supportUrl',
                           'privacyPolicyUrl', 'termsOfServiceUrl'):
                 self.assertTrue(plugin[field])

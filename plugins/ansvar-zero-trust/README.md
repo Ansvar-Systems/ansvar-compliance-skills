@@ -43,10 +43,11 @@ The plugin declares the Ansvar Gateway MCP connector in `.mcp.json`
 account through OAuth. Account registration uses a business email at
 [ansvar.eu](https://ansvar.eu).
 
-The zero trust assessment runs on Team and Company plans. On Free, search
-and cite CISA ZTMM v2.0 and NIST SP 800-207 from `zero-trust-frameworks`.
-There is no Free assessment teaser. Live availability is decided by
-`get_my_capabilities` and `list_workflow_types` before starting.
+Free plans include one assessment run a month, shared across Ansvar's
+included workflows (Solo two); paid plans include more. The report keeps
+obligations and fixes on every plan.
+Live availability is decided by `get_my_capabilities` and
+`list_workflow_types` before starting.
 
 ## What it sends
 
