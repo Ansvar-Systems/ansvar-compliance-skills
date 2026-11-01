@@ -5,9 +5,9 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.0.0"
+  version: "1.0.1"
   build_identity:
-    source_identity: "50867d44941fe3dd15a4387c98f8cc1d9488ccfbd347fe3a246b713d851b3635"
+    source_identity: "bca1c3e7ee2e119db93a663d28c462061a1424d9ae5bdb9fc5d68dbb0ec0257d"
     content_bundle:
       ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.48.0@sha256:f09674c7b63baf4ceefe58c7dbced44c9d5758a9e33a7088c1bd1993130a4e18"
       digest: "sha256:f09674c7b63baf4ceefe58c7dbced44c9d5758a9e33a7088c1bd1993130a4e18"
@@ -66,8 +66,13 @@ no evidence cannot support it: record NOT_MET with the reason, or ask for the
 evidence. The engine does not judge whether evidence is sufficient; the person
 does, and the report says so.
 
-For phase dates and which status a contract requires, cite the 32 CFR 170.3
-row the run fetches. Do not state a CMMC date from memory.
+For the phase-in rule and which status a contract requires, cite the 32 CFR
+170.3 row the run fetches. Do not state a CMMC date from memory, and do not
+present the Phase 2 start that 170.3(e) sets as in effect. Report phase status
+as of 1 November 2026, when this instruction was written: Phase 1 is in effect;
+the Phase 2 requirements have been suspended since July 2026 pending a
+Department of War review, and 32 CFR 170 itself is unchanged. Tell the person to
+confirm the current status with DoD before relying on it.
 
 ## Run the workflow
 

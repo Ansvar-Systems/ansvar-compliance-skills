@@ -15,7 +15,7 @@ class ClaudePackaging(unittest.TestCase):
         self.assertEqual(len(list((ROOT / 'skills').glob('*/SKILL.md'))), 20)
         self.assertIn('zero-trust', {s['id'] for s in manifest['skills']})
         self.assertEqual(manifest['workflow_library']['commit'],
-                         '5857d4d32b29fabd3ff077acc85e6f2c34c2c944')
+                         'b825299b071b134b780f9d86fa9bca76585da763')
         for entry in manifest['skills']:
             self.assertEqual(hashlib.sha256((ROOT / entry['path']).read_bytes()).hexdigest(),
                              entry['sha256'])
