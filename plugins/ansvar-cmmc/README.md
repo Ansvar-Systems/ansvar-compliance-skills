@@ -19,7 +19,7 @@ and it is not legal advice. A solicitation that names Level 2 (C3PAO) needs a
 certified third-party assessment; the skill says so and stops. Your Affirming
 Official reviews the findings and gives the affirmation.
 
-Phase 2 of the CMMC rollout begins on 10 November 2026 (32 CFR 170.3(e)).
+The CMMC Phase 2 requirements were suspended in July 2026 pending a Department of War review. The Phase 1 self-assessment requirements still apply.
 
 ## Install
 
