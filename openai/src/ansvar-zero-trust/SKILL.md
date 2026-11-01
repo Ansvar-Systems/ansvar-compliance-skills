@@ -5,9 +5,9 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.0.0"
+  version: "1.1.0"
   build_identity:
-    source_identity: "6c01eea7dbef3031668c5f7ed8052a95eea4e0deccac0d5130b38ca711f31441"
+    source_identity: "50867d44941fe3dd15a4387c98f8cc1d9488ccfbd347fe3a246b713d851b3635"
     content_bundle:
       ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.48.0@sha256:f09674c7b63baf4ceefe58c7dbced44c9d5758a9e33a7088c1bd1993130a4e18"
       digest: "sha256:f09674c7b63baf4ceefe58c7dbced44c9d5758a9e33a7088c1bd1993130a4e18"
@@ -672,38 +672,94 @@ per-control assessment happens per control, with its own fetches.
 
 ## Zero trust assessment
 
-Call `get_my_capabilities` and `list_workflow_types`. State available capabilities
-before starting, without commercial messaging. If `gap_analysis_zero_trust` is absent or returns
-`control_set_pending`, explain that verified ZTMM content is pending and stop.
-Do not substitute a NIST-only maturity assessment.
+### Before the first question: tell the person what this is
 
-Detect grounding mode from the tools present: use twin grounding when a
-workspace connector exposes twin facts, otherwise interview grounding. Begin
-the report's first line with `Grounding mode: twin` or `Grounding mode: interview`.
-Use observed only for facts the twin supports; use stated for the person's
-answers. Keep unknowns unknown and turn them into questions. A DFD drawn
-from an unknown fact does not supply evidence for that fact.
+Call `get_my_capabilities` and `list_workflow_types`. If
+`gap_analysis_zero_trust` is absent, or `available_to_caller` is false, say so
+without commercial messaging and stop. If it returns `control_set_pending`,
+explain that verified ZTMM content is pending and stop. Do not substitute a
+NIST-only maturity assessment.
 
-Ask for entity, sector, jurisdictions, systems in scope and target stage per
-pillar. Start `gap_analysis_zero_trust`. Follow the served steps, fetch their
-rows, and cite them. Submit `maturity_pillar`, `current_stage`, `target_stage`
-and `basis`; an unknown current stage is null. Keep compliance and maturity
-separate. Record evidenced implicit trust with component, flow and zone refs
-or the quoted interview answer. Retain obligations and fixes.
-CISA ZTMM v2.0 and NIST SP 800-207 are guidance and practice references; citing
-them does not establish a legal obligation. Determine any binding requirement
-separately after verifying current authority and applicability.
+Then give the person this preflight in plain words, before any question:
+
+- **What it covers:** the 40 functions of the CISA Zero Trust Maturity Model
+  v2.0 across five pillars (identity, devices, networks, applications and
+  workloads, data) plus the cross-cutting functions. Each function gets a
+  current stage, a target stage and a gap.
+- **Access:** what this account can run comes from `get_my_capabilities` and
+  `list_workflow_types`. Starting a run uses the account's workflow access and
+  stores run state. Name the workflow and get their OK before `start_workflow`.
+- **How long:** in Ansvar's own run on 1 November 2026 the person answered six
+  times: scope, jurisdictions, whether to draw a diagram, scope approval,
+  findings review, and the opening request. Between those replies the agent
+  records the 40 functions one by one; that part takes the longest, and the
+  person can answer several functions at once from their records.
+- **Have ready:** the systems in scope; how people and services sign in
+  (identity provider, MFA, service credentials); how devices are managed; network
+  segmentation and remote access; how applications are deployed and tested; data
+  classification and encryption; logging and who reviews it. Any of these can be
+  "unknown" and becomes an open question, not a guess.
+- **What you get:** a 40-function register with current and target stage,
+  a priority (P1 first) and effort per gap, the regulations evaluated and
+  whether each applies, open questions, and a roadmap ordered by priority. A
+  report id lets the next run show what changed.
+
+### Grounding
+
+Detect the grounding from the tools present (the architecture-grounding
+section): twin facts from a workspace with records, otherwise the interview.
+State it in your own words in the opening summary and again when you hand over
+the report ("no architecture workspace grounded this run; the answers came from
+the interview"). It is not a field: never submit it to a step. Use observed only
+for facts the twin supports; use stated for the person's answers. Keep unknowns
+unknown and turn them into questions. A DFD drawn from an unknown fact does not
+supply evidence for that fact.
+
+### Scope
+
+Ask for the entity, its sector, the jurisdictions and the systems in scope.
+Then ask for a target stage per pillar in plain words: "For each pillar, how
+far do you want to be in the next 12 to 24 months? Traditional is where most
+organisations start (manual, static, perimeter-based), Initial adds some
+automation, Advanced makes most decisions automatically from current context,
+Optimal is fully automated and continuous." Record what they choose; never
+pick for them. If they are not sure for a pillar, record the target as open and
+say the report cannot show progress against it.
+
+### Running the functions
+
+Start `gap_analysis_zero_trust` and follow the served steps. Each function step
+shows the person one plain question in `questions_for_user`; ask it as written
+in substance: "For this function, describe your current practice or say
+'unknown'." What you must do and submit is in the step's `methodology.body`:
+follow it, but never read it out. Fetch the rows in `data_to_fetch`; rows in
+`shared_rows` were fetched once for the whole run and are cited by handle. Show
+the stage you propose and let the person correct it before you submit.
+
+Every function records `priority` (P1 first), `effort` (S, M, L), the
+regulations it bears on with their applicability (`obligations`), and
+`open_questions`. A regulation you fetched and verified is not, by itself, an
+obligation: DORA applies only to financial entities, Regulation 2023/2841 only
+to Union institutions, NIS2 Article 21 only to essential or important entities,
+and an unknown classification is unresolved, not applicable. CISA ZTMM v2.0 and
+NIST SP 800-207 are guidance and practice references; citing them does not
+establish a legal obligation. Determine any binding requirement separately after
+verifying current authority and applicability. Keep compliance and maturity
+separate. Record evidenced implicit trust with component, flow and zone refs or
+the quoted interview answer.
 No control-library candidates are fetched for zero trust because no ZTMM to
 NIST SP 800-53 crosswalk is available yet. Do not submit `library_controls` or
 map controls from memory. The receipt reports control mappings as unsupported.
 
+### Gates and delivery
+
 Present every human gate to the person and wait for an actual answer. Never
 acknowledge a gate on their behalf. Deliver the register and roadmap through
-the delivery receipt verbatim, including refusals and unresolved questions.
-Group priorities by pillar with effort and target stage. Offer a next cycle:
-what to fix first, what evidence to collect, and how to pass the receipt's
-`report_id` as `baseline_report_id`. A changed twin fact needs re-verification;
-closure requires an observed or stated assessment at the target stage.
+the delivery receipt verbatim, including refusals and unresolved questions. The
+receipt's Next section lists the first actions in priority order and the exact
+re-run prompt with `baseline_report_id`; relay it as written. A changed twin
+fact needs re-verification; closure requires an observed or stated assessment at
+the target stage.
 
 ZTMM stages, target attainment and closure statuses describe evidenced maturity
 for the organisation's own self-assessment. They do not establish legal compliance

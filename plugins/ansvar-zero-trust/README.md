@@ -1,17 +1,20 @@
 # Ansvar Zero Trust Assessment
 
-Assess the zero trust maturity of the systems you name against CISA ZTMM v2.0
-functions, with NIST SP 800-207 as a practice reference. Receive a gap register
-and a roadmap grouped by pillar, with current and target stages and the
-observed, stated or unknown basis for each finding. Re-run against the previous
-report to see what changed.
+Assess the zero trust maturity of the systems you name against the 40
+functions of the CISA Zero Trust Maturity Model v2.0, with NIST SP 800-207 as a
+practice reference. Before the first question your agent tells you what the
+assessment covers, what it costs on your plan, how many replies it takes and what to
+have ready. You choose a target stage for each pillar; your agent never picks
+one for you. Re-run against the previous report to see what changed.
 
 The skill uses twin facts when a workspace connector provides them. Otherwise
 it asks interview questions and labels the answers as stated evidence. Unknowns
 remain questions. ZTMM and SP 800-207 are guidance; binding requirements, such
 as NIS2 Article 21 where applicable, need their own fetched authority and scope
-check. Control mappings are unsupported while the ZTMM-to-800-53 crosswalk is
-unavailable.
+check. Your agent records each regulation it evaluated and whether it applies
+to you; a regulation it fetched is not an obligation by itself. The report
+carries no control-library mappings while no ZTMM-to-800-53 crosswalk is
+available.
 
 The plugin includes `using-ansvar` for one-off legal and standards questions.
 Results support your own self-assessment and human review. They do not establish
@@ -36,6 +39,36 @@ The founder submits the separate plugin-directory listing after review.
 - Using Ansvar, re-run our zero trust assessment using baseline_report_id from our previous receipt.
 - Using Ansvar, identify which open zero trust gaps relate to NIS2 Article 21.
 
+## What to have ready
+
+- The systems in scope.
+- How people and services sign in: identity provider, MFA, service credentials.
+- How devices are managed.
+- Network segmentation and remote access.
+- How applications are deployed and tested.
+- Data classification and encryption.
+- Logging, and who reviews it.
+
+Any of these can be "unknown"; it becomes an open question in the report, not a
+guess.
+
+## Effort
+
+In Ansvar's own run on 1 November 2026 the person answered six times: the
+opening request, scope, jurisdictions, whether to draw a diagram, scope
+approval and the findings review. Between those replies your agent records the
+40 functions one by one. That part takes the longest, and you can answer
+several functions at once from your records.
+
+## What you get
+
+- A 40-function register with the current and target stage of each function.
+- A priority (P1 first) and an effort (S, M or L) for each gap.
+- The regulations evaluated, and whether each applies to you.
+- Open questions for everything recorded as unknown.
+- A roadmap ordered by priority, with first actions.
+- A report id (`baseline_report_id`) that lets the next run show what changed.
+
 ## What you need
 
 The plugin declares the Ansvar Gateway MCP connector in `.mcp.json`
@@ -43,9 +76,11 @@ The plugin declares the Ansvar Gateway MCP connector in `.mcp.json`
 account through OAuth. Account registration uses a business email at
 [ansvar.eu](https://ansvar.eu).
 
-Free plans include one assessment run a month, shared across Ansvar's
-included workflows (Solo two); paid plans include more. The report keeps
-obligations and fixes on every plan.
+Free and Solo include one and two workflow runs a month, shared across the
+included workflows; Premium and above run the assessment from the monthly
+allowance. Starting a run spends one, and on Free and Solo a cancelled run is
+not handed back, so your agent names the workflow and asks before it starts.
+The report keeps obligations and fixes on every plan.
 Live availability is decided by `get_my_capabilities` and
 `list_workflow_types` before starting.
 

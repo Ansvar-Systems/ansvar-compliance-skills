@@ -38,21 +38,26 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
         replacements["not on the customer's plan"] = "not on the customer's account access"
     if sid == "ansvar-vulnerability-management":
         replacements.update({
-            "Call get_my_capabilities and list_workflow_types. State availability and tier\nlimits before starting.":
-                "Call get_my_capabilities and list_workflow_types. State available capabilities\nbefore starting, without commercial messaging.",
-            "related-to until reviewed. Free, Solo and Premium, plus missing or unknown\ntiers, carry controls: unavailable_on_tier when the library is unavailable.":
+            "- **Plan:** the assessment runs on every plan: Free and Solo include one and two\n  runs a month, Premium and above use the monthly allowance. Starting a run\n  spends one; name the workflow and get their OK first. Control-library\n  mappings need Team or above. Cycle steps 1 to 3 run on every plan; step 4\n  (scoring a scanner export) needs Premium or above.":
+                "- **Access:** what this account can run comes from `get_my_capabilities` and\n  `list_workflow_types`. Starting a run uses the account's workflow access and\n  stores run state; name the workflow and get their OK first. Report an\n  unavailable step or control mapping without commercial messaging.",
+            "explain its availability from the row's `tier_caveat` and offer the":
+                "say it is unavailable to this account, without commercial messaging, and offer the",
+            "related-to until reviewed. Free, Solo and Premium, plus missing or unknown tiers,\ncarry controls: unavailable_on_tier when the library is unavailable.":
                 "related-to until reviewed. When the control library is unavailable, retain\nthe returned unavailable status; never invent control mappings.",
-            "Steps 1–3 run on every tier with the free feed tools. At Free and Solo, stop\nafter step 3 and deliver the candidate list, exposure questions, freshness and\ncursors. Explain: step 4 needs Premium or above and a scanner export. At any\ntier without a scanner export, stop after step 3 with the same deliverable.":
-                "Check feed-tool availability for steps 1–3. If the decision workflows are\nunavailable or no scanner export is supplied, stop after step 3 and deliver\nthe candidate list, exposure questions, freshness and cursors. Explain the\nmissing input or unavailable capability without commercial messaging.",
+            "Steps 1–3 run on every tier with the free feed tools. At Free and Solo, stop\nafter step 3 and deliver the candidate list, exposure questions, freshness and\nthe cursor. Explain: step 4 needs Premium or above and a scanner export. At any\ntier without a scanner export, stop after step 3 with the same deliverable.":
+                "Check feed-tool availability for steps 1–3. If the decision workflows are\nunavailable or no scanner export is supplied, stop after step 3 and deliver\nthe candidate list, exposure questions, freshness and the cursor. Explain the\nmissing input or unavailable capability without commercial messaging.",
             "4. Decide. At Premium or above, ask for a scanner export.":
                 "4. Decide. When the decision workflows are available, ask for a scanner export.",
             "The workflows grant scoring tools inside the run at Premium.":
                 "The workflows grant scoring tools inside an admitted run.",
         })
     elif sid == "ansvar-zero-trust":
-        replacements["Call `get_my_capabilities` and `list_workflow_types`. State the tier limits\nbefore starting."] = (
-            "Call `get_my_capabilities` and `list_workflow_types`. State available capabilities\n"
-            "before starting, without commercial messaging.")
+        replacements.update({
+            "say so\nwith the row's `tier_caveat` and stop.":
+                "say so\nwithout commercial messaging and stop.",
+            "- **Plan:** Free and Solo include one and two assessment runs a month; Premium\n  and above run it from the monthly allowance. Starting a run spends one, and on\n  Free and Solo a cancelled run is not handed back. Name the workflow and get\n  their OK before `start_workflow`.":
+                "- **Access:** what this account can run comes from `get_my_capabilities` and\n  `list_workflow_types`. Starting a run uses the account's workflow access and\n  stores run state. Name the workflow and get their OK before `start_workflow`.",
+        })
     elif sid == "ansvar-cmmc":
         replacements["their own catalogue, and on free and solo the gateway refuses a framework\nargument it does not know."] = (
             "their own catalogue, and the gateway can refuse a framework argument it does\nnot know.")
