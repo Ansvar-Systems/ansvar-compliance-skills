@@ -20,7 +20,9 @@ class Packages(unittest.TestCase):
         for path in ("openai/vendor/vulnerability-management.md",
                      "openai/src/ansvar-vulnerability-management/SKILL.md",
                      "openai/vendor/zero-trust.md",
-                     "openai/src/ansvar-zero-trust/SKILL.md"):
+                     "openai/src/ansvar-zero-trust/SKILL.md",
+                     "openai/vendor/cmmc.md",
+                     "openai/src/ansvar-cmmc/SKILL.md"):
             with self.subTest(path=path), tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp)
                 shutil.copytree(ROOT / "openai", root / "openai", ignore=shutil.ignore_patterns("dist"))
@@ -52,15 +54,50 @@ class Packages(unittest.TestCase):
                          "wait for an actual answer", "does not establish a stage"):
             self.assertIn(contract, adapted)
         catalog = json.loads((ROOT / "openai/catalog.json").read_text())
-        self.assertEqual(catalog["version"], "0.3.0")
-        self.assertEqual(len(catalog["plugins"]), 5)
+        self.assertEqual(catalog["version"], "0.4.0")
+        self.assertEqual(len(catalog["plugins"]), 6)
         item = next(p for p in catalog["plugins"] if p["id"] == "ansvar-zero-trust")
         self.assertTrue(all(len(p) <= 128 for p in item["prompts"]))
         broken = copy.deepcopy(item)
         broken["prompts"][0] = "Using Ansvar, " + "x" * 128
         with self.assertRaisesRegex(ValueError, "submission limit"):
             builder.validate_spec(broken)
-        self.assertEqual(len(builder.verify_inputs(ROOT)["compiled_skills"]), 2)
+        self.assertEqual(len(builder.verify_inputs(ROOT)["compiled_skills"]), 3)
+
+    def test_cmmc_contract_and_commercial_adapter(self):
+        compiled = (ROOT / "openai/vendor/cmmc.md").read_bytes()
+        with self.assertRaisesRegex(ValueError, "adapter needs review"):
+            builder.adapt_compiled(compiled.replace(b"on free and solo the gateway", b"the gateway"),
+                                   "ansvar-cmmc")
+        adapted = builder.adapt_compiled(compiled, "ansvar-cmmc").decode()
+        # "red-team" and the "tier" response field are not commercial wording.
+        self.assertNotRegex(adapted, r"(?i)(?<![-\w\"])(?:premium|solo|free|team|company|upgrade|tiers?)\b")
+        for contract in ("cmmc_l1_self", "cmmc_l2_self", "closeout_of", "32 CFR 170.24",
+                         "out of 110", "15 requirements", "Never submit a score",
+                         "self-assessment aid", "as a C3PAO assessment",
+                         "never give the affirmation for the person"):
+            self.assertIn(contract, adapted)
+        catalog = json.loads((ROOT / "openai/catalog.json").read_text())
+        item = next(p for p in catalog["plugins"] if p["id"] == "ansvar-cmmc")
+        self.assertTrue(all(len(p) <= 128 for p in item["prompts"]))
+        listing = " ".join([item["description"], item["summary"], item["subtitle"]])
+        self.assertNotRegex(listing, r"(?i)\b(?:premium|solo|free|team|company|upgrade|plan|pricing|checkout)\b")
+        self.assertIn("not a C3PAO assessment", item["description"])
+
+    def test_compiled_archives_carry_no_commercial_wording(self):
+        catalog = json.loads((ROOT / "openai/catalog.json").read_text())
+        lock = builder.verify_inputs(ROOT)
+        for spec in catalog["plugins"]:
+            if spec["id"] not in builder.COMPILED_IDS:
+                continue
+            files = builder.package_files(ROOT, spec, catalog["version"], lock)
+            for name in builder.FRAGMENTS:
+                self.assertNotIn(f"skills/{spec['id']}/references/{name}", files)
+            for name, data in files.items():
+                if name.endswith(".md") and not name.endswith("grounding.md"):
+                    with self.subTest(package=spec["id"], file=name):
+                        self.assertNotRegex(data.decode(),
+                                            r"(?i)(?<![-\w\"])(?:premium|solo|free|team|company|upgrade|tiers?)\b(?!-)")
 
     def test_reproducible_and_self_contained(self):
         first = builder.build(ROOT)

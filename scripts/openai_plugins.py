@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FRAGMENTS = ("workflow-loop.md", "delivery-rules.md")
 SCHEMA = "https://agent-plugins.org/schemas/1.0.0/"
 GATEWAY = "https://gateway.ansvar.eu/mcp"
-COMPILED_IDS = ("ansvar-vulnerability-management", "ansvar-zero-trust")
+COMPILED_IDS = ("ansvar-vulnerability-management", "ansvar-zero-trust", "ansvar-cmmc")
 
 
 def adapt_compiled(data, sid="ansvar-vulnerability-management"):
@@ -29,11 +29,13 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
     replacements = {
         "with a tier caveat": "with an access caveat",
         "Tiers without a run allowance": "Accounts without a run allowance",
-        "not on the customer's plan": "not on the customer's account access",
         "and plan. Never infer that there is no law.":
             "and account access. Never infer that there is no law.",
         "plan; follow the step note.": "account access; follow the step note.",
     }
+    if sid != "ansvar-cmmc":
+        # Wording the cmmc family overlay does not carry.
+        replacements["not on the customer's plan"] = "not on the customer's account access"
     if sid == "ansvar-vulnerability-management":
         replacements.update({
             "Call get_my_capabilities and list_workflow_types. State availability and tier\nlimits before starting.":
@@ -51,6 +53,9 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
         replacements["Call `get_my_capabilities` and `list_workflow_types`. State the tier limits\nbefore starting."] = (
             "Call `get_my_capabilities` and `list_workflow_types`. State available capabilities\n"
             "before starting, without commercial messaging.")
+    elif sid == "ansvar-cmmc":
+        replacements["their own catalogue, and on free and solo the gateway refuses a framework\nargument it does not know."] = (
+            "their own catalogue, and the gateway can refuse a framework argument it does\nnot know.")
     else:
         raise ValueError(f"Unknown compiled adapter: {sid}")
     for old, new in replacements.items():
@@ -69,6 +74,11 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
                      "memory. Do not fetch control-library candidates: the ZTMM crosswalk is\n"
                      "unsupported. Refuse bypass instructions and redirect to authorized\n"
                      "defensive assessment.\n")
+    if sid == "ansvar-cmmc":
+        boundary += ("This is a self-assessment aid. Never certify CMMC compliance or status,\n"
+                     "present the result as a C3PAO assessment, give legal advice, or enter\n"
+                     "anything in SPRS. Never state a score, POA&M eligibility or status the\n"
+                     "engine has not returned, and never give the affirmation for the person.\n")
     return (frontmatter + "\n---\n" + boundary + body).encode()
 
 
@@ -114,7 +124,9 @@ def upstream(wf_source, ai_source):
     compiled_rows = []
     for sid in COMPILED_IDS:
         skill = sid.removeprefix("ansvar-")
-        focused = next(row for row in manifest["focused_skills"] if row["id"] == skill)
+        # A focused skill, or a whole family skill (ansvar-cmmc packages the cmmc family).
+        focused = next(row for row in [*manifest["focused_skills"], *manifest["families"]]
+                       if row["id"] == skill)
         source = f"instructions/dist/{skill}/SKILL.md"
         compiled = git(wf_source, "show", f"{commit}:{source}")
         artifact = next(row for row in focused["artifacts"] if row["path"] == source)
@@ -259,7 +271,9 @@ def package_files(root, spec, version, lock):
             if not path.is_file() or path.suffix != ".md":
                 raise ValueError(f"Unexpected reference: {path}")
             files[prefix + "references/" + path.name] = read(path)
-    if spec["workflow"]:
+    # Compiled skills already carry the shared core inline, adapted for ChatGPT;
+    # the raw fragments would ship its unadapted plan and tier wording.
+    if spec["workflow"] and sid not in COMPILED_IDS:
         for name in FRAGMENTS:
             files[prefix + "references/" + name] = read(root / "openai/vendor" / name)
     validate_files(files)

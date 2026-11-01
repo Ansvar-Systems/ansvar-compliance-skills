@@ -26,6 +26,11 @@
       "path": "openai/vendor/zero-trust.md",
       "source_path": "instructions/dist/zero-trust/SKILL.md",
       "sha256": "4cb285d7c480c760c810df49cb132d9da4f59aaf3d46c56b9008c5fddb467e79"
+    },
+    {
+      "path": "openai/vendor/cmmc.md",
+      "source_path": "instructions/dist/cmmc/SKILL.md",
+      "sha256": "4e87b964cf152611ce01eca0047a1372248217e2656b1a26a7e607935497078c"
     }
   ],
   "icon": {
