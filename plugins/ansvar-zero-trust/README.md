@@ -13,8 +13,8 @@ remain questions. ZTMM and SP 800-207 are guidance; binding requirements, such
 as NIS2 Article 21 where applicable, need their own fetched authority and scope
 check. Your agent records each regulation it evaluated and whether it applies
 to you; a regulation it fetched is not an obligation by itself. The report
-carries no control-library mappings while no ZTMM-to-800-53 crosswalk is
-available.
+can include NIST SP 800-53 candidates from the served SP 1800-35 crosswalk
+on Team and Company, marked related-to for review rather than coverage.
 
 The plugin includes `using-ansvar` for one-off legal and standards questions.
 Results support your own self-assessment and human review. They do not establish
@@ -54,11 +54,12 @@ guess.
 
 ## Effort
 
-In Ansvar's own run on 1 November 2026 the person answered six times: the
-opening request, scope, jurisdictions, whether to draw a diagram, scope
-approval and the findings review. Between those replies your agent records the
-40 functions one by one. That part takes the longest, and you can answer
-several functions at once from your records.
+In Ansvar's own runs on 1 November 2026 the person replied eight times when
+the 40 function answers came from existing records in batches: the opening
+request, scope and targets, jurisdictions, diagram choice, scope approval,
+function answers, stage confirmation and findings review. Answering live,
+function by function, adds a question and a confirmation for each function.
+Between replies your agent makes about 170 lookups and records each function.
 
 ## What you get
 
