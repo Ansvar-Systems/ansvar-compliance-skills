@@ -90,6 +90,24 @@ class Packages(unittest.TestCase):
         self.assertIn("not a C3PAO assessment", item["description"])
 
     def test_compiled_archives_carry_no_commercial_wording(self):
+        def normalize_noncommercial_fields(text):
+            # These exact evidence/content mechanics are not account or pricing
+            # copy. The citation allowance is the complete sentence so a generic
+            # quoted `tier` elsewhere remains visible to the guard.
+            for safe, replacement in (
+                ('`"quotation"` and `"tier"` if you need them; nothing else.',
+                 "optional citation evidence fields"),
+                ("evidence tier", "evidence classification"),
+                ("evidence-tier", "evidence-classification"),
+                ("free-text", "untrusted-text"),
+                ("red-team", "adversarial-review"),
+                ("checkout-api", "order-service"),
+            ):
+                text = text.replace(safe, replacement)
+            return text
+
+        commercial = (r"(?i)\b(?:premium|solo|free|team|company|upgrade|tiers?|paid|pricing|"
+                      r"subscription|checkout|purchase|billing)\b")
         catalog = json.loads((ROOT / "openai/catalog.json").read_text())
         lock = builder.verify_inputs(ROOT)
         for spec in catalog["plugins"]:
@@ -101,25 +119,17 @@ class Packages(unittest.TestCase):
             for name, data in files.items():
                 if name.endswith(".md") and not name.endswith("grounding.md"):
                     with self.subTest(package=spec["id"], file=name):
-                        # These exact compounds are evidence/content mechanics, not
-                        # account or pricing copy. Everything else is scanned strictly.
-                        body = data.decode()
-                        for safe, replacement in (
-                            ("evidence tier", "evidence classification"),
-                            ("evidence-tier", "evidence-classification"),
-                            ('"tier"', '"evidence_classification"'),
-                            ("`tier`", "`evidence_classification`"),
-                            ("free-text", "untrusted-text"),
-                            ("red-team", "adversarial-review"),
-                        ):
-                            body = body.replace(safe, replacement)
-                        self.assertNotRegex(
-                            body,
-                            r"(?i)\b(?:premium|solo|free|team|company|upgrade|tiers?)\b",
-                        )
-        commercial = r"(?i)\b(?:premium|solo|free|team|company|upgrade|tiers?)\b"
-        for bad in ("`Premium` accounts", "Premium-tier pricing", "free plan", "Team account"):
-            self.assertRegex(bad, commercial)
+                        self.assertNotRegex(normalize_noncommercial_fields(data.decode()), commercial)
+        for bad in (
+            "`Premium` accounts",
+            "Premium-tier pricing",
+            "free plan",
+            "Team account",
+            "Choose a paid plan at checkout.",
+            "Purchase a subscription; see pricing.",
+            "Select another `tier` for more access.",
+        ):
+            self.assertRegex(normalize_noncommercial_fields(bad), commercial)
 
     def test_reproducible_and_self_contained(self):
         first = builder.build(ROOT)
