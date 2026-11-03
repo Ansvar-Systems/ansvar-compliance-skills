@@ -149,3 +149,12 @@ text changes: a run that ends not achieved or cannot complete takes a
 reviewer sign-off and record-only SPRS fields; the evidence attestation is
 its own acknowledgment. The other packages change only their build identity
 line. Re-test the CMMC package before submission.
+
+CMMC compiled skill 1.0.4 (workflow repository 5175b0ac) rebuilds all six
+candidates at 0.6.2 and moves the Claude plugins to 2.6.2. Only the CMMC
+text changes: the Level 1 and Level 2 review instructions no longer say the
+Affirming Official always gives the 170.22 affirmation; an initial run that
+ends not achieved or cannot complete takes a reviewer sign-off, and Final,
+Conditional and closeout runs keep the affirmation. The other packages
+change only their build identity line. Re-test the CMMC package before
+submission.

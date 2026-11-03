@@ -18,9 +18,10 @@ This is a self-assessment aid. It is not a C3PAO assessment or certification,
 and it is not legal advice. A solicitation that names Level 2 (C3PAO) needs a
 certified third-party assessment; the skill says so and stops. On a Final
 or Conditional result your Affirming Official reviews the findings and gives
-the 32 CFR 170.22 affirmation. A run that ends not achieved or cannot
-complete has no CMMC Status to affirm: a named reviewer signs off the
-findings, and the report's SPRS fields are a record only.
+the 32 CFR 170.22 affirmation, as on every closeout run. An initial run that
+ends not achieved or cannot complete has no CMMC Status to affirm: a named
+reviewer signs off the findings, and the report's SPRS fields are a record
+only.
 
 The CMMC Phase 2 requirements were suspended in July 2026 pending a Department of War review. The Phase 1 self-assessment requirements still apply.
 
