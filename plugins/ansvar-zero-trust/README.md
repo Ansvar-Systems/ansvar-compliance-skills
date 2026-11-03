@@ -31,12 +31,10 @@ In Claude Code:
 /reload-plugins
 ```
 
-The founder submits the separate plugin-directory listing after review.
-
 ## Try it
 
 - Using Ansvar, assess our zero trust maturity for the systems we name.
-- Using Ansvar, re-run our zero trust assessment using baseline_report_id from our previous receipt.
+- Using Ansvar, re-run our zero trust assessment with baseline_report_id <report id from our previous receipt> and show what changed.
 - Using Ansvar, identify which open zero trust gaps relate to NIS2 Article 21.
 
 ## What to have ready
@@ -54,12 +52,10 @@ guess.
 
 ## Effort
 
-In Ansvar's own runs on 1 November 2026 the person replied eight times when
-the 40 function answers came from existing records in batches: the opening
-request, scope and targets, jurisdictions, diagram choice, scope approval,
-function answers, stage confirmation and findings review. Answering live,
-function by function, adds a question and a confirmation for each function.
-Between replies your agent makes about 170 lookups and records each function.
+Expect 20 to 35 minutes with records at hand. You answer six evidence batches,
+one for each pillar area, then review the proposed stages in one table. Your
+agent performs about 230 source and control-library lookups and records all 40
+functions, so some tool work can take 15 to 25 minutes.
 
 ## What you get
 
@@ -69,6 +65,7 @@ Between replies your agent makes about 170 lookups and records each function.
 - Open questions for everything recorded as unknown.
 - A roadmap ordered by priority, with first actions.
 - A report id (`baseline_report_id`) that lets the next run show what changed.
+- An HTML report link that lasts one hour; download it within that hour.
 
 ## What you need
 

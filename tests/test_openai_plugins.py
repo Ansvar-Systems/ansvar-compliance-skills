@@ -37,7 +37,9 @@ class Packages(unittest.TestCase):
         adapted = builder.adapt_compiled(compiled).decode()
         self.assertNotRegex(adapted, r"\b(?:Premium|Solo|Free|upgrade)\b")
         for contract in ("scanner findings", "cursor_expired", "snapshot_required",
-                         "baseline_report_id", "Unknown basis cannot close a gap"):
+                         "baseline_report_id", "Unknown basis cannot close a gap",
+                         "one numbered batch", "get_review_context", "done_when",
+                         "risk_reason", "one hour"):
             self.assertIn(contract, adapted)
 
     def test_zero_trust_contract_and_commercial_adapter(self):
@@ -52,10 +54,12 @@ class Packages(unittest.TestCase):
                          "fetched crosswalk rows", "never map controls", "related-to",
                          "interview_attestation", "Unknown evidence requires",
                          "guidance and practice references", "self-assessment",
-                         "wait for an actual answer", "does not establish a stage"):
+                         "wait for an actual answer", "does not establish a stage",
+                         "one numbered evidence batch", "get_review_context", "done_when",
+                         "risk_reason", "one hour"):
             self.assertIn(contract, adapted)
         catalog = json.loads((ROOT / "openai/catalog.json").read_text())
-        self.assertEqual(catalog["version"], "0.5.0")
+        self.assertEqual(catalog["version"], "0.6.0")
         self.assertEqual(len(catalog["plugins"]), 6)
         item = next(p for p in catalog["plugins"] if p["id"] == "ansvar-zero-trust")
         self.assertTrue(all(len(p) <= 128 for p in item["prompts"]))
@@ -97,8 +101,12 @@ class Packages(unittest.TestCase):
             for name, data in files.items():
                 if name.endswith(".md") and not name.endswith("grounding.md"):
                     with self.subTest(package=spec["id"], file=name):
-                        self.assertNotRegex(data.decode(),
-                                            r"(?i)(?<![-\w\"])(?:premium|solo|free|team|company|upgrade|tiers?)\b(?!-)")
+                        # `evidence tier` is a report field, not account or pricing copy.
+                        body = data.decode().replace("evidence tier", "evidence classification")
+                        self.assertNotRegex(
+                            body,
+                            r"(?i)(?<![-\w\"`])(?:premium|solo|free|team|company|upgrade|tiers?)\b(?![-`])",
+                        )
 
     def test_reproducible_and_self_contained(self):
         first = builder.build(ROOT)

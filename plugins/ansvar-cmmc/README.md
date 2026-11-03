@@ -31,8 +31,6 @@ In Claude Code:
 /reload-plugins
 ```
 
-The founder submits the separate plugin-directory listing after review.
-
 ## Try it
 
 - Using Ansvar, run a CMMC Level 1 self-assessment for our company; we handle Federal Contract Information only.
