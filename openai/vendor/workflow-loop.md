@@ -33,8 +33,9 @@ customer believes it has.
 4. Do what the step says. Fetch what its directives name, ask the human what it
    says to ask, and answer in the shape it declares. Pass `workflow_id` on every
    `search` you make for the run (see below).
-5. `submit_response(workflow_id, step_id=<the id get_current_step returned>,
-   responses={…}, fetched_data={…})`. Quality gates run server-side inside this
+5. Generate one UUID as `submission_id`, then call
+   `submit_response(workflow_id, step_id=<the id get_current_step returned>,
+   responses={…}, fetched_data={…}, submission_id=<that UUID>)`. Quality gates run server-side inside this
    call; a rejection comes back as `accepted: false` with a reason and a hint.
    Fix what the hint names and submit again.
 6. Repeat from step 3 until the engine reports `status: ready_for_report`, then
@@ -42,6 +43,18 @@ customer believes it has.
    call with `include_report=false`: you get the receipt, its `display_markdown`
    and the artifact links. Relay `delivery_receipt.display_markdown` unchanged;
    get the full report with `include_report=true` or use the rendered artifacts.
+
+Use a bounded 20-second timeout for a source lookup and 30 seconds for a
+submission. On lookup timeout, keep the workflow id and fetched cache, retry
+that exact lookup at most twice with short backoff, and replace the failed
+envelope when a retry succeeds. Never submit a transport-timeout envelope while
+a bounded retry can recover it. On submission timeout, reuse the exact same
+`submission_id` and payload: a client timeout does not prove the first call
+failed. Then call `get_current_step` and resume the existing run. Cancel only
+after those retries fail. When the gateway itself observed the transport
+failure and the run was admitted in the same billing month, it automatically
+restores the run allowance under its bounded safeguard; do not self-assert a
+failure reason.
 
 ### Name the run on every search
 

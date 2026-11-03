@@ -3,13 +3,13 @@
   "generated_by": "scripts/sync.sh --repin",
   "workflow_library": {
     "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-    "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+    "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
     "manifest_path": "instructions/dist/manifest.json",
-    "manifest_sha256": "75bf1a0d5dddc886a67d6186c5206e75372811d6a6fcf45cbd5b847385050745",
-    "content_bundle_version": "1.52.0",
+    "manifest_sha256": "73811044fefc250db3130b244048707d7e9a9a39409655cbbbd15e41466e504d",
+    "content_bundle_version": "1.53.0",
     "pinned_by": {
       "repo": "Ansvar-Systems/ansvar-ai",
-      "commit": "5161678355ed219de6a1f15b45fff6191b9ea21f",
+      "commit": "64bce34656b7f249ceeb68842573ad258739fe58",
       "path": "scripts/workflow-skills.pin.json"
     }
   },
@@ -21,10 +21,10 @@
       "title": "CMMC Self-Assessment",
       "instruction_version": "1.0.4",
       "path": "skills/cmmc/SKILL.md",
-      "sha256": "c7e3eaeebb935004baa9d42912c77a0a2df81a51c69dc6a0df663d7644a5c87f",
+      "sha256": "d1547abff0b79ce9b32474042da32b6e6d18aeb374c1fb9e64fade8e8ea1612e",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/cmmc/SKILL.md"
       }
     },
@@ -34,10 +34,10 @@
       "title": "Ansvar CMMC Level 1 Self-Assessment",
       "instruction_version": "1.0.2",
       "path": "skills/cmmc-level-1/SKILL.md",
-      "sha256": "2c5a593fb4e7aa64425ae43efc2a3f77590c49a85ba3bd1ca9bf07fa7923136a",
+      "sha256": "1b3885ffcf660d37944c986d0917a52c375327495d1ffb0db99d7adccaced95e",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/cmmc-level-1/SKILL.md"
       }
     },
@@ -47,10 +47,10 @@
       "title": "Ansvar CMMC Level 2 Self-Assessment",
       "instruction_version": "1.0.2",
       "path": "skills/cmmc-level-2/SKILL.md",
-      "sha256": "3973a0cfd1ab6302461fbdbae74e6dd9ad769de6a36401f35e313de59001bb8e",
+      "sha256": "698e8f23898fe5ebaccbdfd09ad0410b2c41b0e056e8480c84d49d1760540845",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/cmmc-level-2/SKILL.md"
       }
     },
@@ -60,10 +60,10 @@
       "title": "Document Review",
       "instruction_version": "1.2.0",
       "path": "skills/document-review/SKILL.md",
-      "sha256": "f60c8913c4bac3cca9f41ec4dd6e4b2749583937de719270d8c6a1f5fa541ba2",
+      "sha256": "6c95e8352443aa2b96a0b9d1c33fbbc91433756bc94c439cef55342f194a6127",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/document-review/SKILL.md"
       }
     },
@@ -73,10 +73,10 @@
       "title": "Impact Assessments — DPIA and FRIA",
       "instruction_version": "1.2.0",
       "path": "skills/dpia/SKILL.md",
-      "sha256": "f1a9e09ea024530a8b037f7e846f955944b94c675d3073be8dea80aa5c57b5b2",
+      "sha256": "31e8cc9b778651efcf1298bf7300e4e45b5fa02768320cd66b4dcfc52b9e6d6d",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/dpia/SKILL.md"
       }
     },
@@ -86,10 +86,10 @@
       "title": "Drone Operations — SORA",
       "instruction_version": "1.2.0",
       "path": "skills/drone-operations/SKILL.md",
-      "sha256": "2c7a29acc85c632f0e1ceec33f467c798f725affc222c099d11a88bf4ba521f8",
+      "sha256": "8f0106c233728fabc3ecb3bb84e2a264fb92ea74e9b3c2cae5584d6afdee5720",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/drone-operations/SKILL.md"
       }
     },
@@ -99,10 +99,10 @@
       "title": "Regulatory Gap Analysis",
       "instruction_version": "1.5.0",
       "path": "skills/gap-analysis/SKILL.md",
-      "sha256": "2eeca7729d57c1de651a79b2536c3334b4b22bb33e1ed7813982c0cf771490f0",
+      "sha256": "7482e8ff6d6f9fdc1167b9e4be7e21d693a25699567af0129e2b1f2b703ddeb3",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/gap-analysis/SKILL.md"
       }
     },
@@ -112,10 +112,10 @@
       "title": "Regulatory Applicability Register",
       "instruction_version": "1.0.0",
       "path": "skills/product-horizon/SKILL.md",
-      "sha256": "f87eeb36b5d7e14fd254f7cbfb9e070d9bb8226942757afd7a5cc7292bf1793e",
+      "sha256": "749b3f1b16743a1499cae09a4942f2a30a3bd4c2f1f38aa5a512151e1c97f2ed",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/product-horizon/SKILL.md"
       }
     },
@@ -125,10 +125,10 @@
       "title": "Adversary Tabletop",
       "instruction_version": "1.2.0",
       "path": "skills/tabletop/SKILL.md",
-      "sha256": "4346bea78ab70f0829e96c0d288b711476a0ff9959c5bdd61b4eb945cc565941",
+      "sha256": "4731e4937e9dc5db7dc41420ad3d3ea0eef830335e4d12d72ff4361c7c3359ca",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/tabletop/SKILL.md"
       }
     },
@@ -138,10 +138,10 @@
       "title": "Threat Analysis and Risk Assessment",
       "instruction_version": "1.2.0",
       "path": "skills/tara/SKILL.md",
-      "sha256": "c0db263478d4808182e7499f5ffd5d60c68c7517dfaf86a6e44ae1d6184f7d1e",
+      "sha256": "94f5711830f4c15d1a32858aeb3588e746fa17a073055fd194396fd0ddd3e958",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/tara/SKILL.md"
       }
     },
@@ -151,10 +151,10 @@
       "title": "Tender Review and Audit",
       "instruction_version": "1.2.0",
       "path": "skills/tender-review/SKILL.md",
-      "sha256": "6818a3a2660468dc03b633df0ec0a180b4bec90a372208a607205cf2b7d0c795",
+      "sha256": "6213df06321897303d6f01387ab6150ef372fb6022388a0d3c7c289bd63074d7",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/tender-review/SKILL.md"
       }
     },
@@ -164,10 +164,10 @@
       "title": "Threat Modelling",
       "instruction_version": "1.8.1",
       "path": "skills/threat-model/SKILL.md",
-      "sha256": "dde45f4154d94efba1ab439df6ca4ac3cf2205f2d171bb7b53cd6ddf97610166",
+      "sha256": "590f2b2892832adda48afd20dbd7de26d3bc0bae1de215cd8fa9467aaf7a3d5f",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/threat-model/SKILL.md"
       }
     },
@@ -178,7 +178,7 @@
       "sha256": "bb0daa63e49bb97111e77621a23ded256aa6a8b0ea784c46c730db27eccf1c40",
       "source": {
         "repo": "Ansvar-Systems/ansvar-ai",
-        "commit": "5161678355ed219de6a1f15b45fff6191b9ea21f",
+        "commit": "64bce34656b7f249ceeb68842573ad258739fe58",
         "path": "public/skills/using-ansvar/SKILL.md"
       }
     },
@@ -188,10 +188,10 @@
       "title": "Vulnerability Decisions",
       "instruction_version": "1.2.0",
       "path": "skills/vulnerability-decisions/SKILL.md",
-      "sha256": "b9383d9fc3b83395a0089f5a951c35d8676963ab6ce78d58fee50172616c0799",
+      "sha256": "50d4267e86dd7b939ce4dcbe463da26d96e488f44be02021fa6c3fe2571c5a6a",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/vulnerability-decisions/SKILL.md"
       }
     },
@@ -201,10 +201,10 @@
       "title": "Ansvar Vulnerability Management",
       "instruction_version": "1.3.0",
       "path": "skills/vulnerability-management/SKILL.md",
-      "sha256": "06d0b1fdc3b17f10c2132353fbb36d00c6fc03db2a6febbbd57a3bf10ff07b40",
+      "sha256": "f7b058befdb3c03dc5f37d1411a925e2a3d93a71bd95f736d91cc9de448f7d82",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/vulnerability-management/SKILL.md"
       }
     },
@@ -214,10 +214,10 @@
       "title": "Ansvar Zero Trust Assessment",
       "instruction_version": "1.3.0",
       "path": "skills/zero-trust/SKILL.md",
-      "sha256": "a90510f24b09911c9185fc7b2d4fcf11ed798469f5d7a02f2a0fbe76d9f4e1ec",
+      "sha256": "84648ab92125a323cf80123414c6fdc300fa8d68e5d7684cfeb720a5a4fe31ea",
       "source": {
         "repo": "Ansvar-Systems/ansvar-workflow-mcp",
-        "commit": "29799bd946dcaec8a6599ee9b675567f6d39c5d8",
+        "commit": "d87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7",
         "path": "instructions/dist/zero-trust/SKILL.md"
       }
     }

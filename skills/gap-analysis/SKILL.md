@@ -7,12 +7,12 @@ metadata:
   connector: https://gateway.ansvar.eu/mcp
   version: "1.5.0"
   build_identity:
-    source_identity: "39364ea9ec741cb6852fa0443f05d0a9c9e99fd0f844be7a0f24dadf55c6d2fd"
+    source_identity: "9efb36d4164631c4508ffba2025724f57cc4a18d2546b842f05cc3c123d4d26b"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.52.0@sha256:3c79508bd32745a7ba599357436034b28aa579c23ba84e35e5d2d2dddf380c20"
-      digest: "sha256:3c79508bd32745a7ba599357436034b28aa579c23ba84e35e5d2d2dddf380c20"
-      version_label: "1.52.0"
-    registry_snapshot_sha256: "e0610e072ac1e8d3946d86f3a36993fc7502822371ae960b12378f0321b29d4b"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.53.0@sha256:9dd2022001018632dc52456962a12a5856ed1cc372d028c5d556805e3db4ff89"
+      digest: "sha256:9dd2022001018632dc52456962a12a5856ed1cc372d028c5d556805e3db4ff89"
+      version_label: "1.53.0"
+    registry_snapshot_sha256: "8307f46450f1d1bcfddb2baa388754cc86faa1faaff8178b170c4e6e1ee84566"
 ---
 
 # Regulatory Gap Analysis
@@ -90,8 +90,9 @@ customer believes it has.
 4. Do what the step says. Fetch what its directives name, ask the human what it
    says to ask, and answer in the shape it declares. Pass `workflow_id` on every
    `search` you make for the run (see below).
-5. `submit_response(workflow_id, step_id=<the id get_current_step returned>,
-   responses={…}, fetched_data={…})`. Quality gates run server-side inside this
+5. Generate one UUID as `submission_id`, then call
+   `submit_response(workflow_id, step_id=<the id get_current_step returned>,
+   responses={…}, fetched_data={…}, submission_id=<that UUID>)`. Quality gates run server-side inside this
    call; a rejection comes back as `accepted: false` with a reason and a hint.
    Fix what the hint names and submit again.
 6. Repeat from step 3 until the engine reports `status: ready_for_report`, then
@@ -99,6 +100,18 @@ customer believes it has.
    call with `include_report=false`: you get the receipt, its `display_markdown`
    and the artifact links. Relay `delivery_receipt.display_markdown` unchanged;
    get the full report with `include_report=true` or use the rendered artifacts.
+
+Use a bounded 20-second timeout for a source lookup and 30 seconds for a
+submission. On lookup timeout, keep the workflow id and fetched cache, retry
+that exact lookup at most twice with short backoff, and replace the failed
+envelope when a retry succeeds. Never submit a transport-timeout envelope while
+a bounded retry can recover it. On submission timeout, reuse the exact same
+`submission_id` and payload: a client timeout does not prove the first call
+failed. Then call `get_current_step` and resume the existing run. Cancel only
+after those retries fail. When the gateway itself observed the transport
+failure and the run was admitted in the same billing month, it automatically
+restores the run allowance under its bounded safeguard; do not self-assert a
+failure reason.
 
 ### Name the run on every search
 
@@ -684,8 +697,8 @@ Read from the workflow content the deployed image serves. `list_workflow_types` 
 | `gap_analysis_nis2_nl` | Gap Analysis — NIS2 Netherlands (Cyberbeveiligingswet, Stb. 2026, 187) | NL · nis2 | Gap analysis against the Dutch NIS2 transposition - Cyberbeveiligingswet (Stb. 2026, 187) and Cyberbeveiligingsbesluit (Stb. 2026, 189), both in force 15 August 2026 - using the NIS2 Art.… |
 | `gap_analysis_nis2_pl` | Gap Analysis — NIS2 Poland (ustawa o KSC, Dz.U. 2018 poz. 1560; t.j. Dz.U. 2026 poz. 20, zm. Dz.U. 2026 poz. 252) | PL · nis2 | Analiza luk względem polskiej transpozycji NIS2 w ustawie o krajowym systemie cyberbezpieczeństwa, znowelizowanej ustawą z dnia 23 stycznia 2026 r. (Dz.U. 2026 poz. 252). Art. 8 KSC… |
 | `gap_analysis_r155` | Gap Analysis — UNECE R155 Cyber Security Management System (CSMS) | EU · unece_r155 | Gap analysis of conformity against UNECE R155: the CSMS process controls 7.2.1-7.2.5 and the vehicle-type controls 7.3.1-7.3.6. Scoping fixes the role - an OEM holds the CSMS Certificate… |
-| `gap_analysis_vulnerability_management` | Ansvar Vulnerability Management | VULN_MGMT | Assess vulnerability management functions against served criteria and compare compliance across cycles. |
-| `gap_analysis_zero_trust` | Ansvar Zero Trust Assessment | ZERO_TRUST | Assess zero trust maturity against the 40 CISA ZTMM v2.0 functions and compare stages across cycles. |
+| `gap_analysis_vulnerability_management` | Ansvar Vulnerability Management | VULN_MGMT | Assess nine vulnerability-management functions. Confirm scope and run cost; answer three ordered batches (9 prompts total); optionally provide documents; then review one 9-row… |
+| `gap_analysis_zero_trust` | Ansvar Zero Trust Assessment | ZERO_TRUST | Assess 40 CISA ZTMM v2.0 functions. Confirm scope, target stages and run cost; answer six ordered batches (40 prompts total); optionally provide documents; then review one 40-row… |
 | `ot_machinery_gap` | Machinery Regulation Gap Analysis — EHSRs (EU) 2023/1230 | EU · machinery_2023_1230 | Gap analysis of a manufacturer's obligations for machinery placed on the EU market against the Machinery Regulation (EU) 2023/1230 Annex III Essential Health & Safety Requirements and the… |
 
 ## Starting a run

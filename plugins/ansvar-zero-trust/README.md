@@ -77,8 +77,10 @@ account through OAuth. Account registration uses a business email at
 
 Free and Solo include one and two workflow runs a month, shared across the
 included workflows; Premium and above run the assessment from the monthly
-allowance. Starting a run spends one, and on Free and Solo a cancelled run is
-not handed back, so your agent names the workflow and asks before it starts.
+allowance. Starting a run spends one. A deliberate cancellation is not handed
+back; after bounded retries exhaust a gateway-observed infrastructure failure,
+the gateway can restore the run under its bounded monthly safeguard. Your agent
+never self-asserts that reason, and names the workflow and asks before it starts.
 The report keeps obligations and fixes on every plan.
 Live availability is decided by `get_my_capabilities` and
 `list_workflow_types` before starting.

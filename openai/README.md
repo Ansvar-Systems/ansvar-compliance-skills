@@ -165,3 +165,13 @@ text changes: its workflow-type table names the three types distinctly,
 CMMC Level 1 Self-Assessment (FCI), CMMC Level 2 Self-Assessment (CUI) and
 the base type that defaults to Level 2. The other packages change only
 their build identity line. Re-test the CMMC package before submission.
+
+Content bundle 1.53.0 (workflow repository d87dde6a) rebuilds all six
+candidates at 0.7.0 and moves the Claude plugins to 2.7.0. Zero Trust and
+Vulnerability Management add bounded lookup and idempotent submission retry,
+resume the same run after a timeout, describe the gateway's bounded restoration
+of allowance after an observed infrastructure failure, state the real six/40
+and three/9 interview sizes, and require P1 owner, target date and objectively
+testable completion evidence. The focused ChatGPT adaptation describes run
+allowance use without commercial wording. Re-test both assessment packages
+before submission.

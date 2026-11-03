@@ -39,8 +39,10 @@ class Packages(unittest.TestCase):
         for contract in ("scanner findings", "cursor_expired", "snapshot_required",
                          "baseline_report_id", "Unknown basis cannot close a gap",
                          "one numbered batch", "get_review_context", "done_when",
-                         "risk_reason", "one hour"):
+                         "risk_reason", "one hour", "same allowance period",
+                         "allowance-use confirmation", "scope and run use"):
             self.assertIn(contract, adapted)
+        self.assertNotIn("billing month", adapted)
 
     def test_zero_trust_contract_and_commercial_adapter(self):
         compiled = (ROOT / "openai/vendor/zero-trust.md").read_bytes()
@@ -56,11 +58,14 @@ class Packages(unittest.TestCase):
                          "guidance and practice references", "self-assessment",
                          "wait for an actual answer", "does not establish a stage",
                          "one numbered\nevidence batch", "get_review_context", "done_when",
-                         "risk_reason", "one hour"):
+                         "risk_reason", "one hour", "same allowance period"):
             self.assertIn(contract, adapted)
-        self.assertIn("five pillar areas plus the cross-cutting area", adapted)
+        self.assertNotIn("billing month", adapted)
+        self.assertIn("allowance-use confirmation", adapted)
+        self.assertIn("target stages and run use", adapted)
+        self.assertIn("six evidence batches with 40", adapted)
         catalog = json.loads((ROOT / "openai/catalog.json").read_text())
-        self.assertEqual(catalog["version"], "0.6.3")
+        self.assertEqual(catalog["version"], "0.7.0")
         self.assertEqual(len(catalog["plugins"]), 6)
         item = next(p for p in catalog["plugins"] if p["id"] == "ansvar-zero-trust")
         self.assertTrue(all(len(p) <= 128 for p in item["prompts"]))
@@ -81,8 +86,10 @@ class Packages(unittest.TestCase):
         for contract in ("cmmc_l1_self", "cmmc_l2_self", "closeout_of", "32 CFR 170.24",
                          "out of 110", "15 requirements", "Never submit a score",
                          "self-assessment aid", "as a C3PAO assessment",
-                         "never give the affirmation for the person"):
+                         "never give the affirmation for the person",
+                         "same allowance period"):
             self.assertIn(contract, adapted)
+        self.assertNotIn("billing month", adapted)
         catalog = json.loads((ROOT / "openai/catalog.json").read_text())
         item = next(p for p in catalog["plugins"] if p["id"] == "ansvar-cmmc")
         self.assertTrue(all(len(p) <= 128 for p in item["prompts"]))
