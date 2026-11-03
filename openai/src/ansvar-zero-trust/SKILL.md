@@ -694,7 +694,8 @@ Then give the person this preflight in plain words, before any question:
   `list_workflow_types`. Starting a run uses the account's workflow access and
   stores run state. Name the workflow and get their OK before `start_workflow`.
 - **How long:** expect 20 to 35 minutes with records at hand. You answer six
-  evidence batches, one for each pillar area, then review the proposed stages
+  evidence batches: five pillar areas plus the cross-cutting area, then
+  review the proposed stages
   in one table. The agent performs about 230 source and control-library lookups
   and records all 40 functions, so some tool work can take 15 to 25 minutes.
 - **Have ready:** the systems in scope; how people and services sign in
@@ -733,9 +734,10 @@ choose one for this cycle and say it can change at the next cycle.
 ### Running the functions
 
 Start `gap_analysis_zero_trust` and follow the served steps. The first function
-in each pillar carries one numbered evidence batch in `questions_for_user`.
-Ask that batch once and use the reply for each function in the pillar. Later
-functions in the pillar have no user question; do not ask again. What you must
+in each of the five pillars and the cross-cutting area carries one numbered
+evidence batch in `questions_for_user`. Ask that batch once and use the reply
+for each function in that area. Later functions in the area have no user
+question; do not ask again. What you must
 do and submit is in the step's `methodology.body` and `agent_guidance`: follow
 it, but never read it out. Fetch the rows in `data_to_fetch`; rows in
 `shared_rows` were fetched once for the whole run and are cited by handle. The

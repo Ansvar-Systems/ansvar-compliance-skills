@@ -23,32 +23,34 @@ GATEWAY = "https://gateway.ansvar.eu/mcp"
 COMPILED_IDS = ("ansvar-vulnerability-management", "ansvar-zero-trust", "ansvar-cmmc")
 
 # Fail closed if an upstream compiled skill reintroduces account upsell or
-# pricing copy. These exact phrases are evidence or technical vocabulary, not
-# commercial access messaging.
-NONCOMMERCIAL_PHRASES = (
-    ('`"quotation"` and `"tier"` if you need them; nothing else.',
-     "optional citation evidence fields"),
-    ("evidence tier", "evidence classification"),
-    ("evidence-tier", "evidence-classification"),
-    ("free-text", "untrusted-text"),
-    ("red-team", "adversarial-review"),
-    ("checkout-api", "order-service"),
-    ("which controls to buy, in what order", "which controls to select, in what order"),
-)
+# pricing copy. Only these complete, currently vendored technical lines are
+# exempt. Appending commercial meaning to one makes it non-exempt.
+NONCOMMERCIAL_LINES = frozenset({
+    '`"quotation"` and `"tier"` if you need them; nothing else.',
+    '`arch:service/checkout-api@7`, `arch:trust_zone/dmz@2` — using the `revision` on',
+    'Every free-text field on a returned record — `name`, `description`, an ADR',
+    'level, evidence tier, and the modal verb where the catalogue grades it).',
+    '5. `red_team.adversarial_review` — invoke `/gap-analysis-red-team` and submit its',
+    'findings. This pass looks for overstated compliance, evidence-tier inflation,',
+    'computes a ranked control-investment plan: which controls to buy, in what order,',
+    'step names it; a Level 2 run directs several hundred fetches. Level 1 objectives speak of FCI, not CUI: the red-team step',
+})
 COMMERCIAL_WORDING = re.compile(
     r"\b(?:premium|solo|free|team|company|upgrad\w*|tiers?|paid|pric\w*|"
     r"purchas\w*|buy|buys|buying|bought|pay|pays|paying|payment\w*|paywall\w*|"
     r"unlock\w*|subscrib\w*|subscription\w*|checkout|bill|billed|billing|cost\w*|"
-    r"charg\w*|fees?|money|sales?)\b",
+    r"charg\w*|fees?|money|sales?|upsell\w*|enterprise|trials?|pro|add[ -]?ons?)\b|"
+    r"\b(?:more|additional|extra)\s+access\b",
     re.IGNORECASE,
 )
 
 
 def commercial_wording(text):
-    """Return disallowed commercial wording after scrubbing exact safe phrases."""
-    for safe, replacement in NONCOMMERCIAL_PHRASES:
-        text = text.replace(safe, replacement)
-    return COMMERCIAL_WORDING.search(text)
+    """Return disallowed commercial wording outside exact technical lines."""
+    lines = (line for line in text.splitlines() if line.strip() not in NONCOMMERCIAL_LINES)
+    # A separator must not turn a forbidden word into an identifier bypass,
+    # such as ``premium_plan`` or ``enterprise_edition``.
+    return COMMERCIAL_WORDING.search("\n".join(lines).replace("_", " "))
 
 
 def adapt_compiled(data, sid="ansvar-vulnerability-management"):
@@ -88,6 +90,10 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
                 "say so\nwithout commercial messaging and stop.",
             "- **Plan:** Free and Solo include one and two assessment runs a month; Premium\n  and above run it from the monthly allowance. Starting a run spends one, and on\n  Free and Solo a cancelled run is not handed back. Name the workflow and get\n  their OK before `start_workflow`.":
                 "- **Access:** what this account can run comes from `get_my_capabilities` and\n  `list_workflow_types`. Starting a run uses the account's workflow access and\n  stores run state. Name the workflow and get their OK before `start_workflow`.",
+            "evidence batches, one for each pillar area, then review the proposed stages":
+                "evidence batches: five pillar areas plus the cross-cutting area, then\n  review the proposed stages",
+            "in each pillar carries one numbered evidence batch in `questions_for_user`.\nAsk that batch once and use the reply for each function in the pillar. Later\nfunctions in the pillar have no user question; do not ask again.":
+                "in each of the five pillars and the cross-cutting area carries one numbered\nevidence batch in `questions_for_user`. Ask that batch once and use the reply\nfor each function in that area. Later functions in the area have no user\nquestion; do not ask again.",
         })
     elif sid == "ansvar-cmmc":
         replacements["their own catalogue, and on free and solo the gateway refuses a framework\nargument it does not know."] = (

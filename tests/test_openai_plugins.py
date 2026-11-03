@@ -55,9 +55,10 @@ class Packages(unittest.TestCase):
                          "interview_attestation", "Unknown evidence requires",
                          "guidance and practice references", "self-assessment",
                          "wait for an actual answer", "does not establish a stage",
-                         "one numbered evidence batch", "get_review_context", "done_when",
+                         "one numbered\nevidence batch", "get_review_context", "done_when",
                          "risk_reason", "one hour"):
             self.assertIn(contract, adapted)
+        self.assertIn("five pillar areas plus the cross-cutting area", adapted)
         catalog = json.loads((ROOT / "openai/catalog.json").read_text())
         self.assertEqual(catalog["version"], "0.6.0")
         self.assertEqual(len(catalog["plugins"]), 6)
@@ -116,15 +117,24 @@ class Packages(unittest.TestCase):
             "Subscribe to get upgraded access.",
             "Costs, charges, and fees apply.",
             "Save money in this sale.",
+            "Upsell this workflow.",
+            "Choose the enterprise edition.",
+            "Start a trial for more access.",
+            "Use premium_plan for additional access.",
+            "Choose a pro account.",
+            "Activate the add-on.",
+            "Move to another evidence tier for more access.",
+            "Get more access via checkout-api.",
         ):
             with self.subTest(bad=bad):
                 self.assertIsNotNone(builder.commercial_wording(bad))
 
-        # Exact technical/evidence phrases stay permissible; the surrounding
-        # commercial vocabulary remains visible to the same production guard.
-        for safe, _ in builder.NONCOMMERCIAL_PHRASES:
+        # Exact technical/evidence lines stay permissible; appending commercial
+        # vocabulary makes the whole line visible to the production guard.
+        for safe in builder.NONCOMMERCIAL_LINES:
             with self.subTest(safe=safe):
                 self.assertIsNone(builder.commercial_wording(safe))
+                self.assertIsNotNone(builder.commercial_wording(safe + " Get more access."))
 
     def test_compiled_adapter_rejects_commercial_lexical_variants(self):
         compiled = (ROOT / "openai/vendor/vulnerability-management.md").read_bytes()
@@ -135,6 +145,11 @@ class Packages(unittest.TestCase):
             "Payments and paywalls apply.",
             "Subscribe for upgraded access.",
             "Costs, charges, fees, and sales apply.",
+            "Upsell this workflow; choose the enterprise edition.",
+            "Start a trial or activate the add-on.",
+            "Use premium_plan for additional access.",
+            "Move to another evidence tier for more access.",
+            "Get more access via checkout-api.",
         ):
             with self.subTest(bad=bad), self.assertRaisesRegex(
                     ValueError, "commercial wording"):
