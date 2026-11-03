@@ -101,12 +101,25 @@ class Packages(unittest.TestCase):
             for name, data in files.items():
                 if name.endswith(".md") and not name.endswith("grounding.md"):
                     with self.subTest(package=spec["id"], file=name):
-                        # `evidence tier` is a report field, not account or pricing copy.
-                        body = data.decode().replace("evidence tier", "evidence classification")
+                        # These exact compounds are evidence/content mechanics, not
+                        # account or pricing copy. Everything else is scanned strictly.
+                        body = data.decode()
+                        for safe, replacement in (
+                            ("evidence tier", "evidence classification"),
+                            ("evidence-tier", "evidence-classification"),
+                            ('"tier"', '"evidence_classification"'),
+                            ("`tier`", "`evidence_classification`"),
+                            ("free-text", "untrusted-text"),
+                            ("red-team", "adversarial-review"),
+                        ):
+                            body = body.replace(safe, replacement)
                         self.assertNotRegex(
                             body,
-                            r"(?i)(?<![-\w\"`])(?:premium|solo|free|team|company|upgrade|tiers?)\b(?![-`])",
+                            r"(?i)\b(?:premium|solo|free|team|company|upgrade|tiers?)\b",
                         )
+        commercial = r"(?i)\b(?:premium|solo|free|team|company|upgrade|tiers?)\b"
+        for bad in ("`Premium` accounts", "Premium-tier pricing", "free plan", "Team account"):
+            self.assertRegex(bad, commercial)
 
     def test_reproducible_and_self_contained(self):
         first = builder.build(ROOT)

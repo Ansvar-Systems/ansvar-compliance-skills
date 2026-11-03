@@ -52,10 +52,11 @@ guess.
 
 ## Effort
 
-Expect 20 to 35 minutes with records at hand. You answer six evidence batches,
-one for each pillar area, then review the proposed stages in one table. Your
-agent performs about 230 source and control-library lookups and records all 40
-functions, so some tool work can take 15 to 25 minutes.
+Expect 20 to 35 minutes with records at hand. You answer six evidence batches:
+one for each of five pillars and one cross-cutting batch, then review the
+proposed stages in one table. Your agent performs about 230 source and
+control-library lookups and records all 40 functions, so some tool work can
+take 15 to 25 minutes.
 
 ## What you get
 

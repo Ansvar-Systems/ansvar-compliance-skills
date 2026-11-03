@@ -61,6 +61,7 @@ class ClaudePackaging(unittest.TestCase):
         vulnerability = (ROOT / 'plugins/ansvar-vulnerability-management/README.md').read_text()
         cmmc = (ROOT / 'plugins/ansvar-cmmc/README.md').read_text()
         self.assertIn('six evidence batches', zero_trust)
+        self.assertIn('five pillars and one cross-cutting batch', zero_trust)
         self.assertIn('three evidence\nbatches', vulnerability)
         self.assertIn('lasts one hour', zero_trust)
         self.assertIn('lasts one hour', vulnerability)
