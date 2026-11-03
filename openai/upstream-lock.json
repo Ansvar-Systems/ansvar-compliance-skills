@@ -1,9 +1,9 @@
 {
   "workflow_repo": "Ansvar-Systems/ansvar-workflow-mcp",
-  "workflow_commit": "6e18f6e54524cf0254a980e25aef9304b1cd4ca4",
-  "workflow_manifest_sha256": "b7721a534d8ed1f41b1e6663a6847f53e9626a252f024bed24f269fe6ae359da",
+  "workflow_commit": "5175b0ac9591b8204235468a2d955dbb0042aa61",
+  "workflow_manifest_sha256": "fd2de157d22f84a194cbbe8697923361c1c36ac92cd8014106b332e2e12e574b",
   "publication_repo": "Ansvar-Systems/ansvar-ai",
-  "publication_commit": "cf8aeb53d62bf0cb286a8c3d42698178e685a171",
+  "publication_commit": "e41918c393f52a1193ab120de6ef3ef588fd83df",
   "fragments": [
     {
       "path": "openai/vendor/workflow-loop.md",
@@ -20,17 +20,17 @@
     {
       "path": "openai/vendor/vulnerability-management.md",
       "source_path": "instructions/dist/vulnerability-management/SKILL.md",
-      "sha256": "7c3d33ca88e6f7fdc4ab8e9d1309b99d132fce5c8f3d7ad8538310ab338639fb"
+      "sha256": "33b0e977252d771c50c38d70335549483ed77b9289c3c6da1170b79c53c48886"
     },
     {
       "path": "openai/vendor/zero-trust.md",
       "source_path": "instructions/dist/zero-trust/SKILL.md",
-      "sha256": "a03dff445984ea016a33db1a202dd8f8a9896945850bb8b59ca0658b3b49bcd8"
+      "sha256": "7dfe5543904f56850f802a4441f07189eab86bf5258eefb0f3341a1447a1171a"
     },
     {
       "path": "openai/vendor/cmmc.md",
       "source_path": "instructions/dist/cmmc/SKILL.md",
-      "sha256": "a3fc35814b7564d875b8de69dad73f035df1cabf883b7076f24f79a99fbd6bc2"
+      "sha256": "b4a5078f9e575933368e9f6317fee49b8932119744949cdefdddb23f96d72355"
     }
   ],
   "icon": {

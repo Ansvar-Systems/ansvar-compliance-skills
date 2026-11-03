@@ -60,7 +60,7 @@ class Packages(unittest.TestCase):
             self.assertIn(contract, adapted)
         self.assertIn("five pillar areas plus the cross-cutting area", adapted)
         catalog = json.loads((ROOT / "openai/catalog.json").read_text())
-        self.assertEqual(catalog["version"], "0.6.1")
+        self.assertEqual(catalog["version"], "0.6.2")
         self.assertEqual(len(catalog["plugins"]), 6)
         item = next(p for p in catalog["plugins"] if p["id"] == "ansvar-zero-trust")
         self.assertTrue(all(len(p) <= 128 for p in item["prompts"]))

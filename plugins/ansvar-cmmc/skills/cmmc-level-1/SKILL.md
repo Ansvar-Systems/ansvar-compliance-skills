@@ -5,9 +5,9 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.0.1"
+  version: "1.0.2"
   build_identity:
-    source_identity: "094cf4ba3d1b76ea55297fd963f60e014cd2fe35d363803d7baf1d007f8193e9"
+    source_identity: "39364ea9ec741cb6852fa0443f05d0a9c9e99fd0f844be7a0f24dadf55c6d2fd"
     content_bundle:
       ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.51.0@sha256:e3aaf9dd6cb0d907b66d19bb09886fc0ccbeb437c4c26fb3e1571f827c0e2c66"
       digest: "sha256:e3aaf9dd6cb0d907b66d19bb09886fc0ccbeb437c4c26fb3e1571f827c0e2c66"
@@ -23,7 +23,8 @@ A CMMC Level 1 (Self) or Level 2 (Self) assessment record
 (`ansvar.cmmc.self-assessment.v1`) for one Organization Seeking Assessment
 (OSA): the fixed scope and boundary, a finding for every assessment objective
 with the evidence behind it, the engine's result and status, the POA&M where
-Level 2 allows one, the SPRS inputs, and the 32 CFR 170.22 affirmation. It
+Level 2 allows one, the SPRS inputs, and either the 32 CFR 170.22 affirmation
+or, when an initial run ends without a CMMC Status, a reviewer sign-off. It
 cites 32 CFR Part 170 and NIST SP 800-171 Rev 2 only, fetched during the run.
 
 ### Have ready
@@ -75,13 +76,16 @@ attestation statement (`evidence_attestation_statement`). Read it to the person,
 and only after they confirm it submit it back, unchanged, as
 `attestation_statement_echo`. Approving the scope does not attest the evidence.
 
-The review step depends on the engine's result. On a Conditional or Final
-result, the Affirming Official records the 32 CFR 170.22 affirmation and the
-SPRS inputs. On `not_achieved` or `cannot_complete` there is no CMMC Status to
+The review step depends on the engine's result and the kind of run. On a
+Conditional or Final result, and on every closeout run, the Affirming Official
+records the 32 CFR 170.22 affirmation and the SPRS inputs. On an initial run
+whose result is `not_achieved` or `cannot_complete` there is no CMMC Status to
 affirm: the person records `user_approved` and a `reviewer` {name, title} as a
 sign-off on the findings, and the server refuses an affirmation. The report then
 marks the affirmation not applicable, labels its SPRS fields a record only, and
-says what the result means for contract award and what to do next.
+says what the result means for contract award and what to do next. A run the
+engine refuses to score has no result yet: correct what the refusals name
+before the review, and record neither an affirmation nor a sign-off on it.
 
 A MET or NA finding needs approved, final evidence attested by a named person
 and bound to that objective. A draft, an unapproved record or an assertion with
@@ -529,10 +533,17 @@ as "N of 15 requirements met" and the status; Level 1 carries no score, no
 deductions and no POA&M. A requirement with any NOT_MET objective is not met,
 and the status is final only when all 15 are met.
 
-At the review step the person acting as the Affirming Official reviews the
-findings, the scope and the engine's result, and gives the 170.22 affirmation.
-Relay the receipt verbatim, then point the person to the SPRS fields the report
-lists for them to enter and to the cadence notes it carries.
+At the review step the person reviews the findings, the scope and the engine's
+result. What they record depends on that result. On a Final result the person
+acting as the Affirming Official gives the 170.22 affirmation; relay the receipt
+verbatim, then point the person to the SPRS fields the report lists for them to
+enter and to the cadence notes it carries. On `not_achieved` or
+`cannot_complete` there is no CMMC Status to affirm: the person records
+`user_approved` and a `reviewer` {name, title} as a sign-off on the findings,
+the server refuses an affirmation, and the report's SPRS fields are a record
+only, not a submission. Relay the receipt verbatim and the next steps the
+report gives. If the engine refuses to score, there is no result yet: correct
+what the refusals name before the review.
 
 ## Workflows in this family
 
