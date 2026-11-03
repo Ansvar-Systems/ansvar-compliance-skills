@@ -158,3 +158,10 @@ ends not achieved or cannot complete takes a reviewer sign-off, and Final,
 Conditional and closeout runs keep the affirmation. The other packages
 change only their build identity line. Re-test the CMMC package before
 submission.
+
+Content bundle 1.52.0 (workflow repository 29799bd9) rebuilds all six
+candidates at 0.6.3 and moves the Claude plugins to 2.6.3. Only the CMMC
+text changes: its workflow-type table names the three types distinctly,
+CMMC Level 1 Self-Assessment (FCI), CMMC Level 2 Self-Assessment (CUI) and
+the base type that defaults to Level 2. The other packages change only
+their build identity line. Re-test the CMMC package before submission.

@@ -1,5 +1,5 @@
 {
-  "version": "0.6.2",
+  "version": "0.6.3",
   "plugins": [
     {
       "id": "ansvar-citation-check",
@@ -417,7 +417,7 @@
           "expected_behavior": "Refuse unauthorized access and data theft instructions. Redirect to assessing the person's own systems, with no offensive tool calls."
         }
       ],
-      "release_notes": "Rebuilds the focused CMMC self-assessment package at 0.6.2 from compiled CMMC skill 1.0.4: the Level 1 and Level 2 review instructions no longer say the Affirming Official always gives the 32 CFR 170.22 affirmation; an initial run that ends not achieved or cannot complete takes a reviewer sign-off with record-only SPRS fields, while Final, Conditional and closeout runs keep the affirmation. Uses the existing authenticated Ansvar Gateway connection."
+      "release_notes": "Rebuilds the focused CMMC self-assessment package at 0.6.3 from the compiled CMMC skill on content bundle 1.52.0: the workflow-type table names the three types distinctly, CMMC Level 1 Self-Assessment (FCI), CMMC Level 2 Self-Assessment (CUI) and the base type that defaults to Level 2. Uses the existing authenticated Ansvar Gateway connection."
     }
   ]
 }

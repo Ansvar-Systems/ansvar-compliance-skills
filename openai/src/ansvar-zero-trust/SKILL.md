@@ -9,10 +9,10 @@ metadata:
   build_identity:
     source_identity: "39364ea9ec741cb6852fa0443f05d0a9c9e99fd0f844be7a0f24dadf55c6d2fd"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.51.0@sha256:e3aaf9dd6cb0d907b66d19bb09886fc0ccbeb437c4c26fb3e1571f827c0e2c66"
-      digest: "sha256:e3aaf9dd6cb0d907b66d19bb09886fc0ccbeb437c4c26fb3e1571f827c0e2c66"
-      version_label: "1.51.0"
-    registry_snapshot_sha256: "8c2309e3d235fade8ae409d13635cea71e629a5a07c78b664853f20cdfed14c9"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.52.0@sha256:3c79508bd32745a7ba599357436034b28aa579c23ba84e35e5d2d2dddf380c20"
+      digest: "sha256:3c79508bd32745a7ba599357436034b28aa579c23ba84e35e5d2d2dddf380c20"
+      version_label: "1.52.0"
+    registry_snapshot_sha256: "e0610e072ac1e8d3946d86f3a36993fc7502822371ae960b12378f0321b29d4b"
 ---
 
 
