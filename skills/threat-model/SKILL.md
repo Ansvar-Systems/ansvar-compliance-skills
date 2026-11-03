@@ -7,11 +7,11 @@ metadata:
   connector: https://gateway.ansvar.eu/mcp
   version: "1.8.1"
   build_identity:
-    source_identity: "e19271f882c0915129eee6e68bb718b378a2dbb226bc422efe6c7456998c11f9"
+    source_identity: "1026324d17886dd025b36a91ba7833ddb6645caa18f613c2ba7744b3828ee395"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.49.0@sha256:bc4a2fab6e745bcf0a86eff9dd34fa6bfe447c7315666900f627f46762fac156"
-      digest: "sha256:bc4a2fab6e745bcf0a86eff9dd34fa6bfe447c7315666900f627f46762fac156"
-      version_label: "1.49.0"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.51.0@sha256:e3aaf9dd6cb0d907b66d19bb09886fc0ccbeb437c4c26fb3e1571f827c0e2c66"
+      digest: "sha256:e3aaf9dd6cb0d907b66d19bb09886fc0ccbeb437c4c26fb3e1571f827c0e2c66"
+      version_label: "1.51.0"
     registry_snapshot_sha256: "8c2309e3d235fade8ae409d13635cea71e629a5a07c78b664853f20cdfed14c9"
 ---
 

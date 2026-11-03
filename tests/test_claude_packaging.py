@@ -15,14 +15,14 @@ class ClaudePackaging(unittest.TestCase):
         self.assertEqual(len(list((ROOT / 'skills').glob('*/SKILL.md'))), 20)
         self.assertIn('zero-trust', {s['id'] for s in manifest['skills']})
         self.assertEqual(manifest['workflow_library']['commit'],
-                         '022153ed7dd2884203f9715a09b72a47fefed5b7')
+                         'e7ec4c1c06a501eee33311ea3c42ff75518f5ef0')
         for entry in manifest['skills']:
             self.assertEqual(hashlib.sha256((ROOT / entry['path']).read_bytes()).hexdigest(),
                              entry['sha256'])
         self.assertEqual(len(manifest['skills']), 16)
         self.assertTrue({'zero-trust', 'cmmc', 'cmmc-level-1', 'cmmc-level-2'} <=
                         {s['id'] for s in manifest['skills']})
-        self.assertEqual(marketplace['metadata']['version'], '2.5.0')
+        self.assertEqual(marketplace['metadata']['version'], '2.6.0')
         self.assertEqual({p['name'] for p in marketplace['plugins']},
                          {'ansvar-compliance-skills', 'ansvar-vulnerability-management',
                           'ansvar-zero-trust', 'ansvar-cmmc'})
@@ -40,7 +40,7 @@ class ClaudePackaging(unittest.TestCase):
             self.assertEqual((focused / '.mcp.json').read_bytes(), (ROOT / '.mcp.json').read_bytes())
         for base in bases:
             plugin = json.loads((base / '.claude-plugin/plugin.json').read_text())
-            self.assertEqual(plugin['version'], '2.5.0')
+            self.assertEqual(plugin['version'], '2.6.0')
             for field in ('icon', 'documentationUrl', 'supportUrl',
                           'privacyPolicyUrl', 'termsOfServiceUrl'):
                 self.assertTrue(plugin[field])
@@ -55,6 +55,18 @@ class ClaudePackaging(unittest.TestCase):
         readme = (ROOT / 'plugins/ansvar-zero-trust/README.md').read_text()
         self.assertEqual([line for line in readme.splitlines() if line.startswith('- Using Ansvar')],
                          starters)
+
+    def test_public_readmes_describe_current_experience(self):
+        zero_trust = (ROOT / 'plugins/ansvar-zero-trust/README.md').read_text()
+        vulnerability = (ROOT / 'plugins/ansvar-vulnerability-management/README.md').read_text()
+        cmmc = (ROOT / 'plugins/ansvar-cmmc/README.md').read_text()
+        self.assertIn('six evidence batches', zero_trust)
+        self.assertIn('five pillars and one cross-cutting batch', zero_trust)
+        self.assertIn('three evidence\nbatches', vulnerability)
+        self.assertIn('lasts one hour', zero_trust)
+        self.assertIn('lasts one hour', vulnerability)
+        for readme in (zero_trust, vulnerability, cmmc):
+            self.assertNotIn('founder submits', readme.lower())
 
 
     def test_cmmc_listing_starters_match_compiled_skills(self):

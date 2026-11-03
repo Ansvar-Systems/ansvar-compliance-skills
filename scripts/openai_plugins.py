@@ -22,6 +22,36 @@ SCHEMA = "https://agent-plugins.org/schemas/1.0.0/"
 GATEWAY = "https://gateway.ansvar.eu/mcp"
 COMPILED_IDS = ("ansvar-vulnerability-management", "ansvar-zero-trust", "ansvar-cmmc")
 
+# Fail closed if an upstream compiled skill reintroduces account upsell or
+# pricing copy. Only these complete, currently vendored technical lines are
+# exempt. Appending commercial meaning to one makes it non-exempt.
+NONCOMMERCIAL_LINES = frozenset({
+    '`"quotation"` and `"tier"` if you need them; nothing else.',
+    '`arch:service/checkout-api@7`, `arch:trust_zone/dmz@2` — using the `revision` on',
+    'Every free-text field on a returned record — `name`, `description`, an ADR',
+    'level, evidence tier, and the modal verb where the catalogue grades it).',
+    '5. `red_team.adversarial_review` — invoke `/gap-analysis-red-team` and submit its',
+    'findings. This pass looks for overstated compliance, evidence-tier inflation,',
+    'computes a ranked control-investment plan: which controls to buy, in what order,',
+    'step names it; a Level 2 run directs several hundred fetches. Level 1 objectives speak of FCI, not CUI: the red-team step',
+})
+COMMERCIAL_WORDING = re.compile(
+    r"\b(?:premium|solo|free|team|company|upgrad\w*|tiers?|paid|pric\w*|"
+    r"purchas\w*|buy|buys|buying|bought|pay|pays|paying|payment\w*|paywall\w*|"
+    r"unlock\w*|subscrib\w*|subscription\w*|checkout|bill|billed|billing|cost\w*|"
+    r"charg\w*|fees?|money|sales?|upsell\w*|enterprise|trials?|pro|add[ -]?ons?)\b|"
+    r"\b(?:more|additional|extra)\s+access\b",
+    re.IGNORECASE,
+)
+
+
+def commercial_wording(text):
+    """Return disallowed commercial wording outside exact technical lines."""
+    lines = (line for line in text.splitlines() if line.strip() not in NONCOMMERCIAL_LINES)
+    # A separator must not turn a forbidden word into an identifier bypass,
+    # such as ``premium_plan`` or ``enterprise_edition``.
+    return COMMERCIAL_WORDING.search("\n".join(lines).replace("_", " "))
+
 
 def adapt_compiled(data, sid="ansvar-vulnerability-management"):
     """Keep the compiled workflow instructions; adapt commercial wording for ChatGPT."""
@@ -60,6 +90,10 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
                 "say so\nwithout commercial messaging and stop.",
             "- **Plan:** Free and Solo include one and two assessment runs a month; Premium\n  and above run it from the monthly allowance. Starting a run spends one, and on\n  Free and Solo a cancelled run is not handed back. Name the workflow and get\n  their OK before `start_workflow`.":
                 "- **Access:** what this account can run comes from `get_my_capabilities` and\n  `list_workflow_types`. Starting a run uses the account's workflow access and\n  stores run state. Name the workflow and get their OK before `start_workflow`.",
+            "evidence batches, one for each pillar area, then review the proposed stages":
+                "evidence batches: five pillar areas plus the cross-cutting area, then\n  review the proposed stages",
+            "in each pillar carries one numbered evidence batch in `questions_for_user`.\nAsk that batch once and use the reply for each function in the pillar. Later\nfunctions in the pillar have no user question; do not ask again.":
+                "in each of the five pillars and the cross-cutting area carries one numbered\nevidence batch in `questions_for_user`. Ask that batch once and use the reply\nfor each function in that area. Later functions in the area have no user\nquestion; do not ask again.",
         })
     elif sid == "ansvar-cmmc":
         replacements["their own catalogue, and on free and solo the gateway refuses a framework\nargument it does not know."] = (
@@ -87,7 +121,11 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
                      "present the result as a C3PAO assessment, give legal advice, or enter\n"
                      "anything in SPRS. Never state a score, POA&M eligibility or status the\n"
                      "engine has not returned, and never give the affirmation for the person.\n")
-    return (frontmatter + "\n---\n" + boundary + body).encode()
+    adapted = frontmatter + "\n---\n" + boundary + body
+    match = commercial_wording(adapted)
+    if match:
+        raise ValueError(f"Compiled adapter needs review: commercial wording {match.group()!r}")
+    return adapted.encode()
 
 
 def digest(data):

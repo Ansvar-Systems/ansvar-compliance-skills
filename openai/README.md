@@ -138,3 +138,7 @@ written by hand.
 Zero Trust and Vulnerability Management v2.5.0 (compiled skill 1.2.0) release
 fields and founder steps: [submission packet](review/v2.5.0-submission-packet.md).
 The batch rebuilds all six candidates at 0.5.0; re-test them before submission.
+
+Zero Trust and Vulnerability Management v2.6.0 (compiled skill 1.3.0) release
+fields and publication steps: [submission packet](review/v2.6.0-submission-packet.md).
+The batch rebuilds all six candidates at 0.6.0; re-test them before submission.

@@ -37,7 +37,9 @@ class Packages(unittest.TestCase):
         adapted = builder.adapt_compiled(compiled).decode()
         self.assertNotRegex(adapted, r"\b(?:Premium|Solo|Free|upgrade)\b")
         for contract in ("scanner findings", "cursor_expired", "snapshot_required",
-                         "baseline_report_id", "Unknown basis cannot close a gap"):
+                         "baseline_report_id", "Unknown basis cannot close a gap",
+                         "one numbered batch", "get_review_context", "done_when",
+                         "risk_reason", "one hour"):
             self.assertIn(contract, adapted)
 
     def test_zero_trust_contract_and_commercial_adapter(self):
@@ -52,10 +54,13 @@ class Packages(unittest.TestCase):
                          "fetched crosswalk rows", "never map controls", "related-to",
                          "interview_attestation", "Unknown evidence requires",
                          "guidance and practice references", "self-assessment",
-                         "wait for an actual answer", "does not establish a stage"):
+                         "wait for an actual answer", "does not establish a stage",
+                         "one numbered\nevidence batch", "get_review_context", "done_when",
+                         "risk_reason", "one hour"):
             self.assertIn(contract, adapted)
+        self.assertIn("five pillar areas plus the cross-cutting area", adapted)
         catalog = json.loads((ROOT / "openai/catalog.json").read_text())
-        self.assertEqual(catalog["version"], "0.5.0")
+        self.assertEqual(catalog["version"], "0.6.0")
         self.assertEqual(len(catalog["plugins"]), 6)
         item = next(p for p in catalog["plugins"] if p["id"] == "ansvar-zero-trust")
         self.assertTrue(all(len(p) <= 128 for p in item["prompts"]))
@@ -97,8 +102,58 @@ class Packages(unittest.TestCase):
             for name, data in files.items():
                 if name.endswith(".md") and not name.endswith("grounding.md"):
                     with self.subTest(package=spec["id"], file=name):
-                        self.assertNotRegex(data.decode(),
-                                            r"(?i)(?<![-\w\"])(?:premium|solo|free|team|company|upgrade|tiers?)\b(?!-)")
+                        self.assertIsNone(builder.commercial_wording(data.decode()))
+        for bad in (
+            "`Premium` accounts",
+            "Premium-tier pricing",
+            "free plan",
+            "Team account",
+            "Choose a paid plan at checkout.",
+            "Purchase a subscription; see pricing.",
+            "Select another `tier` for more access.",
+            "See the price before buying additional access.",
+            "Pay to unlock this workflow.",
+            "Payments and paywalls apply.",
+            "Subscribe to get upgraded access.",
+            "Costs, charges, and fees apply.",
+            "Save money in this sale.",
+            "Upsell this workflow.",
+            "Choose the enterprise edition.",
+            "Start a trial for more access.",
+            "Use premium_plan for additional access.",
+            "Choose a pro account.",
+            "Activate the add-on.",
+            "Move to another evidence tier for more access.",
+            "Get more access via checkout-api.",
+        ):
+            with self.subTest(bad=bad):
+                self.assertIsNotNone(builder.commercial_wording(bad))
+
+        # Exact technical/evidence lines stay permissible; appending commercial
+        # vocabulary makes the whole line visible to the production guard.
+        for safe in builder.NONCOMMERCIAL_LINES:
+            with self.subTest(safe=safe):
+                self.assertIsNone(builder.commercial_wording(safe))
+                self.assertIsNotNone(builder.commercial_wording(safe + " Get more access."))
+
+    def test_compiled_adapter_rejects_commercial_lexical_variants(self):
+        compiled = (ROOT / "openai/vendor/vulnerability-management.md").read_bytes()
+        for bad in (
+            "Buy additional access.",
+            "See prices before purchasing access.",
+            "Pay to unlock this workflow.",
+            "Payments and paywalls apply.",
+            "Subscribe for upgraded access.",
+            "Costs, charges, fees, and sales apply.",
+            "Upsell this workflow; choose the enterprise edition.",
+            "Start a trial or activate the add-on.",
+            "Use premium_plan for additional access.",
+            "Move to another evidence tier for more access.",
+            "Get more access via checkout-api.",
+        ):
+            with self.subTest(bad=bad), self.assertRaisesRegex(
+                    ValueError, "commercial wording"):
+                builder.adapt_compiled(compiled + ("\n" + bad).encode())
 
     def test_reproducible_and_self_contained(self):
         first = builder.build(ROOT)

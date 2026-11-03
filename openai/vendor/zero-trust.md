@@ -5,13 +5,13 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.2.0"
+  version: "1.3.0"
   build_identity:
-    source_identity: "e19271f882c0915129eee6e68bb718b378a2dbb226bc422efe6c7456998c11f9"
+    source_identity: "1026324d17886dd025b36a91ba7833ddb6645caa18f613c2ba7744b3828ee395"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.49.0@sha256:bc4a2fab6e745bcf0a86eff9dd34fa6bfe447c7315666900f627f46762fac156"
-      digest: "sha256:bc4a2fab6e745bcf0a86eff9dd34fa6bfe447c7315666900f627f46762fac156"
-      version_label: "1.49.0"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.51.0@sha256:e3aaf9dd6cb0d907b66d19bb09886fc0ccbeb437c4c26fb3e1571f827c0e2c66"
+      digest: "sha256:e3aaf9dd6cb0d907b66d19bb09886fc0ccbeb437c4c26fb3e1571f827c0e2c66"
+      version_label: "1.51.0"
     registry_snapshot_sha256: "8c2309e3d235fade8ae409d13635cea71e629a5a07c78b664853f20cdfed14c9"
 ---
 
@@ -642,8 +642,12 @@ apart:
    supports it. Each specialist runs its own passes and submits its own
    `control_assessment.<control_id>` step. Out-of-order submission inside the
    stage is allowed by design.
-4. `findings_review.assessment_review` — present the matrix to the human and
-   submit with `user_approved: true` once they have reviewed it.
+4. `findings_review.assessment_review` — call
+   `get_review_context(workflow_id, step_id="findings_review.assessment_review")`:
+   `material.enriched.controls` is the matrix (control id, title, compliance
+   level, evidence tier, and the modal verb where the catalogue grades it).
+   Present it to the human and submit with `user_approved: true` once they
+   have reviewed it.
 5. `red_team.adversarial_review` — invoke `/gap-analysis-red-team` and submit its
    findings. This pass looks for overstated compliance, evidence-tier inflation,
    missed horizontal regimes, and mapping over-reach.
@@ -677,14 +681,10 @@ Then give the person this preflight in plain words, before any question:
   and above run it from the monthly allowance. Starting a run spends one, and on
   Free and Solo a cancelled run is not handed back. Name the workflow and get
   their OK before `start_workflow`.
-- **How long:** in Ansvar's own runs on 1 November 2026 the person replied
-  eight times when the 40 function answers came from existing records in
-  batches: the opening request, scope and targets, jurisdictions, whether to
-  draw a diagram, scope approval, the function answers, the stage
-  confirmation and the findings review. Answering function by function, live,
-  adds a question and a confirmation for each of the 40 functions. Between
-  replies the agent makes about 170 lookups and records each function, so
-  expect it to work for a while on its own.
+- **How long:** expect 20 to 35 minutes with records at hand. You answer six
+  evidence batches, one for each pillar area, then review the proposed stages
+  in one table. The agent performs about 230 source and control-library lookups
+  and records all 40 functions, so some tool work can take 15 to 25 minutes.
 - **Have ready:** the systems in scope; how people and services sign in
   (identity provider, MFA, service credentials); how devices are managed; network
   segmentation and remote access; how applications are deployed and tested; data
@@ -693,7 +693,8 @@ Then give the person this preflight in plain words, before any question:
 - **What you get:** a 40-function register with current and target stage,
   a priority (P1 first) and effort per gap, the regulations evaluated and
   whether each applies, open questions, and a roadmap ordered by priority. A
-  report id lets the next run show what changed.
+  report id lets the next run show what changed. Download the HTML report when
+  it arrives; its link lasts one hour.
 
 ### Grounding
 
@@ -719,18 +720,22 @@ choose one for this cycle and say it can change at the next cycle.
 
 ### Running the functions
 
-Start `gap_analysis_zero_trust` and follow the served steps. Each function step
-shows the person one plain question in `questions_for_user`; ask it as written
-in substance: "For this function, describe your current practice or say
-'unknown'." What you must do and submit is in the step's `methodology.body`:
-follow it, but never read it out. Fetch the rows in `data_to_fetch`; rows in
-`shared_rows` were fetched once for the whole run and are cited by handle. Show
-the stage you propose and let the person correct it before you submit.
+Start `gap_analysis_zero_trust` and follow the served steps. The first function
+in each pillar carries one numbered evidence batch in `questions_for_user`.
+Ask that batch once and use the reply for each function in the pillar. Later
+functions in the pillar have no user question; do not ask again. What you must
+do and submit is in the step's `methodology.body` and `agent_guidance`: follow
+it, but never read it out. Fetch the rows in `data_to_fetch`; rows in
+`shared_rows` were fetched once for the whole run and are cited by handle. The
+findings review shows every proposed stage in one table. Let the person correct
+that table before approving the review, and resubmit any corrected function.
 
 The level follows from the stages: at or above the target stage is fully
 compliant, one stage below is partial, two or more below (or unknown) is not
-implemented, and a function at its target carries no P1 action. Every function
-records `priority` (P1 first), `effort` (S, M, L), the
+implemented, and a function at its target carries no P1 or P2 action. Every
+below-target function records one concrete `remediation` and a separate
+`done_when` sentence. Every P1 also records `risk_reason`: the harm or exposure
+that makes it first. Every function records `priority` (P1 first), `effort` (S, M, L), the
 regulations it bears on with their applicability (`obligations`), and
 `open_questions`. A regulation you fetched and verified is not, by itself, an
 obligation: DORA applies only to financial entities, Regulation 2023/2841 only
@@ -758,6 +763,9 @@ re-run prompt with `baseline_report_id`; relay it as written. A changed twin
 fact needs re-verification; closure requires an observed or stated assessment at
 the target stage.
 
+Download the HTML report within one hour. If the link has expired, call
+`generate_report` again for the recorded workflow; this spends no assessment run.
+
 ZTMM stages, target attainment and closure statuses describe evidenced maturity
 for the organisation's own self-assessment. They do not establish legal compliance
 or readiness, constitute legal advice, or certify compliance or maturity. Unknown
@@ -778,5 +786,5 @@ Read from the workflow content the deployed image serves. `list_workflow_types` 
 Openings a customer can paste to their own agent. Each one names Ansvar — without the name the question is answered from the model's own memory and never reaches the connector.
 
 - Using Ansvar, assess our zero trust maturity for the systems we name.
-- Using Ansvar, re-run our zero trust assessment using baseline_report_id from our previous receipt.
+- Using Ansvar, re-run our zero trust assessment with baseline_report_id <report id from our previous receipt> and show what changed.
 - Using Ansvar, identify which open zero trust gaps relate to NIS2 Article 21.
