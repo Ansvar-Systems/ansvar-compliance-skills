@@ -5,9 +5,9 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.0.1"
+  version: "1.0.3"
   build_identity:
-    source_identity: "1026324d17886dd025b36a91ba7833ddb6645caa18f613c2ba7744b3828ee395"
+    source_identity: "094cf4ba3d1b76ea55297fd963f60e014cd2fe35d363803d7baf1d007f8193e9"
     content_bundle:
       ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.51.0@sha256:e3aaf9dd6cb0d907b66d19bb09886fc0ccbeb437c4c26fb3e1571f827c0e2c66"
       digest: "sha256:e3aaf9dd6cb0d907b66d19bb09886fc0ccbeb437c4c26fb3e1571f827c0e2c66"
@@ -38,8 +38,18 @@ cites 32 CFR Part 170 and NIST SP 800-171 Rev 2 only, fetched during the run.
   stops with `cannot_complete`.
 - Evidence in final form: for each record, where it lives (a `customer://`
   locator, or an uploaded `doc://` reference with its sha256 content hash), its
-  version, who approved it and when, and which objectives it supports.
+  version, who approved it and when (a YYYY-MM-DD date), and which objectives
+  it supports. A record with any other locator form, or a date that is not
+  an ISO date, is refused at intake; an unapproved draft is recorded but cannot
+  support MET or NA. Name
+  objectives by their catalogue ref: the `800-171r2:` prefix, the NIST SP
+  800-171A requirement number and the objective letter, such as
+  `800-171r2:3.1.1[a]`; a requirement with a single objective ends in
+  `/objective`, such as `800-171r2:3.10.4/objective`. The evidence step lists
+  every valid ref for the run's level under `evidence_objective_refs`; any other
+  form is refused.
 - The name, title and contact of the person who acts as the Affirming Official.
+  If the run ends without a CMMC Status, a reviewer's name and title instead.
 
 ### Ground rules
 
@@ -55,10 +65,23 @@ predict the score or status to the person before the engine returns it, and
 never round a finding up.
 
 A person approves every human gate, never the agent. The scope and boundary
-approval, the evidence records, the review of the engine's result with the
-affirmation, and the conditional status date are the person's answers. Put each
-gate to the person, wait for an actual answer, and record it as theirs. The
-Affirming Official, not Ansvar and not the agent, owns what goes into SPRS.
+approval, the evidence records, the review of the engine's result, and the
+conditional status date are the person's answers. Put each gate to the person,
+wait for an actual answer, and record it as theirs. The Affirming Official, not
+Ansvar and not the agent, owns what goes into SPRS.
+
+The evidence attestation is its own acknowledgment. The evidence step serves an
+attestation statement (`evidence_attestation_statement`). Read it to the person,
+and only after they confirm it submit it back, unchanged, as
+`attestation_statement_echo`. Approving the scope does not attest the evidence.
+
+The review step depends on the engine's result. On a Conditional or Final
+result, the Affirming Official records the 32 CFR 170.22 affirmation and the
+SPRS inputs. On `not_achieved` or `cannot_complete` there is no CMMC Status to
+affirm: the person records `user_approved` and a `reviewer` {name, title} as a
+sign-off on the findings, and the server refuses an affirmation. The report then
+marks the affirmation not applicable, labels its SPRS fields a record only, and
+says what the result means for contract award and what to do next.
 
 A MET or NA finding needs approved, final evidence attested by a named person
 and bound to that objective. A draft, an unapproved record or an assertion with
@@ -451,8 +474,14 @@ person approves it and is printed in the report. A scoping error moves the
 result more than any single requirement, so ask about every asset category the
 step names rather than accepting a short list.
 
+At Level 1 an External Service Provider's data is `fci` or `neither`; at Level
+2 it is `cui`, `spd` or `neither`.
+
 Fetch the requirement and every objective row the step names from `nist-cui`
-and cite them. Fetch each row once and reuse it unchanged wherever a later
+and cite them. Paste every fetched row whole: the server checks each row's
+identity (its reference, source URL, publisher and licence) when the step is
+submitted, not its text. The text is compared against the served provision only
+when the report is generated. Fetch each row once and reuse it unchanged wherever a later
 step names it; a Level 2 run directs several hundred fetches. Level 1 objectives speak of FCI, not CUI: the red-team step
 checks for that.
 

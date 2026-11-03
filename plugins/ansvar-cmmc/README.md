@@ -7,8 +7,8 @@ objective it assesses from the `nist-cui` corpus, and submits one finding per
 objective with the evidence you name. The Ansvar engine computes the result
 under 32 CFR 170.24: Level 1 is met or not met across 15 requirements, with no
 score; Level 2 is scored out of 110, with the POA&M the rule allows and the
-blockers to Conditional status. The report lists the SPRS inputs and carries
-the affirmation for your Affirming Official.
+blockers to Conditional status. On a Final or Conditional result the report
+lists the SPRS inputs and carries the affirmation for your Affirming Official.
 
 The plugin holds two skills, `cmmc-level-1` and `cmmc-level-2`, plus
 `using-ansvar` for one-off legal and standards questions. A conditional
@@ -16,8 +16,11 @@ Level 2 result can be closed out later with a POA&M closeout run.
 
 This is a self-assessment aid. It is not a C3PAO assessment or certification,
 and it is not legal advice. A solicitation that names Level 2 (C3PAO) needs a
-certified third-party assessment; the skill says so and stops. Your Affirming
-Official reviews the findings and gives the affirmation.
+certified third-party assessment; the skill says so and stops. On a Final
+or Conditional result your Affirming Official reviews the findings and gives
+the 32 CFR 170.22 affirmation. A run that ends not achieved or cannot
+complete has no CMMC Status to affirm: a named reviewer signs off the
+findings, and the report's SPRS fields are a record only.
 
 The CMMC Phase 2 requirements were suspended in July 2026 pending a Department of War review. The Phase 1 self-assessment requirements still apply.
 
@@ -61,7 +64,7 @@ hooks or scripts. When you ask for an assessment, your agent sends the gateway
 the scope, findings and evidence references you choose to share: `customer://`
 locators, or uploaded documents on plans that allow uploads. Workflow runs
 store run state. The skill presents each human gate, including scope approval
-and the affirmation review, for your answer and returns the result through the
+and the review of the result, for your answer and returns the result through the
 report receipt.
 
 Ansvar handles that data under its [privacy policy](https://ansvar.eu/privacy)
