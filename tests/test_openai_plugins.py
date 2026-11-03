@@ -90,24 +90,6 @@ class Packages(unittest.TestCase):
         self.assertIn("not a C3PAO assessment", item["description"])
 
     def test_compiled_archives_carry_no_commercial_wording(self):
-        def normalize_noncommercial_fields(text):
-            # These exact evidence/content mechanics are not account or pricing
-            # copy. The citation allowance is the complete sentence so a generic
-            # quoted `tier` elsewhere remains visible to the guard.
-            for safe, replacement in (
-                ('`"quotation"` and `"tier"` if you need them; nothing else.',
-                 "optional citation evidence fields"),
-                ("evidence tier", "evidence classification"),
-                ("evidence-tier", "evidence-classification"),
-                ("free-text", "untrusted-text"),
-                ("red-team", "adversarial-review"),
-                ("checkout-api", "order-service"),
-            ):
-                text = text.replace(safe, replacement)
-            return text
-
-        commercial = (r"(?i)\b(?:premium|solo|free|team|company|upgrade|tiers?|paid|pricing|"
-                      r"subscription|checkout|purchase|billing)\b")
         catalog = json.loads((ROOT / "openai/catalog.json").read_text())
         lock = builder.verify_inputs(ROOT)
         for spec in catalog["plugins"]:
@@ -119,7 +101,7 @@ class Packages(unittest.TestCase):
             for name, data in files.items():
                 if name.endswith(".md") and not name.endswith("grounding.md"):
                     with self.subTest(package=spec["id"], file=name):
-                        self.assertNotRegex(normalize_noncommercial_fields(data.decode()), commercial)
+                        self.assertIsNone(builder.commercial_wording(data.decode()))
         for bad in (
             "`Premium` accounts",
             "Premium-tier pricing",
@@ -128,8 +110,35 @@ class Packages(unittest.TestCase):
             "Choose a paid plan at checkout.",
             "Purchase a subscription; see pricing.",
             "Select another `tier` for more access.",
+            "See the price before buying additional access.",
+            "Pay to unlock this workflow.",
+            "Payments and paywalls apply.",
+            "Subscribe to get upgraded access.",
+            "Costs, charges, and fees apply.",
+            "Save money in this sale.",
         ):
-            self.assertRegex(normalize_noncommercial_fields(bad), commercial)
+            with self.subTest(bad=bad):
+                self.assertIsNotNone(builder.commercial_wording(bad))
+
+        # Exact technical/evidence phrases stay permissible; the surrounding
+        # commercial vocabulary remains visible to the same production guard.
+        for safe, _ in builder.NONCOMMERCIAL_PHRASES:
+            with self.subTest(safe=safe):
+                self.assertIsNone(builder.commercial_wording(safe))
+
+    def test_compiled_adapter_rejects_commercial_lexical_variants(self):
+        compiled = (ROOT / "openai/vendor/vulnerability-management.md").read_bytes()
+        for bad in (
+            "Buy additional access.",
+            "See prices before purchasing access.",
+            "Pay to unlock this workflow.",
+            "Payments and paywalls apply.",
+            "Subscribe for upgraded access.",
+            "Costs, charges, fees, and sales apply.",
+        ):
+            with self.subTest(bad=bad), self.assertRaisesRegex(
+                    ValueError, "commercial wording"):
+                builder.adapt_compiled(compiled + ("\n" + bad).encode())
 
     def test_reproducible_and_self_contained(self):
         first = builder.build(ROOT)

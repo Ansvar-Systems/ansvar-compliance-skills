@@ -22,6 +22,34 @@ SCHEMA = "https://agent-plugins.org/schemas/1.0.0/"
 GATEWAY = "https://gateway.ansvar.eu/mcp"
 COMPILED_IDS = ("ansvar-vulnerability-management", "ansvar-zero-trust", "ansvar-cmmc")
 
+# Fail closed if an upstream compiled skill reintroduces account upsell or
+# pricing copy. These exact phrases are evidence or technical vocabulary, not
+# commercial access messaging.
+NONCOMMERCIAL_PHRASES = (
+    ('`"quotation"` and `"tier"` if you need them; nothing else.',
+     "optional citation evidence fields"),
+    ("evidence tier", "evidence classification"),
+    ("evidence-tier", "evidence-classification"),
+    ("free-text", "untrusted-text"),
+    ("red-team", "adversarial-review"),
+    ("checkout-api", "order-service"),
+    ("which controls to buy, in what order", "which controls to select, in what order"),
+)
+COMMERCIAL_WORDING = re.compile(
+    r"\b(?:premium|solo|free|team|company|upgrad\w*|tiers?|paid|pric\w*|"
+    r"purchas\w*|buy|buys|buying|bought|pay|pays|paying|payment\w*|paywall\w*|"
+    r"unlock\w*|subscrib\w*|subscription\w*|checkout|bill|billed|billing|cost\w*|"
+    r"charg\w*|fees?|money|sales?)\b",
+    re.IGNORECASE,
+)
+
+
+def commercial_wording(text):
+    """Return disallowed commercial wording after scrubbing exact safe phrases."""
+    for safe, replacement in NONCOMMERCIAL_PHRASES:
+        text = text.replace(safe, replacement)
+    return COMMERCIAL_WORDING.search(text)
+
 
 def adapt_compiled(data, sid="ansvar-vulnerability-management"):
     """Keep the compiled workflow instructions; adapt commercial wording for ChatGPT."""
@@ -87,7 +115,11 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
                      "present the result as a C3PAO assessment, give legal advice, or enter\n"
                      "anything in SPRS. Never state a score, POA&M eligibility or status the\n"
                      "engine has not returned, and never give the affirmation for the person.\n")
-    return (frontmatter + "\n---\n" + boundary + body).encode()
+    adapted = frontmatter + "\n---\n" + boundary + body
+    match = commercial_wording(adapted)
+    if match:
+        raise ValueError(f"Compiled adapter needs review: commercial wording {match.group()!r}")
+    return adapted.encode()
 
 
 def digest(data):
