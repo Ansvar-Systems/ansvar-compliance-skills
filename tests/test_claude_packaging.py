@@ -15,14 +15,14 @@ class ClaudePackaging(unittest.TestCase):
         self.assertEqual(len(list((ROOT / 'skills').glob('*/SKILL.md'))), 20)
         self.assertIn('zero-trust', {s['id'] for s in manifest['skills']})
         self.assertEqual(manifest['workflow_library']['commit'],
-                         'd87dde6af6e467f8f8a7ac5970cbd83b8a8c80c7')
+                         'd46184b3a51e9efa429f8f8aed9729b72c0f7d07')
         for entry in manifest['skills']:
             self.assertEqual(hashlib.sha256((ROOT / entry['path']).read_bytes()).hexdigest(),
                              entry['sha256'])
         self.assertEqual(len(manifest['skills']), 16)
         self.assertTrue({'zero-trust', 'cmmc', 'cmmc-level-1', 'cmmc-level-2'} <=
                         {s['id'] for s in manifest['skills']})
-        self.assertEqual(marketplace['metadata']['version'], '2.7.0')
+        self.assertEqual(marketplace['metadata']['version'], '2.8.0')
         self.assertEqual({p['name'] for p in marketplace['plugins']},
                          {'ansvar-compliance-skills', 'ansvar-vulnerability-management',
                           'ansvar-zero-trust', 'ansvar-cmmc'})
@@ -40,7 +40,7 @@ class ClaudePackaging(unittest.TestCase):
             self.assertEqual((focused / '.mcp.json').read_bytes(), (ROOT / '.mcp.json').read_bytes())
         for base in bases:
             plugin = json.loads((base / '.claude-plugin/plugin.json').read_text())
-            self.assertEqual(plugin['version'], '2.7.0')
+            self.assertEqual(plugin['version'], '2.8.0')
             for field in ('icon', 'documentationUrl', 'supportUrl',
                           'privacyPolicyUrl', 'termsOfServiceUrl'):
                 self.assertTrue(plugin[field])
@@ -60,8 +60,9 @@ class ClaudePackaging(unittest.TestCase):
         zero_trust = (ROOT / 'plugins/ansvar-zero-trust/README.md').read_text()
         vulnerability = (ROOT / 'plugins/ansvar-vulnerability-management/README.md').read_text()
         cmmc = (ROOT / 'plugins/ansvar-cmmc/README.md').read_text()
-        self.assertIn('six evidence batches', zero_trust)
-        self.assertIn('five pillars and one cross-cutting batch', zero_trust)
+        self.assertIn('three evidence batches', zero_trust)
+        self.assertIn('18 decision-changing functions', zero_trust)
+        self.assertIn('Deep mode covers all 40 functions', zero_trust)
         self.assertIn('three evidence\nbatches', vulnerability)
         self.assertIn('lasts one hour', zero_trust)
         self.assertIn('lasts one hour', vulnerability)

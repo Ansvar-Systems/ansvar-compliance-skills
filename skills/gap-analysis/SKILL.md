@@ -7,12 +7,12 @@ metadata:
   connector: https://gateway.ansvar.eu/mcp
   version: "1.5.0"
   build_identity:
-    source_identity: "9efb36d4164631c4508ffba2025724f57cc4a18d2546b842f05cc3c123d4d26b"
+    source_identity: "584f8682f707c517fc6426a18fdff4eceaa6c981f345dbd620aa75c3785b5133"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.53.0@sha256:9dd2022001018632dc52456962a12a5856ed1cc372d028c5d556805e3db4ff89"
-      digest: "sha256:9dd2022001018632dc52456962a12a5856ed1cc372d028c5d556805e3db4ff89"
-      version_label: "1.53.0"
-    registry_snapshot_sha256: "8307f46450f1d1bcfddb2baa388754cc86faa1faaff8178b170c4e6e1ee84566"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.54.0@sha256:91dc29e4ee8ec53445d3cc12d00e2bbd5a52fec3d722420193251c54bdb35bc7"
+      digest: "sha256:91dc29e4ee8ec53445d3cc12d00e2bbd5a52fec3d722420193251c54bdb35bc7"
+      version_label: "1.54.0"
+    registry_snapshot_sha256: "c6a6e0cd30d1eaf0dac84e2be3188d0cc40f26b9b77a2cf29807f294b4bc6030"
 ---
 
 # Regulatory Gap Analysis
@@ -21,8 +21,9 @@ metadata:
 
 A gap analysis assesses one organisation against one framework, control by
 control. Each control is graded, cited to the article or section it comes from,
-and backed by whatever evidence the customer can show. The report states a
-coverage percentage and lists the gaps in the order they matter.
+and backed by whatever evidence the customer can show. The report states the
+applicable completion or maturity-stage counts and lists the gaps in the order
+they matter.
 
 It is an assessment, not an audit and not legal advice. The grades reflect what
 the customer told the workflow and what the corpora say, and every unresolved
@@ -63,7 +64,9 @@ evidence, and stop when the engine says the run is done.
 
 ### Discover before you start
 
-Call `list_workflow_types` first, on every run. It returns the live catalogue:
+Call `get_my_capabilities` and `list_workflow_types` before any other tool, on
+every run. The first call establishes the caller's tier and allowance; the
+second returns the live catalogue:
 type ids, the deliverable each one produces, required inputs, framework and
 jurisdiction bindings, and the date each definition was last legally reviewed.
 Pick the type from that response. The catalogue in this document is a map for
@@ -103,7 +106,7 @@ customer believes it has.
 
 Use a bounded 20-second timeout for a source lookup and 30 seconds for a
 submission. On lookup timeout, keep the workflow id and fetched cache, retry
-that exact lookup at most twice with short backoff, and replace the failed
+that exact lookup once with short backoff, and replace the failed
 envelope when a retry succeeds. Never submit a transport-timeout envelope while
 a bounded retry can recover it. On submission timeout, reuse the exact same
 `submission_id` and payload: a client timeout does not prove the first call
@@ -698,7 +701,7 @@ Read from the workflow content the deployed image serves. `list_workflow_types` 
 | `gap_analysis_nis2_pl` | Gap Analysis — NIS2 Poland (ustawa o KSC, Dz.U. 2018 poz. 1560; t.j. Dz.U. 2026 poz. 20, zm. Dz.U. 2026 poz. 252) | PL · nis2 | Analiza luk względem polskiej transpozycji NIS2 w ustawie o krajowym systemie cyberbezpieczeństwa, znowelizowanej ustawą z dnia 23 stycznia 2026 r. (Dz.U. 2026 poz. 252). Art. 8 KSC… |
 | `gap_analysis_r155` | Gap Analysis — UNECE R155 Cyber Security Management System (CSMS) | EU · unece_r155 | Gap analysis of conformity against UNECE R155: the CSMS process controls 7.2.1-7.2.5 and the vehicle-type controls 7.3.1-7.3.6. Scoping fixes the role - an OEM holds the CSMS Certificate… |
 | `gap_analysis_vulnerability_management` | Ansvar Vulnerability Management | VULN_MGMT | Assess nine vulnerability-management functions. Confirm scope and run cost; answer three ordered batches (9 prompts total); optionally provide documents; then review one 9-row… |
-| `gap_analysis_zero_trust` | Ansvar Zero Trust Assessment | ZERO_TRUST | Assess 40 CISA ZTMM v2.0 functions. Confirm scope, target stages and run cost; answer six ordered batches (40 prompts total); optionally provide documents; then review one 40-row… |
+| `gap_analysis_zero_trust` | Ansvar Zero Trust Assessment | ZERO_TRUST | Assess the 18 CISA ZTMM v2.0 functions that drive a first-stage decision in three batches. Deep mode assesses all 40 functions in six batches. Confirm scope, target stages and run cost… |
 | `ot_machinery_gap` | Machinery Regulation Gap Analysis — EHSRs (EU) 2023/1230 | EU · machinery_2023_1230 | Gap analysis of a manufacturer's obligations for machinery placed on the EU market against the Machinery Regulation (EU) 2023/1230 Annex III Essential Health & Safety Requirements and the… |
 
 ## Starting a run

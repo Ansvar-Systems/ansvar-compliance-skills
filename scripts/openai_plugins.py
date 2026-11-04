@@ -57,6 +57,7 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
     """Keep the compiled workflow instructions; adapt commercial wording for ChatGPT."""
     text = data.decode()
     replacements = {
+        "caller's tier and allowance": "caller's available tools and workflow allowance",
         "with a tier caveat": "with an access caveat",
         "Tiers without a run allowance": "Accounts without a run allowance",
         "run was admitted in the same billing month":
@@ -87,18 +88,16 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
         })
     elif sid == "ansvar-zero-trust":
         replacements.update({
-            "target-stage and cost confirmation":
-                "target-stage and allowance-use confirmation",
             "target stages and run cost": "target stages and run use",
+            "approved scope and explicit cost\nconsent":
+                "approved scope and explicit allowance-use\nconsent",
             "On Team and Company, each function fetches":
                 "When available to this account, each function fetches",
             "Team and Company only": "available only with the required account access",
             "say so\nwith the row's `tier_caveat` and stop.":
                 "say so\nwithout commercial messaging and stop.",
-            "- **Plan:** Free and Solo include one and two assessment runs a month; Premium\n  and above run it from the monthly allowance. Starting a run spends one. A\n  deliberate cancellation is not handed back; a cancellation after bounded\n  retries exhaust an infrastructure failure is restored by the gateway,\n  subject to its bounded monthly safeguard. Name the workflow and get their OK\n  before `start_workflow`.":
+            "- **Plan:** Free and Solo include one and two assessment runs a month; Premium\n  and above run it from the monthly allowance. Starting a run spends one. A\n  deliberate cancellation is not handed back; a cancellation after bounded\n  retries exhaust an infrastructure failure is restored by the gateway,\n  subject to its bounded monthly safeguard. Name the workflow and its one-run\n  cost before consent.":
                 "- **Access:** what this account can run comes from `get_my_capabilities` and\n  `list_workflow_types`. Starting a run uses the account's workflow access and\n  stores run state. Name the workflow and get their OK before `start_workflow`.",
-            "in each pillar carries one numbered evidence batch in `questions_for_user`.\nAsk that batch once and use the reply for each function in the pillar. Later\nfunctions in the pillar have no user question; do not ask again.":
-                "in each of the five pillars and the cross-cutting area carries one numbered\nevidence batch in `questions_for_user`. Ask that batch once and use the reply\nfor each function in that area. Later functions in the area have no user\nquestion; do not ask again.",
         })
     elif sid == "ansvar-cmmc":
         replacements["their own catalogue, and on free and solo the gateway refuses a framework\nargument it does not know."] = (

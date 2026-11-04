@@ -6,7 +6,9 @@ evidence, and stop when the engine says the run is done.
 
 ### Discover before you start
 
-Call `list_workflow_types` first, on every run. It returns the live catalogue:
+Call `get_my_capabilities` and `list_workflow_types` before any other tool, on
+every run. The first call establishes the caller's tier and allowance; the
+second returns the live catalogue:
 type ids, the deliverable each one produces, required inputs, framework and
 jurisdiction bindings, and the date each definition was last legally reviewed.
 Pick the type from that response. The catalogue in this document is a map for
@@ -46,7 +48,7 @@ customer believes it has.
 
 Use a bounded 20-second timeout for a source lookup and 30 seconds for a
 submission. On lookup timeout, keep the workflow id and fetched cache, retry
-that exact lookup at most twice with short backoff, and replace the failed
+that exact lookup once with short backoff, and replace the failed
 envelope when a retry succeeds. Never submit a transport-timeout envelope while
 a bounded retry can recover it. On submission timeout, reuse the exact same
 `submission_id` and payload: a client timeout does not prove the first call

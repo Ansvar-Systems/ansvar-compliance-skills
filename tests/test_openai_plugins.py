@@ -57,15 +57,18 @@ class Packages(unittest.TestCase):
                          "interview_attestation", "Unknown evidence requires",
                          "guidance and practice references", "self-assessment",
                          "wait for an actual answer", "does not establish a stage",
-                         "one numbered\nevidence batch", "get_review_context", "done_when",
+                         "numbered evidence\nbatch", "get_review_context", "done_when",
                          "risk_reason", "one hour", "same allowance period"):
             self.assertIn(contract, adapted)
         self.assertNotIn("billing month", adapted)
-        self.assertIn("allowance-use confirmation", adapted)
+        self.assertIn("explicit allowance-use", adapted)
         self.assertIn("target stages and run use", adapted)
-        self.assertIn("six evidence batches with 40", adapted)
+        self.assertIn("default mode assesses 18", adapted)
+        self.assertIn("three batches", adapted)
+        self.assertIn("Deep mode assesses all 40", adapted)
+        self.assertIn("This uses one zero trust assessment run from your allowance. Start now?", adapted)
         catalog = json.loads((ROOT / "openai/catalog.json").read_text())
-        self.assertEqual(catalog["version"], "0.7.0")
+        self.assertEqual(catalog["version"], "0.8.0")
         self.assertEqual(len(catalog["plugins"]), 6)
         item = next(p for p in catalog["plugins"] if p["id"] == "ansvar-zero-trust")
         self.assertTrue(all(len(p) <= 128 for p in item["prompts"]))

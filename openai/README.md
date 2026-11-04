@@ -175,3 +175,10 @@ and three/9 interview sizes, and require P1 owner, target date and objectively
 testable completion evidence. The focused ChatGPT adaptation describes run
 allowance use without commercial wording. Re-test both assessment packages
 before submission.
+
+Content bundle 1.54.0 (workflow repository d46184b3) rebuilds all six
+candidates at 0.8.0 and moves the Claude plugins to 2.8.0. Zero Trust defaults
+to 18 decision-changing functions in three batches and keeps a 40-function
+deep mode. It asks for explicit one-run consent after scope review, uses the
+same effort vocabulary throughout, and carries a function-specific completion
+test for each remediation. Re-test both assessment packages before submission.
