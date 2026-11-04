@@ -2,8 +2,8 @@
 
 Run a CMMC Level 1 or Level 2 self-assessment for a US defence contract. Your
 agent records the scope, assets, boundary and External Service Providers under
-32 CFR 170.19, fetches every NIST SP 800-171 requirement and assessment
-objective it assesses from the `nist-cui` corpus, and submits one finding per
+32 CFR 170.19, cites every NIST SP 800-171 requirement and assessment
+objective it assesses from the rows the server attaches to each step, and submits one finding per
 objective with the evidence you name. The Ansvar engine computes the result
 under 32 CFR 170.24: Level 1 is met or not met across 15 requirements, with no
 score; Level 2 is scored out of 110, with the POA&M the rule allows and the

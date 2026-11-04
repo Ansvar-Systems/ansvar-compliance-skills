@@ -34,6 +34,7 @@ NONCOMMERCIAL_LINES = frozenset({
     'findings. This pass looks for overstated compliance, evidence-tier inflation,',
     'computes a ranked control-investment plan: which controls to buy, in what order,',
     'step names it; a Level 2 run directs several hundred fetches. Level 1 objectives speak of FCI, not CUI: the red-team step',
+    'CUI: the red-team step checks for that.',
 })
 COMMERCIAL_WORDING = re.compile(
     r"\b(?:premium|solo|free|team|company|upgrad\w*|tiers?|paid|pric\w*|"
