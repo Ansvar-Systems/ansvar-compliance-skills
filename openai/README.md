@@ -190,3 +190,12 @@ CMMC text changes. It names the partial-credit fields
 `no_evidence` basis, the `proceed_with_uncovered` acknowledgement and the
 objective step's `response_shape`. The other packages change only their build
 identity line. Re-test the CMMC package before submission.
+
+Workflow repository 76ac3ee4 (content bundle 1.54.0) rebuilds all six
+candidates at 1.0.0. Zero Trust and Vulnerability Management align their
+served contracts with the live workflow: scope targets are collected once,
+an empty Vulnerability Management document set is valid, unknown answers are
+not presented as attestations, and the receipt carries one applicability and
+citation summary line. Every ZIP now includes a top-level README. The public
+starter prompts and skill instructions use the same customer prompt, beginning
+with "Using Ansvar". Re-test both assessment packages before submission.

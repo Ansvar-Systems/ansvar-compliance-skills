@@ -40,7 +40,7 @@ class ClaudePackaging(unittest.TestCase):
             self.assertEqual((focused / '.mcp.json').read_bytes(), (ROOT / '.mcp.json').read_bytes())
         for base in bases:
             plugin = json.loads((base / '.claude-plugin/plugin.json').read_text())
-            expected = '0.9.0' if base.name in {
+            expected = '1.0.0' if base.name in {
                 'ansvar-vulnerability-management', 'ansvar-zero-trust'} else '2.8.1'
             self.assertEqual(plugin['version'], expected)
             for field in ('icon', 'documentationUrl', 'supportUrl',
@@ -57,6 +57,21 @@ class ClaudePackaging(unittest.TestCase):
         readme = (ROOT / 'plugins/ansvar-zero-trust/README.md').read_text()
         self.assertEqual([line for line in readme.splitlines() if line.startswith('- Using Ansvar')],
                          starters)
+        catalog = json.loads((ROOT / 'openai/catalog.json').read_text())
+        item = next(p for p in catalog['plugins'] if p['id'] == 'ansvar-zero-trust')
+        self.assertEqual(item['prompts'][0], starters[0].removeprefix('- '))
+
+    def test_vulnerability_listing_starters_match_compiled_skill(self):
+        skill = (ROOT / 'skills/vulnerability-management/SKILL.md').read_text()
+        starters = [line for line in skill.split('## Starting a run')[1].splitlines()
+                    if line.startswith('- Using Ansvar')]
+        readme = (ROOT / 'plugins/ansvar-vulnerability-management/README.md').read_text()
+        self.assertEqual([line for line in readme.splitlines() if line.startswith('- Using Ansvar')],
+                         starters)
+        catalog = json.loads((ROOT / 'openai/catalog.json').read_text())
+        item = next(p for p in catalog['plugins']
+                    if p['id'] == 'ansvar-vulnerability-management')
+        self.assertEqual(item['prompts'][0], starters[0].removeprefix('- '))
 
     def test_public_readmes_describe_current_experience(self):
         zero_trust = (ROOT / 'plugins/ansvar-zero-trust/README.md').read_text()
@@ -72,8 +87,8 @@ class ClaudePackaging(unittest.TestCase):
                     "assessment uses one workflow allowance; I'll ask before starting.")
         self.assertIn(contract, zero_trust)
         self.assertIn(contract, vulnerability)
-        self.assertIn('Release version: 0.9.0.', zero_trust)
-        self.assertIn('Release version: 0.9.0.', vulnerability)
+        self.assertIn('Release version: 1.0.0.', zero_trust)
+        self.assertIn('Release version: 1.0.0.', vulnerability)
         self.assertIn('gateway-observed infrastructure failure', zero_trust)
         self.assertIn('never self-asserts', zero_trust)
         for readme in (zero_trust, vulnerability, cmmc):

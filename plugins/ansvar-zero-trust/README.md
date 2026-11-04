@@ -1,6 +1,6 @@
 # Ansvar Zero Trust Assessment
 
-Release version: 0.9.0.
+Release version: 1.0.0.
 
 Assess the zero trust maturity of the systems you name against the CISA Zero
 Trust Maturity Model v2.0, with NIST SP 800-207 as a practice reference.

@@ -21,12 +21,12 @@
       "description": "Assess a vulnerability management programme and run a defensive vulnerability feed cycle with candidate findings, exposure questions, national advisories and one cursor across all feeds. Includes using-ansvar for cited legal and standards questions.",
       "homepage": "https://ansvar.eu/docs/agent-skills",
       "license": "CC-BY-4.0",
-      "version": "0.9.0"
+      "version": "1.0.0"
     },
     {
       "name": "ansvar-zero-trust",
       "source": "./plugins/ansvar-zero-trust",
-      "version": "0.9.0",
+      "version": "1.0.0",
       "description": "Assess zero trust maturity against CISA ZTMM v2.0 with fetched guidance, interview or twin evidence, a gap register and a roadmap for the next cycle. Includes using-ansvar for cited legal and standards questions.",
       "homepage": "https://ansvar.eu/docs/agent-skills",
       "license": "CC-BY-4.0"
