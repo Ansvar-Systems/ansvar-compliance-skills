@@ -5,14 +5,14 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.3.0"
+  version: "1.4.0"
   build_identity:
-    source_identity: "9efb36d4164631c4508ffba2025724f57cc4a18d2546b842f05cc3c123d4d26b"
+    source_identity: "584f8682f707c517fc6426a18fdff4eceaa6c981f345dbd620aa75c3785b5133"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.53.0@sha256:9dd2022001018632dc52456962a12a5856ed1cc372d028c5d556805e3db4ff89"
-      digest: "sha256:9dd2022001018632dc52456962a12a5856ed1cc372d028c5d556805e3db4ff89"
-      version_label: "1.53.0"
-    registry_snapshot_sha256: "8307f46450f1d1bcfddb2baa388754cc86faa1faaff8178b170c4e6e1ee84566"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.54.0@sha256:91dc29e4ee8ec53445d3cc12d00e2bbd5a52fec3d722420193251c54bdb35bc7"
+      digest: "sha256:91dc29e4ee8ec53445d3cc12d00e2bbd5a52fec3d722420193251c54bdb35bc7"
+      version_label: "1.54.0"
+    registry_snapshot_sha256: "c6a6e0cd30d1eaf0dac84e2be3188d0cc40f26b9b77a2cf29807f294b4bc6030"
 ---
 
 
@@ -34,8 +34,9 @@ defensive assessment.
 
 A gap analysis assesses one organisation against one framework, control by
 control. Each control is graded, cited to the article or section it comes from,
-and backed by whatever evidence the customer can show. The report states a
-coverage percentage and lists the gaps in the order they matter.
+and backed by whatever evidence the customer can show. The report states the
+applicable completion or maturity-stage counts and lists the gaps in the order
+they matter.
 
 It is an assessment, not an audit and not legal advice. The grades reflect what
 the customer told the workflow and what the corpora say, and every unresolved
@@ -76,7 +77,9 @@ evidence, and stop when the engine says the run is done.
 
 ### Discover before you start
 
-Call `list_workflow_types` first, on every run. It returns the live catalogue:
+Call `get_my_capabilities` and `list_workflow_types` before any other tool, on
+every run. The first call establishes the caller's available tools and workflow allowance; the
+second returns the live catalogue:
 type ids, the deliverable each one produces, required inputs, framework and
 jurisdiction bindings, and the date each definition was last legally reviewed.
 Pick the type from that response. The catalogue in this document is a map for
@@ -116,7 +119,7 @@ customer believes it has.
 
 Use a bounded 20-second timeout for a source lookup and 30 seconds for a
 submission. On lookup timeout, keep the workflow id and fetched cache, retry
-that exact lookup at most twice with short backoff, and replace the failed
+that exact lookup once with short backoff, and replace the failed
 envelope when a retry succeeds. Never submit a transport-timeout envelope while
 a bounded retry can recover it. On submission timeout, reuse the exact same
 `submission_id` and payload: a client timeout does not prove the first call
@@ -691,7 +694,8 @@ per-control assessment happens per control, with its own fetches.
 
 ### Before the first question: tell the person what this is
 
-Call `get_my_capabilities` and `list_workflow_types`. If
+Before any other tool call, call `get_my_capabilities` and
+`list_workflow_types`. If
 `gap_analysis_zero_trust` is absent, or `available_to_caller` is false, say so
 without commercial messaging and stop. If it returns `control_set_pending`,
 explain that verified ZTMM content is pending and stop. Do not substitute a
@@ -699,26 +703,24 @@ NIST-only maturity assessment.
 
 Then give the person this preflight in plain words, before any question:
 
-- **What it covers:** the 40 functions of the CISA Zero Trust Maturity Model
-  v2.0 across five pillars (identity, devices, networks, applications and
-  workloads, data) plus the cross-cutting functions. Each function gets a
-  current stage, a target stage and a gap.
+- **What it covers:** default mode assesses 18 CISA Zero Trust Maturity Model
+  v2.0 functions that change a first-stage decision, in three batches. The 22
+  other functions are labelled "Not assessed this run; rerun in deep mode to
+  assess this function." Deep mode assesses all 40 functions in six batches.
 - **Access:** what this account can run comes from `get_my_capabilities` and
   `list_workflow_types`. Starting a run uses the account's workflow access and
   stores run state. Name the workflow and get their OK before `start_workflow`.
-- **How long:** expect 20 to 35 minutes with records at hand. After one scope,
-  target-stage and allowance-use confirmation, you answer six evidence batches with 40
-  prompts in total: Identity 7, Devices 7, Networks 7, Applications and
-  Workloads 8, Data 8, then Cross-Cutting 3. Documents are optional. You then
-  review all 40 proposed stages in one table. This is normally at least eight
-  replies. The agent performs about 230 source and control-library lookups
-  and records all 40 functions, so some tool work can take 15 to 25 minutes.
+- **How long:** plan for 15 to 30 minutes with records at hand in default mode,
+  including three evidence replies and one findings review. Deep mode takes
+  longer because it asks 40 questions in six batches. Source lookups run in
+  parallel with a 20-second limit and one bounded retry. You can pause and
+  resume after any batch.
 - **Have ready:** the systems in scope; how people and services sign in
   (identity provider, MFA, service credentials); how devices are managed; network
   segmentation and remote access; how applications are deployed and tested; data
   classification and encryption; logging and who reviews it. Any of these can be
   "unknown" and becomes an open question, not a guess.
-- **What you get:** a 40-function register with current and target stage,
+- **What you get:** a register of assessed functions with current and target stage,
   a priority (P1 first) and effort per gap, the regulations evaluated and
   whether each applies, open questions, and a roadmap ordered by priority. A
   report id lets the next run show what changed. Download the HTML report when
@@ -744,15 +746,27 @@ organisations start (manual, static, perimeter-based), Initial adds some
 automation, Advanced makes most decisions automatically from current context,
 Optimal is fully automated and continuous." Record what they choose; never
 pick for them. Every pillar needs a target: if they are not sure, ask them to
-choose one for this cycle and say it can change at the next cycle.
+choose one for this cycle and say it can change at the next cycle. Ask whether
+they want default mode (18 questions, three batches) or deep mode (all 40, six
+batches). Present the complete scope, targets and selected mode for review and
+wait for an explicit correction or approval.
+
+After the scope review is approved, name `gap_analysis_zero_trust` and ask this
+one consent question exactly: "This uses one zero trust assessment run from your allowance. Start now?"
+Call `start_workflow` only after an explicit yes.
+If the answer is anything else, do not start a run.
 
 ### Running the functions
 
-Start `gap_analysis_zero_trust` and follow the served steps. The first function
-in each of the five pillars and the cross-cutting area carries one numbered
-evidence batch in `questions_for_user`. Ask that batch once and use the reply
-for each function in that area. Later functions in the area have no user
-question; do not ask again. What you must
+Start `gap_analysis_zero_trust` only after the approved scope and explicit allowance-use
+consent, then follow the served steps. Submit the already selected
+`assessment_mode` at `scoping.scope_review`. Reuse the scope and targets the
+person approved before the start; do not ask those questions again unless a
+served value differs from the approved scope. In default mode, the first
+function in each of three cross-pillar batches carries one numbered evidence
+batch in `questions_for_user`; in deep mode there are six pillar batches. Ask
+each batch once and use the reply for its functions. Later functions in the
+batch have no user question; do not ask again. What you must
 do and submit is in the step's `methodology.body` and `agent_guidance`: follow
 it, but never read it out. Fetch the rows in `data_to_fetch`; rows in
 `shared_rows` were fetched once for the whole run and are cited by handle. The
@@ -763,12 +777,14 @@ The level follows from the stages: at or above the target stage is fully
 compliant, one stage below is partial, two or more below (or unknown) is not
 implemented, and a function at its target carries no P1 or P2 action. Every
 action, including an improvement beyond target, records the accountable
-`owner_role`, a `due_date` in YYYY-MM-DD, and a separate, testable `done_when`
-that names observable evidence and its expected result. Default due dates from
+`owner_role`, a `due_date` in YYYY-MM-DD, and the function-specific `done_when`
+served in `agent_guidance`: it states what to try, the expected result and what
+evidence to attach. Default due dates from
 the run date are P1 +14 days, P2 +45 days and P3 +90 days unless the person
 provides a date. Every below-target function also records one concrete
 `remediation`. Never restate the action as the acceptance test. Every P1 also records `risk_reason`: the harm or exposure
-that makes it first. Every function records `priority` (P1 first), `effort` (S, M, L), the
+that makes it first. Every function records `priority` (P1 first), `effort`
+(small (S): days; medium (M): weeks; large (L): a quarter or more), the
 regulations it bears on with their applicability (`obligations`), and
 `open_questions`. A regulation you fetched and verified is not, by itself, an
 obligation: DORA applies only to financial entities, Regulation 2023/2841 only
@@ -812,7 +828,7 @@ Read from the workflow content the deployed image serves. `list_workflow_types` 
 
 | Workflow type | Name | Scope | What it covers |
 |---|---|---|---|
-| `gap_analysis_zero_trust` | Ansvar Zero Trust Assessment | ZERO_TRUST | Assess 40 CISA ZTMM v2.0 functions. Confirm scope, target stages and run use; answer six ordered batches (40 prompts total); optionally provide documents; then review one 40-row… |
+| `gap_analysis_zero_trust` | Ansvar Zero Trust Assessment | ZERO_TRUST | Assess the 18 CISA ZTMM v2.0 functions that drive a first-stage decision in three batches. Deep mode assesses all 40 functions in six batches. Confirm scope, target stages and run use… |
 
 ## Starting a run
 

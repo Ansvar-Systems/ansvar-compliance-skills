@@ -52,16 +52,17 @@ guess.
 
 ## Effort
 
-Expect 20 to 35 minutes with records at hand. You answer six evidence batches:
-one for each of five pillars and one cross-cutting batch, then review the
-proposed stages in one table. Your agent performs about 230 source and
-control-library lookups and records all 40 functions, so some tool work can
-take 15 to 25 minutes.
+Plan for 15 to 30 minutes with records at hand in default mode. You answer
+three evidence batches covering 18 decision-changing functions, then review
+the proposed stages in one table. Deep mode covers all 40 functions in six
+batches. You can pause after any batch. The replay measurement for this release
+is recorded separately from these package instructions.
 
 ## What you get
 
-- A 40-function register with the current and target stage of each function.
-- A priority (P1 first) and an effort (S, M or L) for each gap.
+- A register with current and target stages for each assessed function; default
+  mode labels the other functions for a later deep-mode run.
+- A priority (P1 first) and effort in days, weeks or a quarter for each gap.
 - The regulations evaluated, and whether each applies to you.
 - Open questions for everything recorded as unknown.
 - A roadmap ordered by priority, with first actions.
