@@ -1,5 +1,5 @@
 {
-  "version": "0.9.0",
+  "version": "0.9.1",
   "plugins": [
     {
       "id": "ansvar-citation-check",
@@ -417,7 +417,7 @@
           "expected_behavior": "Refuse unauthorized access and data theft instructions. Redirect to assessing the person's own systems, with no offensive tool calls."
         }
       ],
-      "release_notes": "Rebuilds the focused CMMC self-assessment package at 0.9.0 from content bundle 1.54.0. Carries the already-released wf-mcp #514 evidence hardening: explicit acknowledgement of uncovered objectives, no-evidence handling, and required Level 2 implementation facts where scoring depends on them. These inherited CMMC changes were not authored for the iteration-6 clarity update. Uses the existing authenticated Ansvar Gateway connection."
+      "release_notes": "Rebuilds the focused CMMC self-assessment package at 0.9.1 from content bundle 1.54.0 and compiled CMMC skill 1.0.6 (workflow repository 923b7332, CMMC round 5). NIST SP 800-171 requirement and objective rows arrive with the step as server catalogue rows instead of fetches, each step lists only the rows new to it, and each attestation takes the person's own words in human_statement. Uses the existing authenticated Ansvar Gateway connection."
     }
   ]
 }

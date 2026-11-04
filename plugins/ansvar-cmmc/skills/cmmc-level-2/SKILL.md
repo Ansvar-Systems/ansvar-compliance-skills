@@ -5,9 +5,9 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.0.3"
+  version: "1.0.4"
   build_identity:
-    source_identity: "76212e73b3ef43ddc9d0b3e873cf8c624900b6fa4af861e193edbffb21779554"
+    source_identity: "553317136fc3715d66fd7927c37761ecece26a3d17a258a9b781ec5a42b50d85"
     content_bundle:
       ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.54.0@sha256:91dc29e4ee8ec53445d3cc12d00e2bbd5a52fec3d722420193251c54bdb35bc7"
       digest: "sha256:91dc29e4ee8ec53445d3cc12d00e2bbd5a52fec3d722420193251c54bdb35bc7"
@@ -25,7 +25,8 @@ A CMMC Level 1 (Self) or Level 2 (Self) assessment record
 with the evidence behind it, the engine's result and status, the POA&M where
 Level 2 allows one, the SPRS inputs, and either the 32 CFR 170.22 affirmation
 or, when an initial run ends without a CMMC Status, a reviewer sign-off. It
-cites 32 CFR Part 170 and NIST SP 800-171 Rev 2 only, fetched during the run.
+cites 32 CFR Part 170, fetched during the run, and NIST SP 800-171 Rev 2, whose
+requirement and objective rows the server attaches from its pinned catalogue.
 
 ### Have ready
 
@@ -78,6 +79,18 @@ The evidence attestation is its own acknowledgment. The evidence step serves an
 attestation statement (`evidence_attestation_statement`). Read it to the person,
 and only after they confirm it submit it back, unchanged, as
 `attestation_statement_echo`. Approving the scope does not attest the evidence.
+
+Each attestation takes the person's own words. At the scope approval, the
+evidence attestation and the review, ask the person at that step and put their
+reply, as they typed it, in `human_statement`: their own confirmation of what
+the step records, at least three words that name it (the scope or boundary,
+the evidence records, the findings and result), never a bare "yes" or "ok",
+never the served statement repeated, and different at each of the three
+steps. A standing or
+general instruction such as "keep going", "do it all" or "you may finish the
+workflow" never satisfies an attestation, however recently the person gave it,
+and the server refuses one: stop at the step and ask. The report prints the words beside what was attested and
+says the server cannot prove a person typed them.
 
 The review step depends on the engine's result and the kind of run. On a
 Conditional or Final result, and on every closeout run, the Affirming Official
@@ -201,7 +214,11 @@ and the report then shows the finding as unverified.
 Every accepted `submit_response` returns `row_handles`, one per row you put in
 `fetched_data`, and `get_current_step` returns `citable_rows`, the rows the run
 has stored so far. Each entry carries a `handle` (`wfrow:v1:...`), the row's
-`canonical_ref` and its `title`. Cite with one of these shapes:
+`canonical_ref` and its `title`. When the step says `citable_rows_scope:
+new_to_step`, `citable_rows` holds only the rows new to that step and
+`stored_rows_total` counts the rest: `get_progress` lists every stored row by
+handle, and every stored handle resolves at submit whether it is listed or
+not. Cite with one of these shapes:
 
 - `{"row": "<handle>"}` for a row an earlier submission stored. Add
   `"quotation"` and `"tier"` if you need them; nothing else.
@@ -501,13 +518,24 @@ step names rather than accepting a short list.
 At Level 1 an External Service Provider's data is `fci` or `neither`; at Level
 2 it is `cui`, `spd` or `neither`.
 
-Fetch the requirement and every objective row the step names from `nist-cui`
-and cite them. Paste every fetched row whole: the server checks each row's
-identity (its reference, source URL, publisher and licence) when the step is
-submitted, not its text. The text is compared against the served provision only
-when the report is generated. Fetch each row once and reuse it unchanged wherever a later
-step names it; a Level 2 run directs several hundred fetches. Level 1 objectives speak of FCI, not CUI: the red-team step
-checks for that.
+Do not fetch the NIST SP 800-171 rows. Each objective step serves its
+requirement and objective rows as `catalogue_rows`, from the server's pinned
+catalogue, each with a `handle` and its text, and stores them with the step.
+Cite them by handle in `responses.citations`; do not paste them into
+`fetched_data`. They carry provenance `server_catalogue`, not `fetched`. When
+the report is generated the server checks each row's text against the served
+`nist-cui` provision with `verify_citations`; a row that does not match is
+reported as drifted, and a row the check did not reach reads unverified.
+`cmmc_practice` maps the practice id (for example `AC.L2-3.1.1`) to its NIST SP
+800-171 refs. The 32 CFR 170 rows are still fetched: paste each one whole, as
+served; the server checks each row's identity when the step is submitted and
+its text when the report is generated. Level 1 objectives speak of FCI, not
+CUI: the red-team step checks for that.
+
+Each step lists only the rows new to it under `citable_rows`
+(`citable_rows_scope: new_to_step`), with `stored_rows_total`. `get_progress`
+lists every row the run has stored by handle, and every stored handle resolves
+at submit whether a step lists it or not.
 
 Level 1 is met or not met only (32 CFR 170.24(c)(1)). The report states how
 many of the 15 requirements are met, with no score, no deductions and no
@@ -552,11 +580,10 @@ than after the person has spent time on scope. Start `cmmc_l2_self` without a
 `framework` argument.
 
 Plan for the size of the run before starting. A Level 2 run is about 117
-steps, and each objective step directs `get_provision` fetches from `nist-cui`
-for the requirement and every one of its objectives, so the whole run makes
-several hundred fetches. Tell the person it spans many turns. Fetch each row
-once, keep it, and paste it unchanged into every step that names it; do not
-re-fetch a row you already hold.
+steps; tell the person it spans many turns. The objective steps need no
+fetches: each serves its NIST SP 800-171 requirement and objective rows from
+the server's catalogue (`catalogue_rows`), which you cite by handle. Only the
+32 CFR 170 rows a few steps name are fetched, once each.
 
 Assess every objective of the 110 requirements with its evidence, and submit
 the implementation fact the partial-credit requirements ask for:
@@ -570,7 +597,8 @@ blocks conditional status. Do not tell the person a requirement is POA&M
 eligible before the engine says so.
 
 At the review step the person reviews the findings, the scope, the POA&M and
-the engine's result. What they record depends on that result. On a Conditional
+the engine's result, and confirms it in their own words (`human_statement`),
+asked at that step. What they record depends on that result. On a Conditional
 or Final result, and on every closeout run, the person acting as the Affirming
 Official gives the 170.22 affirmation. On an initial run that ends
 `not_achieved` or `cannot_complete` there is no CMMC Status to affirm: the

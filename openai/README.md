@@ -190,3 +190,12 @@ CMMC text changes. It names the partial-credit fields
 `no_evidence` basis, the `proceed_with_uncovered` acknowledgement and the
 objective step's `response_shape`. The other packages change only their build
 identity line. Re-test the CMMC package before submission.
+
+Workflow repository 923b7332 (CMMC round 5, content bundle 1.54.0) rebuilds all
+six candidates at 0.9.1 and moves the Claude CMMC plugin and the root plugin to
+2.8.2. The CMMC text changes: NIST SP 800-171 rows arrive as server catalogue
+rows (`catalogue_rows`, `cmmc_practice`) instead of fetches, step responses list
+only the rows new to the step (`citable_rows_scope: new_to_step`), and each
+attestation takes the person's own words in `human_statement`. The other
+packages change only the shared run-loop paragraph and their build identity
+line. Re-test the CMMC package before submission.

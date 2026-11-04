@@ -69,7 +69,7 @@ class Packages(unittest.TestCase):
         self.assertIn("**Access:** I'll check what this account can run; starting the named assessment uses one workflow allowance; I'll ask before starting.", adapted)
         self.assertIn("This uses one zero trust assessment run from your allowance. Start now?", adapted)
         catalog = json.loads((ROOT / "openai/catalog.json").read_text())
-        self.assertEqual(catalog["version"], "0.9.0")
+        self.assertEqual(catalog["version"], "0.9.1")
         self.assertEqual(len(catalog["plugins"]), 6)
         item = next(p for p in catalog["plugins"] if p["id"] == "ansvar-zero-trust")
         self.assertTrue(all(len(p) <= 128 for p in item["prompts"]))

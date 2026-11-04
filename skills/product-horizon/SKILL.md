@@ -5,9 +5,9 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.0.0"
+  version: "1.0.1"
   build_identity:
-    source_identity: "76212e73b3ef43ddc9d0b3e873cf8c624900b6fa4af861e193edbffb21779554"
+    source_identity: "553317136fc3715d66fd7927c37761ecece26a3d17a258a9b781ec5a42b50d85"
     content_bundle:
       ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.54.0@sha256:91dc29e4ee8ec53445d3cc12d00e2bbd5a52fec3d722420193251c54bdb35bc7"
       digest: "sha256:91dc29e4ee8ec53445d3cc12d00e2bbd5a52fec3d722420193251c54bdb35bc7"
@@ -209,7 +209,11 @@ and the report then shows the finding as unverified.
 Every accepted `submit_response` returns `row_handles`, one per row you put in
 `fetched_data`, and `get_current_step` returns `citable_rows`, the rows the run
 has stored so far. Each entry carries a `handle` (`wfrow:v1:...`), the row's
-`canonical_ref` and its `title`. Cite with one of these shapes:
+`canonical_ref` and its `title`. When the step says `citable_rows_scope:
+new_to_step`, `citable_rows` holds only the rows new to that step and
+`stored_rows_total` counts the rest: `get_progress` lists every stored row by
+handle, and every stored handle resolves at submit whether it is listed or
+not. Cite with one of these shapes:
 
 - `{"row": "<handle>"}` for a row an earlier submission stored. Add
   `"quotation"` and `"tier"` if you need them; nothing else.
