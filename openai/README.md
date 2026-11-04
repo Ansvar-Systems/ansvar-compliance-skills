@@ -191,6 +191,12 @@ CMMC text changes. It names the partial-credit fields
 objective step's `response_shape`. The other packages change only their build
 identity line. Re-test the CMMC package before submission.
 
+Workflow repository 923b7332 (CMMC round 5, content bundle 1.54.0) rebuilt all
+six candidates at 0.9.1 and moved the Claude CMMC plugin and the root plugin to
+2.8.2. The CMMC text changed: NIST SP 800-171 requirement and objective rows
+arrive with the step as server catalogue rows, each step lists only its new
+rows, and each attestation takes the person's own words in `human_statement`.
+
 Workflow repository 76ac3ee4 (content bundle 1.54.0) rebuilds all six
 candidates at 1.0.0. Zero Trust and Vulnerability Management align their
 served contracts with the live workflow: scope targets are collected once,

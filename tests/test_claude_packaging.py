@@ -15,14 +15,14 @@ class ClaudePackaging(unittest.TestCase):
         self.assertEqual(len(list((ROOT / 'skills').glob('*/SKILL.md'))), 20)
         self.assertIn('zero-trust', {s['id'] for s in manifest['skills']})
         self.assertEqual(manifest['workflow_library']['commit'],
-                         'cf1a0a5f192d3995f6d48708d57cf622e56bb69c')
+                         '923b7332dd5f4d3ac40a1b0374dfad7670222af7')
         for entry in manifest['skills']:
             self.assertEqual(hashlib.sha256((ROOT / entry['path']).read_bytes()).hexdigest(),
                              entry['sha256'])
         self.assertEqual(len(manifest['skills']), 16)
         self.assertTrue({'zero-trust', 'cmmc', 'cmmc-level-1', 'cmmc-level-2'} <=
                         {s['id'] for s in manifest['skills']})
-        self.assertEqual(marketplace['metadata']['version'], '2.8.1')
+        self.assertEqual(marketplace['metadata']['version'], '2.8.2')
         self.assertEqual({p['name'] for p in marketplace['plugins']},
                          {'ansvar-compliance-skills', 'ansvar-vulnerability-management',
                           'ansvar-zero-trust', 'ansvar-cmmc'})
@@ -41,7 +41,7 @@ class ClaudePackaging(unittest.TestCase):
         for base in bases:
             plugin = json.loads((base / '.claude-plugin/plugin.json').read_text())
             expected = '1.0.0' if base.name in {
-                'ansvar-vulnerability-management', 'ansvar-zero-trust'} else '2.8.1'
+                'ansvar-vulnerability-management', 'ansvar-zero-trust'} else '2.8.2'
             self.assertEqual(plugin['version'], expected)
             for field in ('icon', 'documentationUrl', 'supportUrl',
                           'privacyPolicyUrl', 'termsOfServiceUrl'):

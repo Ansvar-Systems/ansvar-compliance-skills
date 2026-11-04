@@ -352,7 +352,7 @@
       "title": "Ansvar CMMC Self-Assessment",
       "subtitle": "Run CMMC self-assessments",
       "summary": "Run CMMC Level 1 and Level 2 self-assessments with cited NIST SP 800-171 objectives.",
-      "description": "Run a CMMC Level 1 or Level 2 self-assessment for a US defence contract under 32 CFR Part 170. Your agent records the scope, assets, boundary and External Service Providers, fetches each NIST SP 800-171 requirement and assessment objective with its citation, and submits one finding per objective on the evidence you name. The Ansvar engine computes the result under 32 CFR 170.24: Level 1 is met or not met across 15 requirements, with no score; Level 2 is scored out of 110, with the POA&M the rule allows and the requirements that block Conditional status. On a Final or Conditional result the report lists the SPRS inputs and carries the affirmation for your Affirming Official, and a conditional Level 2 result can be closed out later with a POA&M closeout run. The CMMC Phase 2 requirements were suspended in July 2026 pending a Department of War review. The Phase 1 self-assessment requirements still apply. Connect an Ansvar account and check available capabilities before starting. This is a self-assessment aid: it is not a C3PAO assessment or certification, and it is not legal advice.",
+      "description": "Run a CMMC Level 1 or Level 2 self-assessment for a US defence contract under 32 CFR Part 170. Your agent records the scope, assets, boundary and External Service Providers, receives each NIST SP 800-171 requirement and assessment objective with its citation from the server's pinned catalogue, and submits one finding per objective on the evidence you name. The Ansvar engine computes the result under 32 CFR 170.24: Level 1 is met or not met across 15 requirements, with no score; Level 2 is scored out of 110, with the POA&M the rule allows and the requirements that block Conditional status. On a Final or Conditional result the report lists the SPRS inputs and carries the affirmation for your Affirming Official, and a conditional Level 2 result can be closed out later with a POA&M closeout run. The CMMC Phase 2 requirements were suspended in July 2026 pending a Department of War review. The Phase 1 self-assessment requirements still apply. Connect an Ansvar account and check available capabilities before starting. This is a self-assessment aid: it is not a C3PAO assessment or certification, and it is not legal advice.",
       "keywords": [
         "cmmc",
         "cmmc-level-1",
@@ -373,7 +373,7 @@
           "description": "Level 1 self-assessment",
           "prompt": "Using Ansvar, run a CMMC Level 1 self-assessment for our company. Our DoD contracts involve Federal Contract Information only.",
           "tools_triggered": "get_my_capabilities, list_workflow_types, start_workflow, get_current_step, get_provision, submit_response, generate_report",
-          "expected_behavior": "Confirm FCI only and agree cmmc_l1_self before an authorized start without a framework argument; explain allowance and stored run state. Have the person approve the 170.19 scope, fetch and cite each nist-cui row, and submit one finding per objective with its evidence. Present the engine's count of the 15 requirements met, with no score or POA&M. On a Final result the Affirming Official reviews and affirms; on not achieved or cannot complete a named reviewer signs off and the SPRS fields are record only; deliver the receipt under the account/evidence boundary."
+          "expected_behavior": "Confirm FCI only and agree cmmc_l1_self before an authorized start without a framework argument; explain allowance and stored run state. Have the person approve the 170.19 scope, cite each server-attached nist-cui catalogue row by handle without fetching it, and submit one finding per objective with its evidence. Present the engine's count of the 15 requirements met, with no score or POA&M. On a Final result the Affirming Official reviews and affirms; on not achieved or cannot complete a named reviewer signs off and the SPRS fields are record only; deliver the receipt under the account/evidence boundary."
         },
         {
           "description": "Level 2 and Conditional status",
@@ -417,7 +417,7 @@
           "expected_behavior": "Refuse unauthorized access and data theft instructions. Redirect to assessing the person's own systems, with no offensive tool calls."
         }
       ],
-      "release_notes": "Rebuilds the focused CMMC self-assessment package at 1.0.0 from the published compiled skill and adds the package README. Uses the existing authenticated Ansvar Gateway connection."
+      "release_notes": "Rebuilds the focused CMMC self-assessment package at 1.0.0 from content bundle 1.54.0 and the published compiled CMMC skill. NIST SP 800-171 requirement and objective rows arrive with the step as server catalogue rows, each step lists only its new rows, and each attestation takes the person's own words in human_statement. Adds a top-level package README and uses the existing authenticated Ansvar Gateway connection."
     }
   ]
 }
