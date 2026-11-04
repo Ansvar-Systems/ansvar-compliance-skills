@@ -59,6 +59,8 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
     replacements = {
         "with a tier caveat": "with an access caveat",
         "Tiers without a run allowance": "Accounts without a run allowance",
+        "run was admitted in the same billing month":
+            "run was admitted in the same allowance period",
         "and plan. Never infer that there is no law.":
             "and account access. Never infer that there is no law.",
         "plan; follow the step note.": "account access; follow the step note.",
@@ -68,6 +70,8 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
         replacements["not on the customer's plan"] = "not on the customer's account access"
     if sid == "ansvar-vulnerability-management":
         replacements.update({
+            "scope and cost confirmation": "scope and allowance-use confirmation",
+            "scope and run cost": "scope and run use",
             "- **Plan:** the assessment runs on every plan: Free and Solo include one and two\n  runs a month, Premium and above use the monthly allowance. Starting a run\n  spends one; name the workflow and get their OK first. Control-library\n  mappings need Team or above. Cycle steps 1 to 3 run on every plan; step 4\n  (scoring a scanner export) needs Premium or above.":
                 "- **Access:** what this account can run comes from `get_my_capabilities` and\n  `list_workflow_types`. Starting a run uses the account's workflow access and\n  stores run state; name the workflow and get their OK first. Report an\n  unavailable step or control mapping without commercial messaging.",
             "explain its availability from the row's `tier_caveat` and offer the":
@@ -83,15 +87,16 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
         })
     elif sid == "ansvar-zero-trust":
         replacements.update({
+            "target-stage and cost confirmation":
+                "target-stage and allowance-use confirmation",
+            "target stages and run cost": "target stages and run use",
             "On Team and Company, each function fetches":
                 "When available to this account, each function fetches",
             "Team and Company only": "available only with the required account access",
             "say so\nwith the row's `tier_caveat` and stop.":
                 "say so\nwithout commercial messaging and stop.",
-            "- **Plan:** Free and Solo include one and two assessment runs a month; Premium\n  and above run it from the monthly allowance. Starting a run spends one, and on\n  Free and Solo a cancelled run is not handed back. Name the workflow and get\n  their OK before `start_workflow`.":
+            "- **Plan:** Free and Solo include one and two assessment runs a month; Premium\n  and above run it from the monthly allowance. Starting a run spends one. A\n  deliberate cancellation is not handed back; a cancellation after bounded\n  retries exhaust an infrastructure failure is restored by the gateway,\n  subject to its bounded monthly safeguard. Name the workflow and get their OK\n  before `start_workflow`.":
                 "- **Access:** what this account can run comes from `get_my_capabilities` and\n  `list_workflow_types`. Starting a run uses the account's workflow access and\n  stores run state. Name the workflow and get their OK before `start_workflow`.",
-            "evidence batches, one for each pillar area, then review the proposed stages":
-                "evidence batches: five pillar areas plus the cross-cutting area, then\n  review the proposed stages",
             "in each pillar carries one numbered evidence batch in `questions_for_user`.\nAsk that batch once and use the reply for each function in the pillar. Later\nfunctions in the pillar have no user question; do not ask again.":
                 "in each of the five pillars and the cross-cutting area carries one numbered\nevidence batch in `questions_for_user`. Ask that batch once and use the reply\nfor each function in that area. Later functions in the area have no user\nquestion; do not ask again.",
         })

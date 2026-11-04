@@ -7,12 +7,12 @@ metadata:
   connector: https://gateway.ansvar.eu/mcp
   version: "1.3.0"
   build_identity:
-    source_identity: "39364ea9ec741cb6852fa0443f05d0a9c9e99fd0f844be7a0f24dadf55c6d2fd"
+    source_identity: "9efb36d4164631c4508ffba2025724f57cc4a18d2546b842f05cc3c123d4d26b"
     content_bundle:
-      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.52.0@sha256:3c79508bd32745a7ba599357436034b28aa579c23ba84e35e5d2d2dddf380c20"
-      digest: "sha256:3c79508bd32745a7ba599357436034b28aa579c23ba84e35e5d2d2dddf380c20"
-      version_label: "1.52.0"
-    registry_snapshot_sha256: "e0610e072ac1e8d3946d86f3a36993fc7502822371ae960b12378f0321b29d4b"
+      ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.53.0@sha256:9dd2022001018632dc52456962a12a5856ed1cc372d028c5d556805e3db4ff89"
+      digest: "sha256:9dd2022001018632dc52456962a12a5856ed1cc372d028c5d556805e3db4ff89"
+      version_label: "1.53.0"
+    registry_snapshot_sha256: "8307f46450f1d1bcfddb2baa388754cc86faa1faaff8178b170c4e6e1ee84566"
 ---
 
 
@@ -103,8 +103,9 @@ customer believes it has.
 4. Do what the step says. Fetch what its directives name, ask the human what it
    says to ask, and answer in the shape it declares. Pass `workflow_id` on every
    `search` you make for the run (see below).
-5. `submit_response(workflow_id, step_id=<the id get_current_step returned>,
-   responses={…}, fetched_data={…})`. Quality gates run server-side inside this
+5. Generate one UUID as `submission_id`, then call
+   `submit_response(workflow_id, step_id=<the id get_current_step returned>,
+   responses={…}, fetched_data={…}, submission_id=<that UUID>)`. Quality gates run server-side inside this
    call; a rejection comes back as `accepted: false` with a reason and a hint.
    Fix what the hint names and submit again.
 6. Repeat from step 3 until the engine reports `status: ready_for_report`, then
@@ -112,6 +113,18 @@ customer believes it has.
    call with `include_report=false`: you get the receipt, its `display_markdown`
    and the artifact links. Relay `delivery_receipt.display_markdown` unchanged;
    get the full report with `include_report=true` or use the rendered artifacts.
+
+Use a bounded 20-second timeout for a source lookup and 30 seconds for a
+submission. On lookup timeout, keep the workflow id and fetched cache, retry
+that exact lookup at most twice with short backoff, and replace the failed
+envelope when a retry succeeds. Never submit a transport-timeout envelope while
+a bounded retry can recover it. On submission timeout, reuse the exact same
+`submission_id` and payload: a client timeout does not prove the first call
+failed. Then call `get_current_step` and resume the existing run. Cancel only
+after those retries fail. When the gateway itself observed the transport
+failure and the run was admitted in the same allowance period, it automatically
+restores the run allowance under its bounded safeguard; do not self-assert a
+failure reason.
 
 ### Name the run on every search
 
@@ -693,10 +706,12 @@ Then give the person this preflight in plain words, before any question:
 - **Access:** what this account can run comes from `get_my_capabilities` and
   `list_workflow_types`. Starting a run uses the account's workflow access and
   stores run state. Name the workflow and get their OK before `start_workflow`.
-- **How long:** expect 20 to 35 minutes with records at hand. You answer six
-  evidence batches: five pillar areas plus the cross-cutting area, then
-  review the proposed stages
-  in one table. The agent performs about 230 source and control-library lookups
+- **How long:** expect 20 to 35 minutes with records at hand. After one scope,
+  target-stage and allowance-use confirmation, you answer six evidence batches with 40
+  prompts in total: Identity 7, Devices 7, Networks 7, Applications and
+  Workloads 8, Data 8, then Cross-Cutting 3. Documents are optional. You then
+  review all 40 proposed stages in one table. This is normally at least eight
+  replies. The agent performs about 230 source and control-library lookups
   and records all 40 functions, so some tool work can take 15 to 25 minutes.
 - **Have ready:** the systems in scope; how people and services sign in
   (identity provider, MFA, service credentials); how devices are managed; network
@@ -747,8 +762,12 @@ that table before approving the review, and resubmit any corrected function.
 The level follows from the stages: at or above the target stage is fully
 compliant, one stage below is partial, two or more below (or unknown) is not
 implemented, and a function at its target carries no P1 or P2 action. Every
-below-target function records one concrete `remediation` and a separate
-`done_when` sentence. Every P1 also records `risk_reason`: the harm or exposure
+action, including an improvement beyond target, records the accountable
+`owner_role`, a `due_date` in YYYY-MM-DD, and a separate, testable `done_when`
+that names observable evidence and its expected result. Default due dates from
+the run date are P1 +14 days, P2 +45 days and P3 +90 days unless the person
+provides a date. Every below-target function also records one concrete
+`remediation`. Never restate the action as the acceptance test. Every P1 also records `risk_reason`: the harm or exposure
 that makes it first. Every function records `priority` (P1 first), `effort` (S, M, L), the
 regulations it bears on with their applicability (`obligations`), and
 `open_questions`. A regulation you fetched and verified is not, by itself, an
@@ -793,7 +812,7 @@ Read from the workflow content the deployed image serves. `list_workflow_types` 
 
 | Workflow type | Name | Scope | What it covers |
 |---|---|---|---|
-| `gap_analysis_zero_trust` | Ansvar Zero Trust Assessment | ZERO_TRUST | Assess zero trust maturity against the 40 CISA ZTMM v2.0 functions and compare stages across cycles. |
+| `gap_analysis_zero_trust` | Ansvar Zero Trust Assessment | ZERO_TRUST | Assess 40 CISA ZTMM v2.0 functions. Confirm scope, target stages and run use; answer six ordered batches (40 prompts total); optionally provide documents; then review one 40-row… |
 
 ## Starting a run
 
