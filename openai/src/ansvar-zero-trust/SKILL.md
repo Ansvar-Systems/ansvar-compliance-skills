@@ -5,9 +5,9 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.4.0"
+  version: "0.9.0"
   build_identity:
-    source_identity: "426000b6be3fafa9b2b93b97b19bf4946ab3b24d69909be45a2931384891f0ff"
+    source_identity: "76212e73b3ef43ddc9d0b3e873cf8c624900b6fa4af861e193edbffb21779554"
     content_bundle:
       ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.54.0@sha256:91dc29e4ee8ec53445d3cc12d00e2bbd5a52fec3d722420193251c54bdb35bc7"
       digest: "sha256:91dc29e4ee8ec53445d3cc12d00e2bbd5a52fec3d722420193251c54bdb35bc7"
@@ -707,9 +707,7 @@ Then give the person this preflight in plain words, before any question:
   v2.0 functions that change a first-stage decision, in three batches. The 22
   other functions are labelled "Not assessed this run; rerun in deep mode to
   assess this function." Deep mode assesses all 40 functions in six batches.
-- **Access:** what this account can run comes from `get_my_capabilities` and
-  `list_workflow_types`. Starting a run uses the account's workflow access and
-  stores run state. Name the workflow and get their OK before `start_workflow`.
+- **Access:** I'll check what this account can run; starting the named assessment uses one workflow allowance; I'll ask before starting.
 - **How long:** plan for 15 to 30 minutes with records at hand in default mode,
   including three evidence replies and one findings review. Deep mode takes
   longer because it asks 40 questions in six batches. Source lookups run in
