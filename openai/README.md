@@ -182,3 +182,11 @@ to 18 decision-changing functions in three batches and keeps a 40-function
 deep mode. It asks for explicit one-run consent after scope review, uses the
 same effort vocabulary throughout, and carries a function-specific completion
 test for each remediation. Re-test both assessment packages before submission.
+
+Workflow repository a1aac76d (CMMC round 4, content bundle 1.54.0) rebuilds
+all six candidates at 0.8.1 and moves the Claude plugins to 2.8.1. Only the
+CMMC text changes. It names the partial-credit fields
+(`implementation_facts.mfa_scope`, `implementation_facts.encryption`), the
+`no_evidence` basis, the `proceed_with_uncovered` acknowledgement and the
+objective step's `response_shape`. The other packages change only their build
+identity line. Re-test the CMMC package before submission.
