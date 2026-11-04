@@ -26,6 +26,7 @@ COMPILED_IDS = ("ansvar-vulnerability-management", "ansvar-zero-trust", "ansvar-
 # pricing copy. Only these complete, currently vendored technical lines are
 # exempt. Appending commercial meaning to one makes it non-exempt.
 NONCOMMERCIAL_LINES = frozenset({
+    '- Using Ansvar, run a CMMC Level 1 self-assessment for our company.',
     '`"quotation"` and `"tier"` if you need them; nothing else.',
     '`arch:service/checkout-api@7`, `arch:trust_zone/dmz@2` — using the `revision` on',
     'Every free-text field on a returned record — `name`, `description`, an ADR',
@@ -268,6 +269,27 @@ def validate_spec(spec):
             raise ValueError("Negative case needs an observable outcome")
 
 
+def package_readme(spec):
+    prompts = "\n".join(f"- {prompt}" for prompt in spec["prompts"])
+    return (
+        f"# {spec['title']}\n\n"
+        f"{spec['description']}\n\n"
+        "## Try it\n\n"
+        f"{prompts}\n\n"
+        "## Connection and data\n\n"
+        "This package connects to the authenticated Ansvar Gateway at "
+        f"`{GATEWAY}`. Sign in through OAuth when your client asks. It sends the "
+        "questions, scope and evidence you choose to share for the requested task. "
+        "Results support human review; they do not certify compliance or provide "
+        "legal advice.\n\n"
+        "Documentation: [ansvar.eu/docs/agent-skills]"
+        "(https://ansvar.eu/docs/agent-skills)  \n"
+        "Support: [ansvar.eu/contact](https://ansvar.eu/contact)  \n"
+        "Privacy: [ansvar.eu/privacy](https://ansvar.eu/privacy)  \n"
+        "Licence: CC-BY-4.0. Published by Ansvar Systems AB.\n"
+    ).encode()
+
+
 def package_files(root, spec, version, lock):
     validate_spec(spec)
     sid = spec["id"]
@@ -298,6 +320,7 @@ def package_files(root, spec, version, lock):
         }},
     }
     files = {
+        "README.md": package_readme(spec),
         "plugin.json": json_bytes(manifest),
         "mcp.json": json_bytes({"$schema": SCHEMA + "mcp.schema.json", "mcpServers": {
             "ansvar": {"type": "streamable-http", "url": GATEWAY}}}),

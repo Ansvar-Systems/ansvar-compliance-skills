@@ -1,9 +1,9 @@
 {
   "workflow_repo": "Ansvar-Systems/ansvar-workflow-mcp",
-  "workflow_commit": "923b7332dd5f4d3ac40a1b0374dfad7670222af7",
+  "workflow_commit": "76ac3ee4a83e72f19446bac8c28049b479a42466",
   "workflow_manifest_sha256": "f8fb384f9d55c19af68b64d4ccdeda31ae57c4a70f61a78edbcef018df72652f",
   "publication_repo": "Ansvar-Systems/ansvar-ai",
-  "publication_commit": "902e98ac6804618fb37460a0212e56eeddeb0cb2",
+  "publication_commit": "699902b12b494be181cffa72acd5d33159096f0f",
   "fragments": [
     {
       "path": "openai/vendor/workflow-loop.md",
