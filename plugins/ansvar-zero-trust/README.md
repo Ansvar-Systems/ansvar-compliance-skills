@@ -1,11 +1,12 @@
 # Ansvar Zero Trust Assessment
 
-Assess the zero trust maturity of the systems you name against the 40
-functions of the CISA Zero Trust Maturity Model v2.0, with NIST SP 800-207 as a
-practice reference. Before the first question your agent tells you what the
-assessment covers, what it costs on your plan, how many replies it takes and what to
-have ready. You choose a target stage for each pillar; your agent never picks
-one for you. Re-run against the previous report to see what changed.
+Assess the zero trust maturity of the systems you name against the CISA Zero
+Trust Maturity Model v2.0, with NIST SP 800-207 as a practice reference.
+Default mode assesses 18 decision-changing functions in three evidence replies;
+deep mode assesses all 40 functions in six batches. Before the first question
+your agent explains the scope, allowance use, expected replies and what to have
+ready. You choose a target stage for each pillar; your agent never picks one for
+you. Re-run against the previous report to see what changed.
 
 The skill uses twin facts when a workspace connector provides them. Otherwise
 it asks interview questions and labels the answers as stated evidence. Unknowns
