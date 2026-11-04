@@ -5,9 +5,9 @@ license: CC-BY-4.0
 metadata:
   author: Ansvar Systems AB
   connector: https://gateway.ansvar.eu/mcp
-  version: "1.0.4"
+  version: "1.0.5"
   build_identity:
-    source_identity: "584f8682f707c517fc6426a18fdff4eceaa6c981f345dbd620aa75c3785b5133"
+    source_identity: "426000b6be3fafa9b2b93b97b19bf4946ab3b24d69909be45a2931384891f0ff"
     content_bundle:
       ref: "ghcr.io/ansvar-systems/ansvar-workflows:v1.54.0@sha256:91dc29e4ee8ec53445d3cc12d00e2bbd5a52fec3d722420193251c54bdb35bc7"
       digest: "sha256:91dc29e4ee8ec53445d3cc12d00e2bbd5a52fec3d722420193251c54bdb35bc7"
@@ -61,7 +61,10 @@ cites 32 CFR Part 170 and NIST SP 800-171 Rev 2 only, fetched during the run.
   `800-171r2:3.1.1[a]`; a requirement with a single objective ends in
   `/objective`, such as `800-171r2:3.10.4/objective`. The evidence step lists
   every valid ref for the run's level under `evidence_objective_refs`; any other
-  form is refused.
+  form is refused. While an objective the run assesses has no approved record,
+  the evidence step is refused; when the person confirms those objectives have
+  no evidence, resubmit with `proceed_with_uncovered` set to the exact count the
+  refusal names.
 - The name, title and contact of the person who acts as the Affirming Official.
   If the run ends without a CMMC Status, a reviewer's name and title instead.
 
@@ -103,7 +106,9 @@ before the review, and record neither an affirmation nor a sign-off on it.
 A MET or NA finding needs approved, final evidence attested by a named person
 and bound to that objective. A draft, an unapproved record or an assertion with
 no evidence cannot support it: record NOT_MET with the reason, or ask for the
-evidence. The engine does not judge whether evidence is sufficient; the person
+evidence. When no evidence exists for an objective, record NOT_MET with basis
+`no_evidence` and `evidence_ids` []; a NOT_MET on basis `evidence` that names
+no records is flagged to the reviewer. The engine does not judge whether evidence is sufficient; the person
 does, and the report says so.
 
 For the phase-in rule and which status a contract requires, cite the 32 CFR
@@ -524,9 +529,13 @@ POA&M. Every requirement must be MET for a final Level 1 status.
 Level 2 is scored by the engine under 32 CFR 170.24(c)(2), out of 110. A POA&M
 is allowed only for 1-point requirements and for SC.L2-3.13.11 when encryption
 is employed but not FIPS-validated; the engine applies the 170.21(a)(2) list
-and the 80% threshold. Partial-credit requirements (IA.L2-3.5.3 multifactor
-authentication, SC.L2-3.13.11 encryption) also take the implementation fact the
-step asks for.
+and the 80% threshold. Partial-credit requirements also take an implementation
+fact in `implementation_facts`: IA.L2-3.5.3 (multifactor authentication) takes
+`mfa_scope` (`none`, `remote_and_privileged` or `all_users`) and SC.L2-3.13.11
+(encryption) takes `encryption` (`none`, `non_fips` or `fips`). The fact is
+required when any objective of the requirement is NOT_MET; no other requirement
+accepts one. The objective step lists every field it accepts under
+`response_shape`.
 
 A conditional Level 2 result is closed out within 180 days of the conditional
 status date. After the report, the person records that date in the optional

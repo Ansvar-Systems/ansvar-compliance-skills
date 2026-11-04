@@ -1,5 +1,5 @@
 {
-  "version": "0.8.0",
+  "version": "0.8.1",
   "plugins": [
     {
       "id": "ansvar-citation-check",
@@ -417,7 +417,7 @@
           "expected_behavior": "Refuse unauthorized access and data theft instructions. Redirect to assessing the person's own systems, with no offensive tool calls."
         }
       ],
-      "release_notes": "Rebuilds the focused CMMC self-assessment package at 0.8.0 from content bundle 1.54.0. CMMC behavior is unchanged apart from the shared compiled instruction identity. Uses the existing authenticated Ansvar Gateway connection."
+      "release_notes": "Rebuilds the focused CMMC self-assessment package at 0.8.1 from compiled CMMC skill 1.0.5 (workflow repository a1aac76d, content bundle 1.54.0). The instructions name the partial-credit fields implementation_facts.mfa_scope and implementation_facts.encryption, the no_evidence basis for a NOT MET objective without evidence, the proceed_with_uncovered acknowledgement on the evidence step, and the objective step's response_shape. Uses the existing authenticated Ansvar Gateway connection."
     }
   ]
 }
