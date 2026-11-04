@@ -1,5 +1,7 @@
 # Ansvar Zero Trust Assessment
 
+Release version: 0.9.0.
+
 Assess the zero trust maturity of the systems you name against the CISA Zero
 Trust Maturity Model v2.0, with NIST SP 800-207 as a practice reference.
 Default mode assesses 18 decision-changing functions in three evidence replies;
@@ -77,15 +79,13 @@ The plugin declares the Ansvar Gateway MCP connector in `.mcp.json`
 account through OAuth. Account registration uses a business email at
 [ansvar.eu](https://ansvar.eu).
 
-Free and Solo include one and two workflow runs a month, shared across the
-included workflows; Premium and above run the assessment from the monthly
-allowance. Starting a run spends one. A deliberate cancellation is not handed
-back; after bounded retries exhaust a gateway-observed infrastructure failure,
-the gateway can restore the run under its bounded monthly safeguard. Your agent
-never self-asserts that reason, and names the workflow and asks before it starts.
-The report keeps obligations and fixes on every plan.
+**Access:** I'll check what this account can run; starting the named assessment uses one workflow allowance; I'll ask before starting.
+
 Live availability is decided by `get_my_capabilities` and
-`list_workflow_types` before starting.
+`list_workflow_types`. The agent reports unavailable steps without commercial
+messaging. A deliberate cancellation is not restored; after bounded retries
+exhaust a gateway-observed infrastructure failure, the gateway can restore the
+run under its bounded safeguard. Your agent never self-asserts that reason.
 
 ## What it sends
 

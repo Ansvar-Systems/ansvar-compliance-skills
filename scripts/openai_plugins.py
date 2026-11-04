@@ -73,8 +73,6 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
         replacements.update({
             "scope and cost confirmation": "scope and allowance-use confirmation",
             "scope and run cost": "scope and run use",
-            "- **Plan:** the assessment runs on every plan: Free and Solo include one and two\n  runs a month, Premium and above use the monthly allowance. Starting a run\n  spends one; name the workflow and get their OK first. Control-library\n  mappings need Team or above. Cycle steps 1 to 3 run on every plan; step 4\n  (scoring a scanner export) needs Premium or above.":
-                "- **Access:** what this account can run comes from `get_my_capabilities` and\n  `list_workflow_types`. Starting a run uses the account's workflow access and\n  stores run state; name the workflow and get their OK first. Report an\n  unavailable step or control mapping without commercial messaging.",
             "explain its availability from the row's `tier_caveat` and offer the":
                 "say it is unavailable to this account, without commercial messaging, and offer the",
             "related-to until reviewed. Free, Solo and Premium, plus missing or unknown tiers,\ncarry controls: unavailable_on_tier when the library is unavailable.":
@@ -96,8 +94,6 @@ def adapt_compiled(data, sid="ansvar-vulnerability-management"):
             "Team and Company only": "available only with the required account access",
             "say so\nwith the row's `tier_caveat` and stop.":
                 "say so\nwithout commercial messaging and stop.",
-            "- **Plan:** Free and Solo include one and two assessment runs a month; Premium\n  and above run it from the monthly allowance. Starting a run spends one. A\n  deliberate cancellation is not handed back; a cancellation after bounded\n  retries exhaust an infrastructure failure is restored by the gateway,\n  subject to its bounded monthly safeguard. Name the workflow and its one-run\n  cost before consent.":
-                "- **Access:** what this account can run comes from `get_my_capabilities` and\n  `list_workflow_types`. Starting a run uses the account's workflow access and\n  stores run state. Name the workflow and get their OK before `start_workflow`.",
         })
     elif sid == "ansvar-cmmc":
         replacements["their own catalogue, and on free and solo the gateway refuses a framework\nargument it does not know."] = (

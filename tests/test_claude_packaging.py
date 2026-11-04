@@ -15,7 +15,7 @@ class ClaudePackaging(unittest.TestCase):
         self.assertEqual(len(list((ROOT / 'skills').glob('*/SKILL.md'))), 20)
         self.assertIn('zero-trust', {s['id'] for s in manifest['skills']})
         self.assertEqual(manifest['workflow_library']['commit'],
-                         'a1aac76de82214beb9aca131106043c5ea2e5592')
+                         'cf1a0a5f192d3995f6d48708d57cf622e56bb69c')
         for entry in manifest['skills']:
             self.assertEqual(hashlib.sha256((ROOT / entry['path']).read_bytes()).hexdigest(),
                              entry['sha256'])
@@ -40,7 +40,9 @@ class ClaudePackaging(unittest.TestCase):
             self.assertEqual((focused / '.mcp.json').read_bytes(), (ROOT / '.mcp.json').read_bytes())
         for base in bases:
             plugin = json.loads((base / '.claude-plugin/plugin.json').read_text())
-            self.assertEqual(plugin['version'], '2.8.1')
+            expected = '0.9.0' if base.name in {
+                'ansvar-vulnerability-management', 'ansvar-zero-trust'} else '2.8.1'
+            self.assertEqual(plugin['version'], expected)
             for field in ('icon', 'documentationUrl', 'supportUrl',
                           'privacyPolicyUrl', 'termsOfServiceUrl'):
                 self.assertTrue(plugin[field])
@@ -66,6 +68,12 @@ class ClaudePackaging(unittest.TestCase):
         self.assertIn('three evidence\nbatches', vulnerability)
         self.assertIn('lasts one hour', zero_trust)
         self.assertIn('lasts one hour', vulnerability)
+        contract = ("**Access:** I'll check what this account can run; starting the named "
+                    "assessment uses one workflow allowance; I'll ask before starting.")
+        self.assertIn(contract, zero_trust)
+        self.assertIn(contract, vulnerability)
+        self.assertIn('Release version: 0.9.0.', zero_trust)
+        self.assertIn('Release version: 0.9.0.', vulnerability)
         self.assertIn('gateway-observed infrastructure failure', zero_trust)
         self.assertIn('never self-asserts', zero_trust)
         for readme in (zero_trust, vulnerability, cmmc):
